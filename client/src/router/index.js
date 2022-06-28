@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
-import Ping from '../components/ping.vue';
+import MyPing from '../components/ping.vue';
 
 const routes = [
   {
@@ -18,8 +18,8 @@ const routes = [
   },
   {
     path: '/ping',
-    name: 'Ping',
-    component: Ping,
+    name: 'MyPing',
+    component: MyPing,
   },
 ];
 

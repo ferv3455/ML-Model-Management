@@ -1,25 +1,41 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import HomeView from '../views/HomeView.vue';
-import MyPing from '../components/ping.vue';
+import ModelView from '../views/ModelView.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'home',
-    component: HomeView,
+    name: 'model',
+    component: ModelView,
   },
   {
-    path: '/about',
-    name: 'about',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/AboutView.vue'),
+    path: '/upload',
+    name: 'upload',
+    component: () => import('../views/UploadView.vue'),
   },
   {
-    path: '/ping',
-    name: 'MyPing',
-    component: MyPing,
+    path: '/model/:modelID',
+    name: 'modelID',
+    component: () => import('../views/ModelIDView.vue'),
+  },
+  {
+    path: '/test/:modelID',
+    name: 'test',
+    component: () => import('../views/TestView.vue'),
+  },
+  {
+    path: '/predict/:modelID',
+    name: 'predict',
+    component: () => import('../views/PredictView.vue'),
+  },
+  {
+    path: '/batch/:modelID',
+    name: 'batch',
+    component: () => import('../views/BatchView.vue'),
+  },
+  {
+    path: '/task/:modelID/:taskID',
+    name: 'task',
+    component: () => import('../views/TaskIDView.vue'),
   },
 ];
 

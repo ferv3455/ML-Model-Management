@@ -32,6 +32,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      // 需从后端请求当前存在的model
       models: [{
         id: 'model1',
         des: 'model 1 is xxxxxx',

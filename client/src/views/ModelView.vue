@@ -13,7 +13,11 @@
         <th>服务状态</th>
       </tr>
       <tr v-for="model in models" :key="model">
-        <td>{{ model.id }}</td>
+        <td>
+          <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
+            {{ model.id }}
+          </router-link>
+        </td>
         <td>{{ model.des }}</td>
         <td>{{ model.type }}</td>
         <td>{{ model.algo }}</td>

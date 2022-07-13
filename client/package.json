@@ -41,7 +41,8 @@
     },
     "rules": {
       "linebreak-style": "off",
-      "no-unused-vars": "warn"
+      "no-unused-vars": "warn",
+      "vuejs-accessibility/form-control-has-label": "off"
     }
   },
   "browserslist": [

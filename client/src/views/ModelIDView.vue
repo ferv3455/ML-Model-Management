@@ -129,6 +129,7 @@ export default {
         name: 'test',
         params: {
           modelID: this.modelID,
+          modelInputs: JSON.stringify(this.modelInputs),
         },
       });
     },

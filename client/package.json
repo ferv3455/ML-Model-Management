@@ -39,7 +39,11 @@
     "parserOptions": {
       "parser": "@babel/eslint-parser"
     },
-    "rules": {}
+    "rules": {
+      "linebreak-style": "off",
+      "no-unused-vars": "warn",
+      "vuejs-accessibility/form-control-has-label": "off"
+    }
   },
   "browserslist": [
     "> 1%",

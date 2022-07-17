@@ -96,6 +96,7 @@ export default {
 
 .testPageSmallBox {
   flex-grow: 1;
+  width: 50%;
   margin: 10px;
   background-color: lightgray;
 }

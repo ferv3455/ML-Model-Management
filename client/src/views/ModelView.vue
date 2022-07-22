@@ -36,23 +36,7 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      // 需从后端请求当前存在的model
-      models: [{
-        id: 'model1',
-        des: 'model 1 is xxxxxx',
-        tyle: 'pmml',
-        algo: 'suanfa',
-        time: '2022/06/19 13:78',
-        status: 'stop',
-      }, {
-        id: 'model2',
-        des: 'model 2 is xxxxxx',
-        tyle: 'onnx',
-        algo: 'suanfa',
-        time: '2022/06/19 06:35',
-        status: 'run',
-      },
-      ],
+      models: [],
     };
   },
   methods: {
@@ -61,6 +45,15 @@ export default {
         name: 'upload',
       });
     },
+  },
+  mounted() {
+    axios.get('http://localhost:5000/model', {
+      params: {},
+    }).then((res) => {
+      this.models = res.data.models;
+    }).catch((error) => {
+      console.log(error);
+    });
   },
 };
 

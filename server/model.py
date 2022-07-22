@@ -3,6 +3,7 @@ import time
 
 class Model:
     def pmmlInit(self, file):
+        # TODO
         # self.model = xxx
         # self.algo = xxx
         # self.input = xxx
@@ -10,6 +11,7 @@ class Model:
         pass
 
     def onnxInit(self, file):
+        # TODO
         # self.model = xxx
         # self.algo = xxx
         # self.input = xxx

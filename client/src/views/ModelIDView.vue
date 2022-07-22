@@ -112,9 +112,11 @@ export default {
   methods: {
     changeModelStatus(event) {
       if (this.modelStatus === 'run') {
+        // TODO
         // 此处需要使用axios向后端发出切换模型状态的请求，成功后才可执行以下操作
         this.modelStatus = 'stop';
       } else {
+        // TODO
         // 同上
         this.modelStatus = 'run';
       }
@@ -141,6 +143,10 @@ export default {
         },
       });
     },
+  },
+  mounted() {
+    // TODO
+    // 从后端获取数据
   },
 };
 </script>

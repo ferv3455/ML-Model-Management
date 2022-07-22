@@ -40,10 +40,12 @@ export default {
     submit(event) {
       const submitObject = JSON.parse(this.jsonInput);
       // console.log(submitObject);
+      // TODO
       // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
     },
     generateCurl(event) {
       this.curlInput = 'Get curl code!!';
+      // TODO
       // 需要生成向后端请求的curl代码
     },
     goToBatchPage(event) {

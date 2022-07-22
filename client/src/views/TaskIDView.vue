@@ -37,6 +37,10 @@ export default {
       });
     },
   },
+  mounted() {
+    // TODO
+    // 从后端获取数据
+  },
 };
 </script>
 

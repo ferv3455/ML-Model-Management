@@ -33,8 +33,9 @@ export default {
     };
   },
   methods: {
-    // 将上传信息提交给后端，后端回应后执行相应操作
     uploadModel(event) {
+      // TODO
+      // 将上传信息提交给后端，后端回应后执行相应操作
     },
   },
 };

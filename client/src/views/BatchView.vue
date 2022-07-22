@@ -20,7 +20,7 @@
     </table>
     <div id="batchPageAddTaskArea">
       <p>创建新任务</p>
-      <!--还未确定可输入文件的类型！（跟后端沟通后再加上）-->
+      <!--TODO 还未确定可输入文件的类型！（跟后端沟通后再加上）-->
       <input id="uploadPageEnterModelFile" type="file">
       <button @click="upload" id="batchPageUploadButton">添加</button>
     </div>
@@ -51,6 +51,7 @@ export default {
   },
   methods: {
     upload(event) {
+      // TODO
       // 将上传文件提交给后端
       // 将后端返回的任务ID提示给用户（通过alert方法）
     },
@@ -62,6 +63,10 @@ export default {
         },
       });
     },
+  },
+  mounted() {
+    // TODO
+    // 从后端获取数据
   },
 };
 

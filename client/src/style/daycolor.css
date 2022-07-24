@@ -1,0 +1,37 @@
+:root {
+    --textColor: #1b4661;
+    --backgroundColor: #ffffff;
+    --buttonColor: #bef6d3;
+    --hrefColor: #28638D;
+    --inputColor: #f1faef;
+    --navColor: #1b4661;
+    --navTextColor: #f1faef;
+}
+
+button {
+    background-color: var(--buttonColor);
+    color: var(--textColor);
+}
+
+input,
+select {
+    background-color: var(--inputColor);
+}
+
+body {
+    background-color: var(--backgroundColor);
+    color: var(--textColor);
+}
+
+h1 {
+    color: var(--textColor);
+}
+
+a {
+    color: var(--hrefColor);
+}
+
+nav {
+    background-color: var(--navColor);
+    color: var(--navTextColor);
+}

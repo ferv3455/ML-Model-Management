@@ -42,7 +42,8 @@
     "rules": {
       "linebreak-style": "off",
       "no-unused-vars": "warn",
-      "vuejs-accessibility/form-control-has-label": "off"
+      "vuejs-accessibility/form-control-has-label": "off",
+      "max-len": "off"
     }
   },
   "browserslist": [

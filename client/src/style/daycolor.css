@@ -1,16 +1,18 @@
 :root {
-    --textColor: #1b4661;
+    --textColor: #242f47;
     --backgroundColor: #ffffff;
-    --buttonColor: #bef6d3;
-    --hrefColor: #28638D;
-    --inputColor: #f1faef;
-    --navColor: #1b4661;
-    --navTextColor: #f1faef;
+    --buttonColor: #abc4ff;
+    --hrefColor: #242f47;
+    --inputColor: #ffffff;
+    --navColor: #242f47;
+    --navTextColor: #ffffff;
+    --buttonTransColor: #e2eafc;
+    --buttonsColor: #FCA9A2;
 }
 
 button {
     background-color: var(--buttonColor);
-    color: var(--textColor);
+    color: var(--navTextColor);
 }
 
 input,
@@ -34,4 +36,11 @@ a {
 nav {
     background-color: var(--navColor);
     color: var(--navTextColor);
+}
+
+.notImportantButton {
+    background-color: transparent;
+    border-style: solid;
+    border-color: var(--textColor);
+    border-width: 2px;
 }

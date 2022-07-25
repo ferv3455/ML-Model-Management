@@ -17,7 +17,7 @@
             <input :id="'var_' + variance.name">
           </div>
         </div>
-        <button @dblclick="clear" id="testPageClearButton">双击清除</button>
+        <button class="notImportantButton" @dblclick="clear" id="testPageClearButton">双击清除</button>
         <button @click="submit" id="testPageSubmitButton">提交</button>
       </div>
       <div class="testPageSmallBox">

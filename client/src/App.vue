@@ -54,6 +54,7 @@ nav {
 
 #homeIcon {
   height: 30px;
+  margin-right: 5px;
 }
 
 #toHomeNav {
@@ -61,6 +62,7 @@ nav {
   align-items: center;
   color: var(--navTextColor);
   margin-right: 20px;
+  text-decoration: none;
 }
 
 footer {

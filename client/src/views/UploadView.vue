@@ -14,7 +14,7 @@
         <option value="onnx">ONNX</option>
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
-      <input id="uploadPageEnterModelFile" type="file" accept=".pmml,.onnx">
+      <input id="uploadPageEnterModelFile" type="file" :accept="'.' + this.modelType">
       <button @click="uploadNewModel" id="uploadPageUploadButton">上传</button>
     </div>
   </div>
@@ -40,7 +40,7 @@ export default {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: '',
       modelDescription: '',
-      modelType: '',
+      modelType: 'pmml',
     };
   },
   methods: {

@@ -22,7 +22,7 @@
         <td>{{ model.des }}</td>
         <td>{{ model.type }}</td>
         <td>{{ model.algo }}</td>
-        <td>{{ model.time }}</td>
+        <td>{{ formatDate(model.time) }}</td>
         <td>{{ model.status }}</td>
       </tr>
 
@@ -45,6 +45,10 @@ export default {
       this.$router.push({
         name: 'upload',
       });
+    },
+    formatDate(value) {
+      const date = new Date(value * 1000);
+      return date.toLocaleString();
     },
   },
   mounted() {

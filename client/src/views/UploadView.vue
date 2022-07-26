@@ -1,27 +1,38 @@
 <template>
-  <div>
+  <div id="uploadPageBox">
     <h1 id="uploadPageTitle">
       模型导入页面
     </h1>
     <div id="uploadPageImportModel">
-      <p class="uploadPageImportModelDetail">模型ID</p>
+      <p class="uploadPageImportModelDetail" id="uploadPageModelID">模型ID</p>
       <input v-model="modelID" id="uploadPageEnterModelID">
-      <p class="uploadPageImportModelDetail">模型描述</p>
-      <input v-model="modelDescription" id="uploadPageEnterModelDescription">
-      <p class="uploadPageImportModelDetail">模型类型</p>
+      <p class="uploadPageImportModelDetail" id="uploadPageModelDescription">模型描述</p>
+      <textarea v-model="modelDescription" id="uploadPageEnterModelDescription"></textarea>
+      <p class="uploadPageImportModelDetail" id="uploadPageModelType">模型类型</p>
       <select v-model="modelType" id="uploadPageEnterModelType" value="pmml">
         <option value="pmml">PMML</option>
         <option value="onnx">ONNX</option>
       </select>
-      <p class="uploadPageImportModelDetail">模型文件</p>
+      <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" type="file" accept=".pmml,.onnx">
+      <button @click="uploadNewModel" id="uploadPageUploadButton">上传</button>
     </div>
-    <button @click="uploadNewModel" id="uploadPageUploadButton">上传</button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+function changeTableSize() {
+  const cont = document.getElementById('uploadPageImportModel');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.8}px`;
+  } else {
+    cont.style.width = '700px';
+  }
+}
+
+window.onresize = changeTableSize;
 
 export default {
   data() {
@@ -38,9 +49,78 @@ export default {
       // 将上传信息提交给后端，后端回应后执行相应操作
     },
   },
+  mounted() {
+    changeTableSize();
+  },
 };
 
 </script>
 
 <style>
+#uploadPageBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#uploadPageImportModel {
+  border-style: solid;
+  border-color: var(--textColor);
+  border-radius: 10px;
+  border-width: 3px;
+  box-sizing: border-box;
+  padding: 20px;
+  display: grid;
+  grid-template-columns: 25% 75%;
+  grid-template-rows: 45px 110px 45px 45px 85px;
+  grid-template-areas: 'ID enterID'
+    'des enterDes'
+    'type enterType'
+    'file enterFile'
+    'button button';
+  justify-items: center;
+  align-items: center;
+}
+
+#uploadPageModelID {
+  grid-area: ID;
+}
+
+#uploadPageEnterModelID {
+  grid-area: enterID;
+}
+
+#uploadPageModelDescription {
+  grid-area: des;
+}
+
+#uploadPageEnterModelDescription {
+  grid-area: enterDes;
+  width: 90%;
+  height: 85px;
+  resize: none;
+}
+
+#uploadPageModelType {
+  grid-area: type;
+}
+
+#uploadPageEnterModelType {
+  grid-area: enterType;
+  width: 91%;
+  height: 32px;
+}
+
+#uploadPageModelFile {
+  grid-area: file;
+}
+
+#uploadPageEnterModelFile {
+  grid-area: enterFile;
+}
+
+#uploadPageUploadButton {
+  margin-top: 30px;
+  grid-area: button;
+}
 </style>

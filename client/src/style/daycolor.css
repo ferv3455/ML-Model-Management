@@ -3,7 +3,7 @@
     --backgroundColor: #ffffff;
     --buttonColor: #abc4ff;
     --hrefColor: #242f47;
-    --inputColor: #ffffff;
+    --inputColor: #e2eafc;
     --navColor: #242f47;
     --navTextColor: #ffffff;
     --buttonTransColor: #e2eafc;
@@ -15,7 +15,8 @@ button {
 }
 
 input,
-select {
+select,
+textarea {
     background-color: var(--inputColor);
 }
 

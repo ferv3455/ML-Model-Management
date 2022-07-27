@@ -15,8 +15,21 @@
     </div>
     <footer>
       <div id="footerBox">
-        <p> info info info </p>
-        <p> email: xxxxxxx </p>
+        <p id="footerWords"> 本网站仅为大作业使用，并无任何商业用途！ </p>
+        <div class="footerInfo">
+          <img id="emailIcon" src="./assets/emailIcon.png" alt="emailIcon">
+          <p> 电子邮箱: yczddgj@126.com </p>
+          <img id="phoneIcon" src="./assets/phoneIcon.png" alt="phoneIcon">
+          <p> 联络电话: +86-15611462910</p>
+          <img id="teamIcon" src="./assets/teamIcon.png" alt="teamIcon">
+          <div id="teamAvatarBox">
+            <p> 团队成员:</p>
+            <img class="teamAvatar" src="./assets/avatar/gxy.png" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/xyy.jpg" alt="avatar">
+          </div>
+          <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
+          <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>
+        </div>
       </div>
     </footer>
   </div>
@@ -83,7 +96,11 @@ footer {
 }
 
 #footerBox {
-  margin-top: 200px;
+  margin-top: 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 16px;
 }
 
 #app {
@@ -92,5 +109,48 @@ footer {
   bottom: 0;
   right: 0;
   left: 0;
+}
+
+.footerInfo {
+  display: grid;
+  align-items: center;
+  grid-template-columns: 50px 300px;
+  grid-template-rows: 40px 40px 40px 40px;
+}
+
+.footerInfo p {
+  margin-left: 20px;
+  text-align: left;
+}
+
+#emailIcon {
+  width: 28px;
+}
+
+#phoneIcon {
+  width: 28px;
+}
+
+#teamIcon {
+  width: 33px;
+}
+
+#linkIcon {
+  width: 30px;
+}
+
+#footerWords {
+  font-weight: bolder;
+}
+
+.teamAvatar {
+  width: 40px;
+  border-radius: 7px;
+  margin: 5px;
+}
+
+#teamAvatarBox {
+  display: flex;
+  align-items: center;
 }
 </style>

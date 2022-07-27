@@ -49,3 +49,12 @@ body {
     font-size: 20px;
     font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
+
+.roundButton {
+    width: 55px;
+    height: 55px;
+    border-radius: 29px;
+    border-style: solid;
+    border-width: 3;
+    box-shadow: none;
+}

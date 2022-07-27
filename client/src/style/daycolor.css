@@ -2,11 +2,13 @@
     --textColor: #242f47;
     --backgroundColor: #ffffff;
     --buttonColor: #abc4ff;
+    --roundButtonColor: #c1d3fe;
     --hrefColor: #242f47;
     --inputColor: #e2eafc;
     --navColor: #242f47;
     --navTextColor: #ffffff;
     --buttonTransColor: #e2eafc;
+    --importantColor: rgb(246, 136, 141);
 }
 
 button {
@@ -43,4 +45,9 @@ nav {
     border-style: solid;
     border-color: var(--textColor);
     border-width: 2px;
+}
+
+.roundButton {
+    background-color: transparent;
+    border-color: var(--textColor);
 }

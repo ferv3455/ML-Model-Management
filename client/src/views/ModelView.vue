@@ -27,7 +27,10 @@
       </tr>
 
     </table>
-    <button @click="changePageToUpload" id="mainPageUploadButton">上传新模型</button>
+    <button @click="changePageToUpload" id="mainPageUploadButton">
+      <img id="mainPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+      上传模型
+    </button>
   </div>
 </template>
 
@@ -88,5 +91,13 @@ export default {
 
 #mainPageUploadButton {
   margin-top: 25px;
+  display: flex;
+  align-items: center;
+}
+
+#mainPageUploadIcon {
+  width: 30px;
+  margin-left: 15px;
+  margin-right: 5px;
 }
 </style>

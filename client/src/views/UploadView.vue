@@ -15,7 +15,10 @@
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" type="file" :accept="'.' + this.modelType">
-      <button @click="uploadNewModel" id="uploadPageUploadButton">上传</button>
+      <button @click="uploadNewModel" id="uploadPageUploadButton">
+        <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+        上传
+      </button>
     </div>
   </div>
 </template>
@@ -44,7 +47,7 @@ export default {
     };
   },
   methods: {
-    uploadModel(event) {
+    uploadNewModel(event) {
       // TODO
       // 将上传信息提交给后端，后端回应后执行相应操作
     },
@@ -122,5 +125,13 @@ export default {
 #uploadPageUploadButton {
   margin-top: 30px;
   grid-area: button;
+  display: flex;
+  align-items: center;
+}
+
+#uploadPageUploadIcon {
+  width: 30px;
+  margin-left: 35px;
+  margin-right: 5px;
 }
 </style>

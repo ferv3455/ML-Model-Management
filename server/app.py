@@ -1,3 +1,4 @@
+from gevent import pywsgi
 from flask import Flask, jsonify
 from flask_cors import CORS
 from model import Model, MODELS
@@ -12,7 +13,7 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 # enable CORS
-CORS(app, resources={r'/*': {'origins': '*'}})
+CORS(app, supports_credentials=True)
 
 # sanity check route
 
@@ -84,4 +85,5 @@ def getTaskInfo(modelID, taskID):
 
 
 if __name__ == '__main__':
-    app.run()
+    server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
+    server.serve_forever()

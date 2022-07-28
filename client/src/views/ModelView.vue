@@ -32,6 +32,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 export default {
   data() {
@@ -47,7 +48,7 @@ export default {
     },
   },
   mounted() {
-    axios.get('http://localhost:5000/model', {
+    axios.get(getBackUrl('/model'), {
       params: {},
     }).then((res) => {
       this.models = res.data.models;

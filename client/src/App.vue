@@ -86,6 +86,7 @@ footer {
   height: 350px;
   background: url('./assets/footer.png');
   text-align: center;
+  position: relative;
 }
 
 #appRouterView {

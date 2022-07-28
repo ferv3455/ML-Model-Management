@@ -1,0 +1,16 @@
+stages:
+    - run
+
+run_client:
+    stage: run
+    before_script:
+        - cd client
+        - npm install
+    script:
+        - npm run serve
+
+run_server:
+    stage: run
+    script:
+        - cd server
+        - flask run

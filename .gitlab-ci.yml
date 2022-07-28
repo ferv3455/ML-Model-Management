@@ -13,4 +13,4 @@ run_server:
     stage: run
     script:
         - cd server
-        - flask run
+        - python3 app.py

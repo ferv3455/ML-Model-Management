@@ -3,7 +3,7 @@ stages:
 
 run_client:
     stage: run
-    before-script:
+    before_script:
         - cd client
         - npm install
     script:

@@ -30,6 +30,9 @@
           <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
           <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>
         </div>
+        <a href="https://git.tsinghua.edu.cn/xy-guo20/ml-model-manage-system">
+          <img id="gitIcon" src="./assets/gitIcon.png" alt="gitIcon">
+        </a>
       </div>
     </footer>
   </div>
@@ -152,5 +155,12 @@ footer {
 #teamAvatarBox {
   display: flex;
   align-items: center;
+}
+
+#gitIcon {
+  width: 30px;
+  position: absolute;
+  bottom: 15px;
+  right: 15px;
 }
 </style>

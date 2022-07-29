@@ -35,8 +35,6 @@ function changeTableSize() {
   }
 }
 
-window.onresize = changeTableSize;
-
 export default {
   data() {
     return {
@@ -54,6 +52,7 @@ export default {
   },
   mounted() {
     changeTableSize();
+    window.onresize = changeTableSize;
   },
 };
 

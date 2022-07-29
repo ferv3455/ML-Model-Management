@@ -17,7 +17,7 @@
         <div id="modelIDPageStatusBox">
           <p class="modelIDPageGetModelInfo">{{ modelStatus }}</p>
           <button @click="changeModelStatus" id="modelIDPageChangeModelStatus">
-            <img id="modelIDPageChangeStatusIcon" src="../assets/changeStatusIcon.png" alt="return">
+            <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" alt="changeIcon">
           </button>
         </div>
         <p class="modelIDPageModelInfo">上传时间</p>
@@ -74,8 +74,8 @@
         <button @click="goToPredictPage" id="modelIDPageGoToPredictPage">进入部署接口页面</button>
       </div>
     </div>
-    <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton">
-      <img id="modelIDPageReturnIcon" src="../assets/returnIcon.png" alt="return">
+    <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton returnButton">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>
@@ -98,8 +98,6 @@ function changeModelDetailSize() {
   }
 }
 
-window.onresize = changeModelDetailSize;
-
 export default {
   data() {
     return {
@@ -119,6 +117,24 @@ export default {
         },
         {
           name: 'input2',
+          type: 'double',
+          measure: 'continuous',
+          value: 1080,
+        },
+        {
+          name: 'input3',
+          type: 'double',
+          measure: 'continuous',
+          value: 1080,
+        },
+        {
+          name: 'input4',
+          type: 'double',
+          measure: 'continuous',
+          value: 1080,
+        },
+        {
+          name: 'input5',
           type: 'double',
           measure: 'continuous',
           value: 1080,
@@ -181,6 +197,8 @@ export default {
   },
   mounted() {
     changeModelDetailSize();
+    window.onresize = changeModelDetailSize;
+
     // TODO
     // 从后端获取数据
   },
@@ -279,23 +297,6 @@ export default {
 
 #modelIDPageInputTable {
   margin-bottom: 30px;
-}
-
-#modelIDPageReturnIcon {
-  width: 30px;
-  margin: 0px;
-  margin-top: 3px;
-}
-
-#modelIDPageBackToModelPage {
-  position: absolute;
-  top: 80px;
-  left: 5px;
-}
-
-#modelIDPageChangeStatusIcon {
-  width: 30px;
-  margin: 0px;
 }
 
 #modelIDPageChangeModelStatus {

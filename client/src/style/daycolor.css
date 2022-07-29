@@ -40,13 +40,6 @@ nav {
     color: var(--navTextColor);
 }
 
-.notImportantButton {
-    background-color: transparent;
-    border-style: solid;
-    border-color: var(--textColor);
-    border-width: 2px;
-}
-
 .roundButton {
     background-color: transparent;
     border-color: var(--textColor);

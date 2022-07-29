@@ -26,6 +26,8 @@
             <p> 团队成员:</p>
             <img class="teamAvatar" src="./assets/avatar/gxy.png" alt="avatar">
             <img class="teamAvatar" src="./assets/avatar/xyy.jpg" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/xrf.jpg" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/fjj.jpg" alt="avatar">
           </div>
           <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
           <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>

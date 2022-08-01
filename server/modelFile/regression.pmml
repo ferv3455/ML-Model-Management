@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_4" xmlns:data="http://jpmml.org/jpmml-model/InlineTable" version="4.4">
+	<Header>
+		<Application name="JPMML-SkLearn library" version="1.7.10"/>
+		<Timestamp>2022-08-01T13:34:47Z</Timestamp>
+	</Header>
+	<DataDictionary>
+		<DataField name="LSTAT" optype="continuous" dataType="double"/>
+		<DataField name="CRIM" optype="continuous" dataType="double"/>
+		<DataField name="ZN" optype="continuous" dataType="double"/>
+		<DataField name="INDUS" optype="continuous" dataType="double"/>
+		<DataField name="CHAS" optype="continuous" dataType="double"/>
+		<DataField name="NOX" optype="continuous" dataType="double"/>
+		<DataField name="RM" optype="continuous" dataType="double"/>
+		<DataField name="AGE" optype="continuous" dataType="double"/>
+		<DataField name="DIS" optype="continuous" dataType="double"/>
+		<DataField name="RAD" optype="continuous" dataType="double"/>
+		<DataField name="TAX" optype="continuous" dataType="double"/>
+		<DataField name="PTRATIO" optype="continuous" dataType="double"/>
+		<DataField name="B" optype="continuous" dataType="double"/>
+	</DataDictionary>
+	<RegressionModel functionName="regression" algorithmName="sklearn.linear_model._base.LinearRegression">
+		<MiningSchema>
+			<MiningField name="LSTAT" usageType="target"/>
+			<MiningField name="CRIM"/>
+			<MiningField name="ZN"/>
+			<MiningField name="INDUS"/>
+			<MiningField name="CHAS"/>
+			<MiningField name="NOX"/>
+			<MiningField name="RM"/>
+			<MiningField name="AGE"/>
+			<MiningField name="DIS"/>
+			<MiningField name="RAD"/>
+			<MiningField name="TAX"/>
+			<MiningField name="PTRATIO"/>
+			<MiningField name="B"/>
+		</MiningSchema>
+		<RegressionTable intercept="32.30908641934306">
+			<NumericPredictor name="CRIM" coefficient="0.11200643805795121"/>
+			<NumericPredictor name="ZN" coefficient="0.003992262912901213"/>
+			<NumericPredictor name="INDUS" coefficient="0.13879789038739915"/>
+			<NumericPredictor name="CHAS" coefficient="-0.6594226266769115"/>
+			<NumericPredictor name="NOX" coefficient="4.410066564778471"/>
+			<NumericPredictor name="RM" coefficient="-4.225149249875839"/>
+			<NumericPredictor name="AGE" coefficient="0.08022422814540088"/>
+			<NumericPredictor name="DIS" coefficient="0.08267288068693177"/>
+			<NumericPredictor name="RAD" coefficient="0.013693519694083453"/>
+			<NumericPredictor name="TAX" coefficient="-9.370196440739928E-4"/>
+			<NumericPredictor name="PTRATIO" coefficient="0.07555399720748711"/>
+			<NumericPredictor name="B" coefficient="-0.011867692617831122"/>
+		</RegressionTable>
+	</RegressionModel>
+</PMML>

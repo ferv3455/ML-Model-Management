@@ -2,7 +2,7 @@
   <div id="testPageDivBox">
     <h1>
       模型测试页面
-      <div id="testPageModelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelID }}</div>
     </h1>
     <div id="testPageLeftRight">
       <div class="testPageSmallBox">
@@ -14,7 +14,7 @@
           </button>
           <div style="flex-grow: 1"></div>
           <button @dblclick="clear" id="testPageClearButton">
-            <img src="../assets/binIcon.png" alt="binIcon" class="binIcon">
+            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
           </button>
         </div>
         <div v-if="mode === 'json'">
@@ -138,11 +138,6 @@ export default {
 .testPageSmallBoxTitle {
   margin: 0px;
   margin-bottom: 10px;
-}
-
-#testPageModelNow {
-  font-size: 18px;
-  margin-top: 5px;
 }
 
 #testPageDivBox {

@@ -17,7 +17,7 @@
         <div id="modelIDPageStatusBox">
           <p class="modelIDPageGetModelInfo">{{ modelStatus }}</p>
           <button @click="changeModelStatus" id="modelIDPageChangeModelStatus">
-            <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" alt="changeIcon">
+            <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
           </button>
         </div>
         <p class="modelIDPageModelInfo">上传时间</p>

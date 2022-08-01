@@ -1,5 +1,5 @@
 <template>
-  <div class="alignCenter">
+  <div id="mainPageDivBox">
     <h1 id="mainPageTitle">
       主页:模型列表页面
     </h1>
@@ -25,7 +25,6 @@
         <td>{{ formatDate(model.time) }}</td>
         <td>{{ model.status }}</td>
       </tr>
-
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton">
       <img id="mainPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
@@ -37,6 +36,15 @@
 <script>
 import axios from 'axios';
 import getBackUrl from '../getIP';
+
+function changeMainPageDivBoxSize() {
+  const cont = document.getElementById('mainPageDivBox');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.95}px`;
+  } else {
+    cont.style.width = `${window.innerWidth * 0.80}px`;
+  }
+}
 
 export default {
   data() {
@@ -56,6 +64,9 @@ export default {
     },
   },
   mounted() {
+    changeMainPageDivBoxSize();
+    window.onresize = changeMainPageDivBoxSize;
+
     axios.get(getBackUrl('/model'), {
       params: {},
     }).then((res) => {
@@ -69,8 +80,16 @@ export default {
 </script>
 
 <style>
+#mainPageDivBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 #mainPageUploadTable {
-  min-width: 80%;
+  min-width: 100%;
   text-align: center;
   border-style: solid;
   border-color: var(--textColor);

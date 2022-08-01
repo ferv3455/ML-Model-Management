@@ -1,31 +1,53 @@
 <template>
-  <div>
+  <div id="predictPageDivBox">
     <h1>
       部署接口页面
+      <div class="modelNow">当前模型：{{ modelID }}</div>
     </h1>
-    <p>当前模型：{{ modelID }}</p>
     <div id="predictPageBox">
       <div class="predictPageSmallBox" id="predictPageInputBox">
-        <p class="predictPageSmallBoxTitle">Json输入</p>
+        <h2 class="predictPageSmallBoxTitle">Json输入</h2>
         <textarea v-model="jsonInput" id="predictPageJsonInput"></textarea>
-        <p class="predictPageSmallBoxTitle">Curl代码</p>
+        <div id="predictPageCurlBox">
+          <h2 class="predictPageSmallBoxTitle">Curl代码</h2>
+          <div id="predictPageCurlBoxGrow"></div>
+          <button @click="generateCurl" id="predictPageGenerateCurl">
+            <img src="../assets/generateIcon.png" title="生成curl代码" alt="generateIcon" class="generateIcon">
+          </button>
+          <button @click="copyCurl" id="predictPageCopyCurl">
+            <img src="../assets/copyIcon.png" title="复制curl代码" alt="copyIcon" class="copyIcon">
+          </button>
+        </div>
         <textarea v-model="curlInput" id="predictPageCurlInput" readonly></textarea>
-        <button @click="submit" id="predictPageSubmitButton">提交</button>
-        <button @click="generateCurl" id="predictPageGenerateCurl">生成Curl代码</button>
-        <button @click="copyCurl" id="predictPageCopyCurl">复制Curl代码</button>
+        <div id="predictPageButton">
+          <button @click="submit" id="predictPageSubmitButton">提交</button>
+        </div>
       </div>
       <div class="predictPageSmallBox" id="predictPageOutputBox">
-        <p>输出</p>
+        <h2>输出</h2>
         <textarea v-model="output" id="predictPageOutput" readonly></textarea>
       </div>
     </div>
     <button @click="goToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
-    <button @click="goToModelIDPage" id="predictPageGoToModelIDPage">返回模型详细信息页面</button>
+    <button @click="goToModelIDPage" id="predictPageGoToModelIDPage" class="roundButton returnButton">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+
+function changePredictPageBoxDirection() {
+  const cont = document.getElementById('predictPageBox');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.90}px`;
+    cont.style.flexDirection = 'column';
+  } else {
+    cont.style.width = `${window.innerWidth * 0.8}px`;
+    cont.style.flexDirection = 'row';
+  }
+}
 
 export default {
   data() {
@@ -70,24 +92,97 @@ export default {
       document.execCommand('copy');
     },
   },
+  mounted() {
+    changePredictPageBoxDirection();
+    window.onresize = changePredictPageBoxDirection;
+  },
 };
 </script>
 
 <style>
+#predictPageDivBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 #predictPageBox {
   display: flex;
-  width: 100%;
 }
 
 .predictPageSmallBox {
   flex-grow: 1;
-  width: 50%;
+  width: 100%;
   margin: 10px;
-  background-color: lightgray;
+  border-style: solid;
+  border-color: var(--textColor);
+  border-radius: 10px;
+  border-width: 3px;
+  box-sizing: border-box;
+  padding: 20px;
 }
 
 #predictPageInputBox {
   display: flex;
   flex-direction: column;
+}
+
+.predictPageSmallBox h2 {
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+.predictPageSmallBoxTitle {
+  font-size: 28px;
+}
+
+#predictPageInputBox textarea {
+  width: 99%;
+  height: 180px;
+  margin-bottom: 20px;
+}
+
+#predictPageOutput {
+  width: 99%;
+  height: 500px;
+}
+
+#predictPageCopyCurl {
+  width: 25px;
+  height: 25px;
+  background-color: transparent;
+  box-shadow: none;
+  margin-right: 20px;
+  margin-top: 12px;
+}
+
+#predictPageGenerateCurl {
+  width: 26px;
+  height: 26px;
+  background-color: transparent;
+  box-shadow: none;
+  margin-top: 12px;
+  margin-right: 10px;
+}
+
+#predictPageCurlBox {
+  display: flex;
+  flex-direction: row;
+}
+
+#predictPageCurlBoxGrow {
+  flex-grow: 1;
+}
+
+#predictPageButton {
+  display: flex;
+  justify-content: center;
+  margin-top: -5px;
+}
+
+#predictPageGoToBatchPage {
+  position: absolute;
+  top: 85px;
+  right: 10px;
 }
 </style>

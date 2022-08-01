@@ -1,5 +1,6 @@
 import time
 import joblib
+from pypmml import Model
 
 
 class Model:
@@ -9,6 +10,41 @@ class Model:
         # self.algo = xxx
         # self.input = xxx
         # self.output = xxx
+        self.model = Model.fromFile(file)
+        self.algo = self.model.algorithmName
+        self.input = []
+        self.output = []
+        for i in range(0, len(self.model.inputNames)):
+            self.input.append({
+                'name': 'feature{}'.format(i+1),
+                'type': 'double',
+                'measure': 'continuous',
+                'value': 'any',
+            })
+        if hasattr(self.model, 'inputNames'):
+            for i in range(0, len(self.model.inputNames)):
+                self.input[i]['name'] = self.model.inputNames[i]
+
+        if  len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
+            output_type = 'integer'
+            output_measure = 'nominal'
+            output_value = self.model.classes
+        elif len(self.model.classes):
+            output_type = 'double'
+            output_measure = 'nominal'
+            output_value = self.model.classes
+        else:
+            output_type = 'double'
+            output_measure = 'continuous'
+            output_value = 'any'
+
+        for i in range(0, len(self.model.targetNames)):
+            self.output.append({
+                'name': self.model.targetNames[i],
+                'type': output_type,
+                'measure': output_measure,
+                'value': output_value
+            })
         pass
 
     def onnxInit(self, file):

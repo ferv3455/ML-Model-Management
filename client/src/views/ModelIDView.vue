@@ -305,7 +305,7 @@ export default {
   box-shadow: none;
   width: 30px;
   height: 30px;
-  margin-left: 40px;
+  margin-left: 10px;
 }
 
 #modelIDPageStatusBox {

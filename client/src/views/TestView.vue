@@ -10,7 +10,7 @@
         <div id="testPageShowMode">
           <p>当前模式：{{ mode }}</p>
           <button @click="changeMode" id="testPageChangeMode">
-            <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" alt="changeIcon">
+            <img class="changeStatusIcon" title="切换输入模式" src="../assets/changeStatusIcon.png" alt="changeIcon">
           </button>
           <div style="flex-grow: 1"></div>
           <button @dblclick="clear" id="testPageClearButton">

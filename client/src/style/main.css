@@ -24,6 +24,10 @@ textarea {
     line-height: 1.5;
 }
 
+img {
+    z-index: 20;
+}
+
 input::file-selector-button {
     width: 120px;
     height: 30px;

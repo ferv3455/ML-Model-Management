@@ -19,6 +19,9 @@
         <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
         上传
       </button>
+      <button @click="goToModelPage" id="goToModelPageButton" class="roundButton returnButton">
+        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      </button>
     </div>
   </div>
 </template>
@@ -48,6 +51,14 @@ export default {
     uploadNewModel(event) {
       // TODO
       // 将上传信息提交给后端，后端回应后执行相应操作
+
+    },
+    goToModelPage(event) {
+      this.$router.push({
+        name: 'model',
+        params: {
+        },
+      });
     },
   },
   mounted() {

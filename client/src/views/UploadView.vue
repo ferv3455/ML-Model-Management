@@ -34,8 +34,24 @@ export default {
   },
   methods: {
     uploadNewModel(event) {
-      // TODO
-      // 将上传信息提交给后端，后端回应后执行相应操作
+      // Model upload
+      path = '/model/' + this.modelID.toString() + '/test';
+      let f = document.getElementById("uploadPageEnterModelFile").files[0];
+      axios.post(getBackUrl(path), {
+        modelID: this.modelID,
+        modelType: this.modelType,
+        modelDescription: this.modelDescription,
+        file: f,
+      })
+        .then((res) => {
+          this.$router.push({
+            name: 'model',
+          });
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
   },
 };

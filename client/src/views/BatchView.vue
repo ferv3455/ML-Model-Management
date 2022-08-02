@@ -53,7 +53,7 @@ export default {
     upload(event) {
       // FileUpload
       // 将上传文件提交给后端
-      path = '/model/' + this.modelID.toString() + '/predict/batch/';
+      path = '/model/' + this.modelID.toString() + '/predict/batch';
       axios.post(getBackUrl(path), {
 
       })
@@ -76,7 +76,7 @@ export default {
   },
   mounted() {
     // getBatchInfo
-    path = '/model/' + this.modelID.toString() + '/predict/batch/';
+    path = '/model/' + this.modelID.toString() + '/predict/batch';
     axios.get(getBackUrl(path), {
       params: {
         modelID: this.modelID,

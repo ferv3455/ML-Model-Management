@@ -2,7 +2,8 @@
   <div id="predictPageDivBox">
     <h1>
       部署接口页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceID }}</div>
+      <div class="modelNowInService">当前模型：{{ modelID }}</div>
     </h1>
     <div id="predictPageBox">
       <div class="predictPageSmallBox" id="predictPageInputBox">
@@ -29,7 +30,7 @@
       </div>
     </div>
     <button @click="goToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
-    <button @click="goToModelIDPage" id="predictPageGoToModelIDPage" class="roundButton returnButton">
+    <button @click="goToServicePage" id="predictPageGoToServicePage" class="roundButton returnButton">
       <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
@@ -53,6 +54,7 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      serviceID: this.$route.params.serviceID,
       output: 'this is output!', // 测试用，提交后等待后端返回输出
       jsonInput: '',
       curlInput: '',
@@ -75,12 +77,13 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
+          serviceID: this.serviceID,
         },
       });
     },
-    goToModelIDPage(event) {
+    goToServicePage(event) {
       this.$router.push({
-        name: 'modelID',
+        name: 'service',
         params: {
           modelID: this.modelID,
         },

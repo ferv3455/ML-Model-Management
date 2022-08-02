@@ -94,3 +94,9 @@ textarea {
     font-size: 18px;
     margin-top: 5px;
 }
+
+.modelNowInService {
+    font-size: 16px;
+    margin-top: 3px;
+    color: var(--buttonColor);
+}

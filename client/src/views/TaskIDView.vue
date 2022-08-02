@@ -2,7 +2,8 @@
   <div id="taskIDPageDivBox">
     <h1>
       任务详情页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceID }}</div>
+      <div class="modelNowInService">当前模型：{{ modelID }}</div>
     </h1>
     <div id="taskIDPageInfoBox">
       <div class="taskIDPageInfoSmallBox">
@@ -10,13 +11,13 @@
         <p>{{ taskID }}</p>
       </div>
       <div class="taskIDPageInfoSmallBox">
-        <p class="taskIDPageInfoBoxTitle">任务状态： </p>
+        <p class="taskIDPageInfoBoxTitle" id="taskIDPageInfoStatus">任务状态： </p>
         <p>{{ status }}</p>
       </div>
       <div v-if="status === 'finished'">
         <p class="taskIDPageInfoBoxTitle">任务结果：</p>
         <textarea v-model="result" id="testIDPageResult" readonly>
-      </textarea>
+        </textarea>
       </div>
     </div>
     <button @click="goToBatchPage" id="goToBatchPageButton" class="roundButton returnButton">
@@ -42,6 +43,7 @@ export default {
     return {
       modelID: this.$route.params.modelID,
       taskID: this.$route.params.taskID,
+      serviceID: this.$route.params.serviceID,
       status: 'finished', // 从后端获取
       result: 'this is a result!', // 从后端获取
     };
@@ -88,7 +90,7 @@ export default {
 
 #taskIDPageInfoBox p {
   margin: 0;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
 }
 
 .taskIDPageInfoBoxTitle {
@@ -99,10 +101,10 @@ export default {
 .taskIDPageInfoSmallBox {
   display: flex;
   margin: 0;
-  margin-bottom: 15px;
 }
 
 #testIDPageResult {
+  margin-top: -10px;
   width: 100%;
   height: 200px;
 }

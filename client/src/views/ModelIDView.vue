@@ -7,21 +7,15 @@
       <div id="modelIDPageModelDetailBasic">
         <p class="modelIDPageModelInfo">ID</p>
         <p class="modelIDPageGetModelInfo">{{ modelID }}</p>
-        <p class="modelIDPageModelInfo">描述</p>
-        <p class="modelIDPageGetModelInfo">{{ modelDes }}</p>
         <p class="modelIDPageModelInfo">类型</p>
         <p class="modelIDPageGetModelInfo">{{ modelType }}</p>
         <p class="modelIDPageModelInfo">算法</p>
         <p class="modelIDPageGetModelInfo">{{ modelAlgo }}</p>
-        <p class="modelIDPageModelInfo">状态</p>
-        <div id="modelIDPageStatusBox">
-          <p class="modelIDPageGetModelInfo">{{ modelStatus }}</p>
-          <button @click="changeModelStatus" id="modelIDPageChangeModelStatus">
-            <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
-          </button>
-        </div>
         <p class="modelIDPageModelInfo">上传时间</p>
         <p class="modelIDPageGetModelInfo">{{ modelTime }}</p>
+        <!--TODO 添加换行时的自适应 -->
+        <p class="modelIDPageModelInfo">描述</p>
+        <textarea class="modelIDPageGetModelInfo" id="modelIDPageModelDes" v-model="modelDes"></textarea>
       </div>
       <div id="modelIDPageModelVar">
         <div class="modelIDPageModelVarTable">
@@ -59,19 +53,9 @@
           </table>
         </div>
       </div>
-      <div id="modelIDPageModelTimeInfo">
-        <p class="modelIDPageModelInfo">执行次数</p>
-        <p class="modelIDPageGetModelInfo">{{ modelCount }}</p>
-        <p class="modelIDPageModelInfo">平均响应时间</p>
-        <p class="modelIDPageGetModelInfo">{{ modelAverResTime }}ms</p>
-        <p class="modelIDPageModelInfo">最大响应时间</p>
-        <p class="modelIDPageGetModelInfo">{{ modelMaxResTime }}ms</p>
-        <p class="modelIDPageModelInfo">最小响应时间</p>
-        <p class="modelIDPageGetModelInfo">{{ modelMinResTime }}ms</p>
-      </div>
       <div>
         <button @click="goToTestPage" id="modelIDPageGoToTestPage">进入模型测试</button>
-        <button @click="goToPredictPage" id="modelIDPageGoToPredictPage">进入部署接口页面</button>
+        <button @click="goToServicePage" id="modelIDPageGoToServicePage">进入服务列表</button>
       </div>
     </div>
     <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton returnButton">
@@ -86,15 +70,12 @@ import axios from 'axios';
 function changeModelDetailSize() {
   const cont = document.getElementById('modelIDPageModelDetailBasic');
   const cont2 = document.getElementById('modelIDPageModelVar');
-  const cont3 = document.getElementById('modelIDPageModelTimeInfo');
   if (window.innerWidth <= 800) {
     cont.style.width = `${window.innerWidth * 0.95}px`;
     cont2.style.width = `${window.innerWidth * 0.95}px`;
-    cont3.style.width = `${window.innerWidth * 0.95}px`;
   } else {
     cont.style.width = '700px';
     cont2.style.width = '700px';
-    cont3.style.width = '700px';
   }
 }
 
@@ -103,11 +84,10 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: this.$route.params.modelID,
-      modelDes: 'xxxxxxxx',
+      modelDes: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
       modelTime: '13:20',
-      modelStatus: 'stop',
       modelInputs: [
         {
           name: 'input1',
@@ -154,10 +134,6 @@ export default {
           value: 123,
         },
       ],
-      modelCount: 17,
-      modelAverResTime: 231,
-      modelMaxResTime: 7912,
-      modelMinResTime: 120,
     };
   },
   methods: {
@@ -186,9 +162,9 @@ export default {
         },
       });
     },
-    goToPredictPage(event) {
+    goToServicePage(event) {
       this.$router.push({
-        name: 'predict',
+        name: 'service',
         params: {
           modelID: this.modelID,
         },
@@ -242,6 +218,7 @@ export default {
   flex-direction: column;
   padding: 20px;
   align-items: center;
+  margin-bottom: 20px;
 }
 
 .modelIDPageModelVarTable {
@@ -274,38 +251,8 @@ export default {
   padding: 5px;
 }
 
-#modelIDPageModelTimeInfo {
-  margin-top: 35px;
-  margin-bottom: 35px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
-  padding: 20px;
-  padding-bottom: 30px;
-  display: grid;
-  grid-template-columns: 30% 20% 30% 20%;
-  grid-template-rows: 50px 50px;
-}
-
-#modelIDPageModelTimeInfo .modelIDPageModelInfo {
-  text-align: right;
-  margin-right: 25px;
-  font-weight: bolder;
-}
-
 #modelIDPageInputTable {
   margin-bottom: 30px;
-}
-
-#modelIDPageChangeModelStatus {
-  background-color: transparent;
-  color: transparent;
-  box-shadow: none;
-  width: 30px;
-  height: 30px;
-  margin-left: 10px;
 }
 
 #modelIDPageStatusBox {
@@ -320,5 +267,12 @@ export default {
 
 #modelIDPageGoToTestPage {
   margin-right: 30px;
+}
+
+#modelIDPageModelDes {
+  background-color: transparent;
+  width: 380%;
+  margin-top: 15px;
+  height: 50px;
 }
 </style>

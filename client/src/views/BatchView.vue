@@ -2,7 +2,8 @@
   <div id="batchPageDivBox">
     <h1>
       批量任务列表页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceID }}</div>
+      <div class="modelNowInService">当前模型：{{ modelID }}</div>
     </h1>
     <table id="batchPageTaskTable">
       <tr>
@@ -12,7 +13,7 @@
       <tr v-for="task in tasks" :key="task" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='transparent'">
         <td>
-          <router-link :to="{ name: 'task', params: { modelID: modelID, taskID: task.id } }">
+          <router-link :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, taskID: task.id } }">
             {{ task.id }}
           </router-link>
         </td>
@@ -22,7 +23,7 @@
     <div id="batchPageAddTaskArea">
       <h2>创建新任务</h2>
       <!--TODO 还未确定可输入文件的类型！（跟后端沟通后再加上）-->
-      <input id="uploadPageEnterModelFile" type="file">
+      <input id="batchPageEnterModelFile" type="file">
       <button @click="upload" id="batchPageUploadButton">添加</button>
     </div>
     <button @click="goToPredictPage" id="BatchPageGoTopredictPage" class="roundButton returnButton">
@@ -47,6 +48,7 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      serviceID: this.$route.params.serviceID,
       // 需从后端请求当前存在的tasks
       tasks: [{
         id: 'task1',
@@ -72,6 +74,7 @@ export default {
         name: 'predict',
         params: {
           modelID: this.modelID,
+          serviceID: this.serviceID,
         },
       });
     },
@@ -138,7 +141,7 @@ export default {
   margin-bottom: 15px;
 }
 
-#uploadPageEnterModelFile {
+#batchPageEnterModelFile {
   width: 100%;
   margin-bottom: 20px;
 }

@@ -49,36 +49,43 @@ def testModel(modelID):
     return jsonify('test!')
 
 
-@app.route('/model/<modelID>/service', methods=['POST'])
-def changeModelStatus(modelID):
+@app.route('/model/<modelID>/service', methods=['GET'])
+def getAllServices(modelID):
     # TODO
     pass
     return jsonify('test!')
 
 
-@app.route('/model/<modelID>/predict/quick', methods=['POST'])
-def quickPredict(modelID):
+@app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
+def changeServiceStatus(modelID, serviceID):
     # TODO
     pass
     return jsonify('test!')
 
 
-@app.route('/model/<modelID>/predict/batch', methods=['POST'])
-def batchPredict(modelID):
+@app.route('/model/<modelID>/service/<serviceID>/quick', methods=['POST'])
+def quickPredict(modelID, serviceID):
     # TODO
     pass
     return jsonify('test!')
 
 
-@app.route('/model/<modelID>/predict/batch', methods=['GET'])
+@app.route('/model/<modelID>/service/<serviceID>/task', methods=['POST'])
+def batchPredict(modelID, serviceID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
+@app.route('/model/<modelID>/service/<serviceID>/task', methods=['GET'])
 def getAllTasks(modelID):
     # TODO
     pass
     return jsonify('test!')
 
 
-@app.route('/model/<modelID>/predict/batch/<taskID>', methods=['GET'])
-def getTaskInfo(modelID, taskID):
+@app.route('/model/<modelID>/service/<serviceID>/task/<taskID>', methods=['GET'])
+def getTaskInfo(modelID, serviceID, taskID):
     # TODO
     pass
     return jsonify('test!')

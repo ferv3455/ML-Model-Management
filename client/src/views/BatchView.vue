@@ -20,7 +20,7 @@
         <td>{{ task.status }}</td>
       </tr>
     </table>
-    <div id="batchPageAddTaskArea">
+    <div id="batchPageAddTaskArea" class="divUse">
       <h2>创建新任务</h2>
       <!--TODO 还未确定可输入文件的类型！（跟后端沟通后再加上）-->
       <input id="batchPageEnterModelFile" type="file">
@@ -124,11 +124,6 @@ export default {
   width: 100%;
   flex-grow: 1;
   margin: 10px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
   display: flex;
   flex-direction: column;

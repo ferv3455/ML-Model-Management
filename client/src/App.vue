@@ -2,7 +2,7 @@
   <div id="appBox">
     <nav>
       <img id="logoImg" src="./assets/s02big.png" alt="logo">
-      <p id="navTeamName">TeAM</p>
+      <p id="navTeamName" class="projectTitle">TeAM</p>
       <router-link id="toHomeNav" to="/">
         <img id="homeIcon" src="./assets/homeIcon.png" alt="homeIcon">
         <p>主页</p>
@@ -39,10 +39,20 @@
         </a>
       </div>
     </footer>
+    <img src="./assets/robotPic.png" alt="" id="backGroundRobotPic">
   </div>
 </template>
 
 <style>
+#backGroundRobotPic {
+  position: fixed;
+  z-index: -50;
+  opacity: 0.1;
+  top: 100px;
+  right: 10px;
+  width: 60%;
+}
+
 #logoImg {
   height: 75%;
   margin-left: 10px;
@@ -69,7 +79,6 @@ nav {
   margin-left: 15px;
   font-weight: bolder;
   flex-grow: 1;
-  font-family: 'Courier New', Courier, monospace;
 }
 
 #homeIcon {

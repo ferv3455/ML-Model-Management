@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import ModelView from '../views/ModelView.vue';
+import MainView from '../views/MainView.vue';
 
 const routes = [
   {
     path: '/',
+    name: 'main',
+    component: MainView,
+  },
+  {
+    path: '/model',
     name: 'model',
-    component: ModelView,
+    component: () => import('../views/ModelView.vue'),
   },
   {
     path: '/upload',

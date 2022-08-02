@@ -98,5 +98,16 @@ textarea {
 .modelNowInService {
     font-size: 16px;
     margin-top: 3px;
-    color: var(--buttonColor);
+}
+
+.projectTitle {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.divUse {
+    border-style: solid;
+    border-color: var(--textColor);
+    border-radius: 10px;
+    border-width: 3px;
+    box-sizing: border-box;
 }

@@ -9,6 +9,7 @@
     --navTextColor: #ffffff;
     --buttonTransColor: #e2eafc;
     --importantColor: rgb(246, 136, 141);
+    --mainPageNotImportantTextColor: #7e9feb;
 }
 
 button {
@@ -43,4 +44,17 @@ nav {
 .roundButton {
     background-color: transparent;
     border-color: var(--textColor);
+}
+
+table {
+    background-color: white;
+}
+
+.divUse {
+    background-color: white;
+
+}
+
+.modelNowInService {
+    color: var(--mainPageNotImportantTextColor);
 }

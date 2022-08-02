@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="mainPageDivBox">
     <h1 id="mainPageTitle">
       主页:模型列表页面
     </h1>
@@ -12,7 +12,8 @@
         <th>上传时间</th>
         <th>服务状态</th>
       </tr>
-      <tr v-for="model in models" :key="model">
+      <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
+        onmouseout="this.style.backgroundColor='transparent'">
         <td>
           <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
             {{ model.id }}
@@ -21,18 +22,29 @@
         <td>{{ model.des }}</td>
         <td>{{ model.type }}</td>
         <td>{{ model.algo }}</td>
-        <td>{{ model.time }}</td>
+        <td>{{ formatDate(model.time) }}</td>
         <td>{{ model.status }}</td>
       </tr>
-
     </table>
-    <button @click="changePageToUpload" id="mainPageUploadButton">上传新模型</button>
+    <button @click="changePageToUpload" id="mainPageUploadButton">
+      <img id="mainPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+      上传模型
+    </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
 import getBackUrl from '../getIP';
+
+function changeMainPageDivBoxSize() {
+  const cont = document.getElementById('mainPageDivBox');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.95}px`;
+  } else {
+    cont.style.width = `${window.innerWidth * 0.80}px`;
+  }
+}
 
 export default {
   data() {
@@ -46,8 +58,15 @@ export default {
         name: 'upload',
       });
     },
+    formatDate(value) {
+      const date = new Date(value * 1000);
+      return date.toLocaleString();
+    },
   },
   mounted() {
+    changeMainPageDivBoxSize();
+    window.onresize = changeMainPageDivBoxSize;
+
     axios.get(getBackUrl('/model'), {
       params: {},
     }).then((res) => {
@@ -61,4 +80,44 @@ export default {
 </script>
 
 <style>
+#mainPageDivBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#mainPageUploadTable {
+  min-width: 100%;
+  text-align: center;
+  border-style: solid;
+  border-color: var(--textColor);
+  border-radius: 10px;
+  border-width: 3px;
+}
+
+#mainPageUploadTable th {
+  border-bottom-style: solid;
+  border-color: var(--textColor);
+  border-collapse: collapse;
+  border-width: 2px;
+  padding: 7px;
+}
+
+#mainPageUploadTable td {
+  padding: 7px;
+}
+
+#mainPageUploadButton {
+  margin-top: 25px;
+  display: flex;
+  align-items: center;
+}
+
+#mainPageUploadIcon {
+  width: 30px;
+  margin-left: 15px;
+  margin-right: 5px;
+}
 </style>

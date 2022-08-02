@@ -26,7 +26,7 @@
         <td>
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
-            <button @click="changeModelStatus" class="changeStatusButton">
+            <button @click="changeStatus(service.id)" class="changeStatusButton">
               <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
             </button>
           </div>
@@ -36,8 +36,8 @@
         <td>{{ service.maxResTime }}</td>
         <td>{{ service.minResTime }}</td>
         <td>
-          <button @dblclick="clear" class="servicePageClearButton">
-            <img src="../assets/deleteIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
+          <button @dblclick="clear(service.id)" class="servicePageClearButton">
+            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
           </button>
         </td>
       </tr>
@@ -85,16 +85,16 @@ export default {
         {
           id: 'service2',
           time: 'xxx',
-          status: 'finished',
+          status: 'stopped',
           count: 'xxx',
           averResTime: 'xxx',
           maxResTime: 'xxx',
           minResTime: 'xxx',
         },
         {
-          id: 'service2',
+          id: 'service3',
           time: 'xxx',
-          status: 'waiting',
+          status: 'stopped',
           count: 'xxx',
           averResTime: 'xxx',
           maxResTime: 'xxx',
@@ -112,6 +112,32 @@ export default {
           modelID: this.modelID,
         },
       });
+    },
+    changeStatus(serviceID) {
+      for (let i = 0; i < this.services.length; i += 1) {
+        if (this.services[i].id === serviceID) {
+          if (this.services[i].status === 'running') {
+            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
+            this.services[i].status = 'stopped';
+          } else {
+            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
+            this.services[i].status = 'running';
+          }
+          break;
+        }
+      }
+    },
+    clear(serviceID) {
+      for (let i = 0; i < this.services.length; i += 1) {
+        if (this.services[i].id === serviceID) {
+          // TODO 向后段发送删除服务请求，成功后执行下面代码
+          for (let j = i; j < this.services.length - 1; j += 1) {
+            this.services[j] = this.services[j + 1];
+          }
+          this.services.pop();
+          break;
+        }
+      }
     },
     upload(event) {
       // TODO 向后端添加一个新服务

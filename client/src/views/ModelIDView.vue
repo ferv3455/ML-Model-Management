@@ -15,7 +15,7 @@
         <p class="modelIDPageGetModelInfo">{{ modelTime }}</p>
         <!--TODO 添加换行时的自适应 -->
         <p class="modelIDPageModelInfo">描述</p>
-        <textarea class="modelIDPageGetModelInfo" id="modelIDPageModelDes" v-model="modelDes"></textarea>
+        <p class="modelIDPageGetModelInfo" id="modelIDPageModelDes">{{ modelDes }}</p>
       </div>
       <div id="modelIDPageModelVar">
         <div class="modelIDPageModelVarTable">
@@ -84,7 +84,7 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: this.$route.params.modelID,
-      modelDes: 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
+      modelDes: 'xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
       modelTime: '13:20',
@@ -198,7 +198,7 @@ export default {
   padding-bottom: 25px;
   display: grid;
   grid-template-columns: 20% 20% 25% 35%;
-  grid-template-rows: 50px 50px 50px;
+  grid-template-rows: 50px 50px auto;
 }
 
 #modelIDPageModelDetailBasic .modelIDPageModelInfo {
@@ -272,7 +272,10 @@ export default {
 #modelIDPageModelDes {
   background-color: transparent;
   width: 380%;
-  margin-top: 15px;
-  height: 50px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  margin-top: 20px;
+  height: auto;
 }
 </style>

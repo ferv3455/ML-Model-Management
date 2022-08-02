@@ -77,8 +77,16 @@ def testModel(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['POST'])
-def changeModelStatus(modelID):
+@app.route('/model/<modelID>/service', methods=['GET'])
+def getAllServices(modelID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
+@app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
+def changeServiceStatus(modelID, serviceID):
+    # TODO
     cmd = request.get_json()
     model = getModel(modelID)
 
@@ -92,8 +100,9 @@ def changeModelStatus(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/predict/quick', methods=['POST'])
-def quickPredict(modelID):
+@app.route('/model/<modelID>/service/<serviceID>/quick', methods=['POST'])
+def quickPredict(modelID, serviceID):
+    # TODO
     model = getModel(modelID)
     if model.status != 'start':
         return jsonify(None)                    # TODO: model not available
@@ -104,8 +113,9 @@ def quickPredict(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/predict/batch', methods=['POST'])
-def batchPredict(modelID):
+@app.route('/model/<modelID>/service/<serviceID>/task', methods=['POST'])
+def batchPredict(modelID, serviceID):
+    # TODO
     params = request.get_json()
     file = params['file']
     model = getModel(modelID)
@@ -119,8 +129,8 @@ def batchPredict(modelID):
     return jsonify({'id': 0})
 
 
-@app.route('/model/<modelID>/predict/batch', methods=['GET'])
-def getAllTasks(modelID):
+@app.route('/model/<modelID>/service/<serviceID>/task', methods=['POST'])
+def batchPredict(modelID, serviceID):
     # model = getModel(modelID)
     # param_names = ('id', 'status')
     # res = {'tasks': [{key: getattr(t, key)
@@ -129,8 +139,8 @@ def getAllTasks(modelID):
     return jsonify({'tasks': []})
 
 
-@app.route('/model/<modelID>/predict/batch/<taskID>', methods=['GET'])
-def getTaskInfo(modelID, taskID):
+@app.route('/model/<modelID>/service/<serviceID>/task/<taskID>', methods=['GET'])
+def getTaskInfo(modelID, serviceID, taskID):
     # task = getTask(modelID, taskID)
     # res = {'status': task.status}
     # if res['status'] == 'finished':

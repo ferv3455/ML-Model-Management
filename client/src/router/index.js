@@ -23,17 +23,22 @@ const routes = [
     component: () => import('../views/TestView.vue'),
   },
   {
-    path: '/predict/:modelID',
+    path: '/service/:modelID',
+    name: 'service',
+    component: () => import('../views/ServiceView.vue'),
+  },
+  {
+    path: '/predict/:modelID/:serviceID',
     name: 'predict',
     component: () => import('../views/PredictView.vue'),
   },
   {
-    path: '/batch/:modelID',
+    path: '/batch/:modelID/:serviceID',
     name: 'batch',
     component: () => import('../views/BatchView.vue'),
   },
   {
-    path: '/task/:modelID/:taskID',
+    path: '/task/:modelID/:serviceID/:taskID',
     name: 'task',
     component: () => import('../views/TaskIDView.vue'),
   },

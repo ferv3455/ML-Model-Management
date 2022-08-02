@@ -21,16 +21,18 @@
           <p> 电子邮箱: yczddgj@126.com </p>
           <img id="phoneIcon" src="./assets/phoneIcon.png" alt="phoneIcon">
           <p> 联络电话: +86-15611462910</p>
+          <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
+          <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>
           <img id="teamIcon" src="./assets/teamIcon.png" alt="teamIcon">
           <div id="teamAvatarBox">
             <p> 团队成员:</p>
-            <img class="teamAvatar" src="./assets/avatar/gxy.png" alt="avatar">
-            <img class="teamAvatar" src="./assets/avatar/xyy.jpg" alt="avatar">
-            <img class="teamAvatar" src="./assets/avatar/xrf.jpg" alt="avatar">
-            <img class="teamAvatar" src="./assets/avatar/fjj.jpg" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/gxy.png" title="郭心源" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/xyy.jpg" title="谢苑瑜" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/xrf.jpg" title="幸若凡" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/fjj.jpg" title="范骏捷" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/gyc.jpg" title="顾洋丞" alt="avatar">
+            <img class="teamAvatar" src="./assets/avatar/wqj.jpg" title="王麒杰" alt="avatar">
           </div>
-          <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
-          <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>
         </div>
         <a href="https://git.tsinghua.edu.cn/xy-guo20/ml-model-manage-system">
           <img id="gitIcon" src="./assets/gitIcon.png" alt="gitIcon">
@@ -120,7 +122,7 @@ footer {
 .footerInfo {
   display: grid;
   align-items: center;
-  grid-template-columns: 50px 300px;
+  grid-template-columns: 50px 380px;
   grid-template-rows: 40px 40px 40px 40px;
 }
 
@@ -150,7 +152,7 @@ footer {
 }
 
 .teamAvatar {
-  width: 40px;
+  width: 35px;
   border-radius: 7px;
   margin: 5px;
 }

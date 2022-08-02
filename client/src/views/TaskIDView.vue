@@ -17,6 +17,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 export default {
   data() {
@@ -38,8 +39,24 @@ export default {
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
+    // getTaskInfo
+    path = '/model/' + this.modelID.toString() + '/predict/batch/' + this.taskID.toString();
+    axios.get(getBackUrl(path), {
+      params: {
+        modelID: this.modelID,
+        taskID: this.taskID,
+      }
+    })
+      .then((res) => {
+        this.status = res.data.status;
+        if (this.status == 'finished') {
+          this.result = res.data.result;
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 </script>

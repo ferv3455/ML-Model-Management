@@ -51,9 +51,19 @@ export default {
   },
   methods: {
     upload(event) {
-      // TODO
+      // FileUpload
       // 将上传文件提交给后端
-      // 将后端返回的任务ID提示给用户（通过alert方法）
+      path = '/model/' + this.modelID.toString() + '/predict/batch/';
+      axios.post(getBackUrl(path), {
+
+      })
+        .then((res) => {
+          // 将后端返回的任务ID提示给用户（通过alert方法）
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     goToPredictPage(event) {
       this.$router.push({
@@ -65,8 +75,20 @@ export default {
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
+    // getBatchInfo
+    path = '/model/' + this.modelID.toString() + '/predict/batch/';
+    axios.get(getBackUrl(path), {
+      params: {
+        modelID: this.modelID,
+      }
+    })
+      .then((res) => {
+        this.tasks = res.data.tasks;
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 

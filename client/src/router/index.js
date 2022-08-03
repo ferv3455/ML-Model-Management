@@ -47,6 +47,11 @@ const routes = [
     name: 'task',
     component: () => import('../views/TaskIDView.vue'),
   },
+  {
+    path: '/:catchAll(.*)',
+    name: 'error',
+    component: () => import('../views/404View.vue'),
+  },
 ];
 
 const router = createRouter({

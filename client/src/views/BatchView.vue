@@ -68,7 +68,7 @@ export default {
     upload(event) {
       // FileUpload
       // 将上传文件提交给后端
-      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
+      let path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
       axios.post(getBackUrl(path), {
 
       })

@@ -166,7 +166,7 @@ export default {
     window.onresize = changeModelDetailSize;
 
     // get modelID info
-    path = '/model/' + this.modelID.toString();
+    let path = '/model/' + this.modelID.toString();
     axios.get(getBackUrl(path), {
       params: {},
     })

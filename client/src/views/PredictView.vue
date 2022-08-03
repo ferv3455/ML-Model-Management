@@ -66,7 +66,7 @@ export default {
       const submitObject = JSON.parse(this.jsonInput);
       // console.log(submitObject);
       // put submitObject
-      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
+      let path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
       axios.post(getBackUrl(path), {
         submitObject: submitObject,
       })

@@ -125,7 +125,7 @@ export default {
             option = 'start'
           }
           // service change request
-          path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          let path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
           axios.post(getBackUrl(path), {
             opr: option,
           })
@@ -154,7 +154,7 @@ export default {
         if (this.services[i].id === serviceID) {
           let option = 'delete';
           // delete service request
-          path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          let path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
           axios.post(getBackUrl(path), {
             opr: option,
           })

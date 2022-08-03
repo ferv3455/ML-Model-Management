@@ -61,7 +61,7 @@ export default {
   },
   mounted() {
     // getTaskInfo
-    path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task/' + this.taskID.toString();
+    let path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task/' + this.taskID.toString();
     axios.get(getBackUrl(path), {
       params: {}
     })

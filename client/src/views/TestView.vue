@@ -99,7 +99,7 @@ export default {
       }
       console.log(submitObject);
       // put submitObject
-      path = '/model/' + this.modelID.toString() + '/test';
+      let path = '/model/' + this.modelID.toString() + '/test';
       axios.post(getBackUrl(path), {
         submitObject: submitObject,
       })

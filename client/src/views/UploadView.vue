@@ -51,7 +51,7 @@ export default {
   methods: {
     uploadNewModel(event) {
       // Model upload
-      path = '/model';
+      let path = '/model';
       let f = document.getElementById("uploadPageEnterModelFile").files[0];
       axios.post(getBackUrl(path), {
         id: this.modelID,

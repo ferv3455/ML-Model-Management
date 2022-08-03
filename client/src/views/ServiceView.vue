@@ -42,7 +42,7 @@
         </td>
       </tr>
     </table>
-    <div id="servicePageAddServiceArea">
+    <div id="servicePageAddServiceArea" class="divUse">
       <h2>添加新服务</h2>
       <div id="addServiceAreaDivBox">
         <p>新服务ID :</p>
@@ -258,11 +258,6 @@ export default {
   width: 100%;
   flex-grow: 1;
   margin: 10px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
   display: flex;
   flex-direction: column;

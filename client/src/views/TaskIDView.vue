@@ -5,7 +5,7 @@
       <div class="modelNow">当前服务：{{ serviceID }}</div>
       <div class="modelNowInService">当前模型：{{ modelID }}</div>
     </h1>
-    <div id="taskIDPageInfoBox">
+    <div id="taskIDPageInfoBox" class="divUse">
       <div class="taskIDPageInfoSmallBox">
         <p class="taskIDPageInfoBoxTitle">当前任务：</p>
         <p>{{ taskID }}</p>
@@ -92,11 +92,6 @@ export default {
   flex-grow: 1;
   width: 100%;
   margin: 10px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
 }
 

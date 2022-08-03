@@ -5,7 +5,7 @@
       <div class="modelNow">当前模型：{{ modelID }}</div>
     </h1>
     <div id="testPageLeftRight">
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输入</h2>
         <div id="testPageShowMode">
           <p>当前模式：{{ mode }}</p>
@@ -32,7 +32,7 @@
           <button @click="submit" id="testPageSubmitButton">提交</button>
         </div>
       </div>
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输出</h2>
         <textarea v-model="output" readonly id="testPageOutput"></textarea>
       </div>
@@ -138,11 +138,6 @@ export default {
   flex-grow: 1;
   width: 100%;
   margin: 10px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
 }
 

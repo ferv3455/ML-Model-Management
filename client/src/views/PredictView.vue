@@ -6,7 +6,7 @@
       <div class="modelNowInService">当前模型：{{ modelID }}</div>
     </h1>
     <div id="predictPageBox">
-      <div class="predictPageSmallBox" id="predictPageInputBox">
+      <div class="predictPageSmallBox divUse" id="predictPageInputBox">
         <h2 class="predictPageSmallBoxTitle">Json输入</h2>
         <textarea v-model="jsonInput" id="predictPageJsonInput"></textarea>
         <div id="predictPageCurlBox">
@@ -24,7 +24,7 @@
           <button @click="submit" id="predictPageSubmitButton">提交</button>
         </div>
       </div>
-      <div class="predictPageSmallBox" id="predictPageOutputBox">
+      <div class="predictPageSmallBox divUse" id="predictPageOutputBox">
         <h2>输出</h2>
         <textarea v-model="output" id="predictPageOutput" readonly></textarea>
       </div>
@@ -139,11 +139,6 @@ export default {
   flex-grow: 1;
   width: 100%;
   margin: 10px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
 }
 

@@ -13,7 +13,7 @@
         <th>服务状态</th>
       </tr>
       <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='transparent'">
+        onmouseout="this.style.backgroundColor='white'">
         <td>
           <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
             {{ model.id }}

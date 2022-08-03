@@ -3,7 +3,7 @@
     <h1 id="uploadPageTitle">
       模型导入页面
     </h1>
-    <div id="uploadPageImportModel">
+    <div id="uploadPageImportModel" class="divUse">
       <p class="uploadPageImportModelDetail" id="uploadPageModelID">模型ID</p>
       <input v-model="modelID" id="uploadPageEnterModelID">
       <p class="uploadPageImportModelDetail" id="uploadPageModelDescription">模型描述</p>
@@ -98,11 +98,6 @@ export default {
 }
 
 #uploadPageImportModel {
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
   display: grid;
   grid-template-columns: 25% 75%;

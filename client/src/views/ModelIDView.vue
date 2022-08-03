@@ -4,7 +4,7 @@
       模型详细信息页面
     </h1>
     <div id="modelIDPageModelDetail">
-      <div id="modelIDPageModelDetailBasic">
+      <div id="modelIDPageModelDetailBasic" class="divUse">
         <p class="modelIDPageModelInfo">ID</p>
         <p class="modelIDPageGetModelInfo">{{ modelID }}</p>
         <p class="modelIDPageModelInfo">类型</p>
@@ -17,7 +17,7 @@
         <p class="modelIDPageModelInfo">描述</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelDes">{{ modelDes }}</p>
       </div>
-      <div id="modelIDPageModelVar">
+      <div id="modelIDPageModelVar" class="divUse">
         <div class="modelIDPageModelVarTable">
           <p class="modelIDPageModelInfo">输入变量列表</p>
           <table id="modelIDPageInputTable">
@@ -197,11 +197,6 @@ export default {
 }
 
 #modelIDPageModelDetailBasic {
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   padding: 20px;
   padding-bottom: 25px;
   display: grid;
@@ -217,11 +212,6 @@ export default {
 
 #modelIDPageModelVar {
   margin-top: 35px;
-  border-style: solid;
-  border-color: var(--textColor);
-  border-radius: 10px;
-  border-width: 3px;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   padding: 20px;

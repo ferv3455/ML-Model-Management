@@ -179,7 +179,7 @@ export default {
     },
     upload(event) {
       // upload new service
-      path = '/model/' + this.modelID.toString() + '/service';
+      let path = '/model/' + this.modelID.toString() + '/service';
       axios.post(getBackUrl(path), {
         id: this.newServiceID,
       })
@@ -200,7 +200,7 @@ export default {
   },
   mounted() {
     // Get Service List
-    path = '/model/' + this.modelID.toString() + '/service';
+    let path = '/model/' + this.modelID.toString() + '/service';
     axios.get(getBackUrl(path), {
       params: {},
     })

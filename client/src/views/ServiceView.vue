@@ -182,8 +182,19 @@ export default {
       })
         .then((res) => {
           if (res.data.status === 'success') {
-            // TODO
-            // 刷新列表信息（等待中）
+            // Get Service List
+            const path = `/model/${this.modelID}/service`;
+            axios.get(getBackUrl(path), {
+              params: {},
+            })
+              .then((res) => {
+                this.services = res.data.services;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            changeServicePageDivBoxSize();
+            window.onresize = changeServicePageDivBoxSize;
           } else {
             const mes = '新建服务失败';
             alert(mes);

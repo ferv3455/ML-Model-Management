@@ -69,9 +69,10 @@ export default {
       // FileUpload
       // 将上传文件提交给后端
       const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
+      const f = document.getElementById('batchPageEnterModelFile').files[0];
       axios.post(getBackUrl(path), {
-        // TODO
         // 上传文件
+        file: f,
       })
         .then((res) => {
           // 将后端返回的任务ID提示给用户

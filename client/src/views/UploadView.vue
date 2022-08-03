@@ -51,8 +51,8 @@ export default {
   methods: {
     uploadNewModel(event) {
       // Model upload
-      let path = '/model';
-      let f = document.getElementById("uploadPageEnterModelFile").files[0];
+      const path = '/model';
+      const f = document.getElementById('uploadPageEnterModelFile').files[0];
       axios.post(getBackUrl(path), {
         id: this.modelID,
         type: this.modelType,
@@ -64,9 +64,8 @@ export default {
             this.$router.push({
               name: 'model',
             });
-          }
-          else {
-            let mes = '创建新模型失败：' + res.data.reason;
+          } else {
+            const mes = `创建新模型失败：${res.data.reason}`;
             alert(mes);
           }
         })

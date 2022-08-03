@@ -66,9 +66,9 @@ export default {
       const submitObject = JSON.parse(this.jsonInput);
       // console.log(submitObject);
       // put submitObject
-      let path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
+      const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
       axios.post(getBackUrl(path), {
-        submitObject: submitObject,
+        submitObject,
       })
         .then((res) => {
           this.output = res.data.output;
@@ -81,15 +81,16 @@ export default {
     generateCurl(event) {
       this.curlInput = 'Get curl code!!';
       // 生成向后端请求的curl代码
-      let curlCode = 'curl -d \"';
-      const Object = JSON.parse(this.jsonInput);
-      for (key in Object) {
-        curlCode = curlCode + key + "=" + Object[key] + "&";
-      }
+      let curlCode = 'curl -d "';
+      const jsonObject = JSON.parse(this.jsonInput);
+      Object.keys(jsonObject).map((key) => {
+        curlCode = `${curlCode}${key}=${jsonObject[key]}&`;
+        return null;
+      });
       curlCode.slice(0, curlCode.length - 1);
-      curlCode += "\" -X POST ";
-      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
-      let posurl = getBackUrl(path);
+      curlCode += '" -X POST ';
+      const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
+      const posurl = getBackUrl(path);
       curlCode += posurl;
       this.curlInput = curlCode;
     },

@@ -120,12 +120,11 @@ export default {
           let option = '';
           if (this.services[i].status === 'running') {
             option = 'pause';
-          }
-          else {
-            option = 'start'
+          } else {
+            option = 'start';
           }
           // service change request
-          let path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          const path = `/model/${this.modelID}/service/${serviceID}`;
           axios.post(getBackUrl(path), {
             opr: option,
           })
@@ -136,9 +135,8 @@ export default {
                 } else {
                   this.services[i].status = 'running';
                 }
-              }
-              else {
-                let mes = '更改服务状态失败';
+              } else {
+                const mes = '更改服务状态失败';
                 alert(mes);
               }
             })
@@ -152,9 +150,9 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          let option = 'delete';
+          const option = 'delete';
           // delete service request
-          let path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          const path = `/model/${this.modelID}/service/${serviceID}`;
           axios.post(getBackUrl(path), {
             opr: option,
           })
@@ -164,9 +162,8 @@ export default {
                   this.services[j] = this.services[j + 1];
                 }
                 this.services.pop();
-              }
-              else {
-                let mes = '删除服务失败';
+              } else {
+                const mes = '删除服务失败';
                 alert(mes);
               }
             })
@@ -179,7 +176,7 @@ export default {
     },
     upload(event) {
       // upload new service
-      let path = '/model/' + this.modelID.toString() + '/service';
+      const path = `/model/${this.modelID}/service`;
       axios.post(getBackUrl(path), {
         id: this.newServiceID,
       })
@@ -187,9 +184,8 @@ export default {
           if (res.data.status === 'success') {
             // TODO
             // 刷新列表信息（等待中）
-          }
-          else {
-            let mes = '新建服务失败';
+          } else {
+            const mes = '新建服务失败';
             alert(mes);
           }
         })
@@ -200,7 +196,7 @@ export default {
   },
   mounted() {
     // Get Service List
-    let path = '/model/' + this.modelID.toString() + '/service';
+    const path = `/model/${this.modelID}/service`;
     axios.get(getBackUrl(path), {
       params: {},
     })

@@ -68,14 +68,15 @@ export default {
     upload(event) {
       // FileUpload
       // 将上传文件提交给后端
-      let path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
+      const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
       axios.post(getBackUrl(path), {
-
+        // TODO
+        // 上传文件
       })
         .then((res) => {
           // 将后端返回的任务ID提示给用户
-          let id_mes = '任务ID：' + res.data.id.toString();
-          alert(id_mes);
+          const idMes = `任务ID：${res.data.id}`;
+          alert(idMes);
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -94,7 +95,7 @@ export default {
   },
   mounted() {
     // getBatchInfo
-    path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
+    const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
     axios.get(getBackUrl(path), {
       params: {},
     })

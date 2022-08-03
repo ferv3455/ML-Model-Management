@@ -166,7 +166,7 @@ export default {
     window.onresize = changeModelDetailSize;
 
     // get modelID info
-    let path = '/model/' + this.modelID.toString();
+    const path = `/model/${this.modelID}`;
     axios.get(getBackUrl(path), {
       params: {},
     })
@@ -178,8 +178,7 @@ export default {
           this.modelTime = res.data.time;
           this.modelInputs = res.data.inputs;
           this.modelOutputs = res.data.outputs;
-        }
-        else {
+        } else {
           alert('模型不存在');
         }
       })

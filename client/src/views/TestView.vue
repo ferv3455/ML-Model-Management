@@ -45,6 +45,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTextPageLeftRightBoxDirection() {
   const cont = document.getElementById('testPageLeftRight');
@@ -99,9 +100,9 @@ export default {
       }
       console.log(submitObject);
       // put submitObject
-      let path = '/model/' + this.modelID.toString() + '/test';
+      const path = `/model/${this.modelID}/test`;
       axios.post(getBackUrl(path), {
-        submitObject: submitObject,
+        submitObject,
       })
         .then((res) => {
           this.output = res.data.output;

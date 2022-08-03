@@ -229,13 +229,15 @@ export default {
   width: 30px;
   height: 30px;
   margin-right: 10px;
+  padding: 0;
 }
 
 .servicePageClearButton {
-  width: 25px;
+  width: 30px;
   margin-right: 10px;
   height: auto;
   background-color: transparent;
   box-shadow: none;
+  padding: 0;
 }
 </style>

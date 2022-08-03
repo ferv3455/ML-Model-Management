@@ -2,6 +2,8 @@
     --textColor: #242f47;
     --backgroundColor: #ffffff;
     --buttonColor: #abc4ff;
+    --buttonHoverColor: #c8d7fd;
+    --buttonActiveColor: #709bff;
     --roundButtonColor: #c1d3fe;
     --hrefColor: #242f47;
     --inputColor: #e2eafc;
@@ -15,6 +17,14 @@
 button {
     background-color: var(--buttonColor);
     color: var(--navTextColor);
+}
+
+button:hover {
+    background-color: var(--buttonHoverColor);
+}
+
+button:active {
+    background-color: var(--buttonActiveColor);
 }
 
 input,

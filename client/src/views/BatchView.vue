@@ -67,7 +67,7 @@ export default {
     upload(event) {
       // FileUpload
       // 将上传文件提交给后端
-      path = '/model/' + this.modelID.toString() + '/predict/batch';
+      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
       axios.post(getBackUrl(path), {
 
       })
@@ -91,11 +91,9 @@ export default {
   },
   mounted() {
     // getBatchInfo
-    path = '/model/' + this.modelID.toString() + '/predict/batch';
+    path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task';
     axios.get(getBackUrl(path), {
-      params: {
-        modelID: this.modelID,
-      }
+      params: {},
     })
       .then((res) => {
         this.tasks = res.data.tasks;

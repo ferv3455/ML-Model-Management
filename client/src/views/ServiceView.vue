@@ -58,6 +58,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
   const cont = document.getElementById('servicePageDivBox');
@@ -116,13 +117,23 @@ export default {
     changeStatus(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          if (this.services[i].status === 'running') {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'stopped';
-          } else {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'running';
-          }
+
+          // service change request
+          path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          axios.post(getBackUrl(path), {
+            serviceStatus: this.services[i].status,
+          })
+            .then((res) => {
+              if (this.services[i].status === 'running') {
+                this.services[i].status = 'stopped';
+              } else {
+                this.services[i].status = 'running';
+              }
+              signal = 1;
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }
@@ -130,11 +141,20 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          // TODO 向后段发送删除服务请求，成功后执行下面代码
-          for (let j = i; j < this.services.length - 1; j += 1) {
-            this.services[j] = this.services[j + 1];
-          }
-          this.services.pop();
+          // delete service request
+          path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
+          axios.post(getBackUrl(path), {
+            serviceStatus: this.services[i].status,
+          })
+            .then((res) => {
+              for (let j = i; j < this.services.length - 1; j += 1) {
+                this.services[j] = this.services[j + 1];
+              }
+              this.services.pop();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }

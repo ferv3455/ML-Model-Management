@@ -64,8 +64,17 @@ export default {
     submit(event) {
       const submitObject = JSON.parse(this.jsonInput);
       // console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      // put submitObject
+      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
+      axios.post(getBackUrl(path), {
+        submitObject: submitObject,
+      })
+        .then((res) => {
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     generateCurl(event) {
       this.curlInput = 'Get curl code!!';

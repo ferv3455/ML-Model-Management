@@ -73,6 +73,37 @@ body {
     width: 25px;
 }
 
+.binIcon:hover {
+    animation: shake 600ms ease-in-out;
+}
+
+@keyframes shake {
+
+    10%,
+    90% {
+        transform: translate3d(-1px, 0, 0);
+    }
+
+    20%,
+    80% {
+        transform: translate3d(+2px, 0, 0);
+    }
+
+    30%,
+    70% {
+        transform: translate3d(-3px, 0, 0);
+    }
+
+    40%,
+    60% {
+        transform: translate3d(+3px, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(-2px, 0, 0);
+    }
+}
+
 .copyIcon {
     width: 25px;
 }
@@ -84,6 +115,11 @@ body {
 .changeStatusIcon {
     width: 30px;
     margin: 0px;
+}
+
+.changeStatusIcon:hover {
+    transform: rotate(180deg);
+    transition: transform .8s;
 }
 
 textarea {

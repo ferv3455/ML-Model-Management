@@ -24,7 +24,15 @@
           <div id="testPageFormArea">
             <div class="testPageInputVariance" v-for="variance in variances" :key="variance">
               <p>{{ variance.name }}</p>
-              <input :id="'var_' + variance.name">
+              <div v-if="variance.type !== 'image'">
+                <input :id="'var_' + variance.name">
+              </div>
+              <div v-else>
+                <input :id="'var_' + variance.name" type="file" ref="file" accept=".png, .jpg, .jpeg, .bmp"
+                  @change="onImageChange(variance.name)">
+                <img :id="'var_' + variance.name + '_image'" class="testPageUploadImage" alt="inputImage"
+                  src="../assets/emptyPic.png">
+              </div>
             </div>
           </div>
         </div>
@@ -85,6 +93,10 @@ export default {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
           inputBox.value = '';
+          if (this.variances[i].type === 'image') {
+            const imgFile = document.getElementById(`var_${this.variances[i].name}`);
+            document.getElementById(`var_${this.variances[i].name}_image`).classList.remove('testPageImageLoaded');
+          }
         }
       }
     },
@@ -95,7 +107,11 @@ export default {
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
-          submitObject[this.variances[i].name] = inputBox.value;
+          if (this.variances[i].type !== 'image') {
+            submitObject[this.variances[i].name] = inputBox.value;
+          } else {
+            // TODO图片转base64
+          }
         }
       }
       console.log(submitObject);
@@ -119,6 +135,16 @@ export default {
           modelID: this.modelID,
         },
       });
+    },
+    onImageChange(name) {
+      const imgFile = document.getElementById(`var_${name}`);
+      if (imgFile.files.length === 0) {
+        document.getElementById(`var_${name}_image`).classList.remove('testPageImageLoaded');
+      } else {
+        const imageToShow = window.URL.createObjectURL(imgFile.files[0]);
+        document.getElementById(`var_${name}_image`).src = imageToShow;
+        document.getElementById(`var_${name}_image`).classList.add('testPageImageLoaded');
+      }
     },
   },
   mounted() {
@@ -213,5 +239,13 @@ export default {
 #testPageOutput {
   width: 99%;
   height: 340px;
+}
+
+.testPageUploadImage {
+  width: 0px;
+}
+
+.testPageImageLoaded {
+  width: 150px;
 }
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="mainPageDivBox">
     <h1 id="mainPageTitle">
-      主页:模型列表页面
+      模型列表页面
     </h1>
     <table id="mainPageUploadTable">
       <tr>

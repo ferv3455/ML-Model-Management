@@ -304,10 +304,11 @@ export default {
 }
 
 .servicePageClearButton {
-  width: 30px;
+  width: 25px;
   margin-right: 10px;
-  height: auto;
+  height: 25px;
   background-color: transparent;
+  color: transparent;
   box-shadow: none;
   padding: 0;
 }

@@ -91,7 +91,7 @@ export default {
       modelInputs: [
         {
           name: 'input1',
-          type: 'double',
+          type: 'image',
           measure: 'continuous',
           value: '',
         },

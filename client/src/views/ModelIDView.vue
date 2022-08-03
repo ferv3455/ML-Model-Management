@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import getBackUrl from '@/getIP';
 import axios from 'axios';
 
 function changeModelDetailSize() {
@@ -137,17 +138,6 @@ export default {
     };
   },
   methods: {
-    changeModelStatus(event) {
-      if (this.modelStatus === 'run') {
-        // TODO
-        // 此处需要使用axios向后端发出切换模型状态的请求，成功后才可执行以下操作
-        this.modelStatus = 'stop';
-      } else {
-        // TODO
-        // 同上
-        this.modelStatus = 'run';
-      }
-    },
     backToModelPage(event) {
       this.$router.push({
         name: 'model',
@@ -175,8 +165,26 @@ export default {
     changeModelDetailSize();
     window.onresize = changeModelDetailSize;
 
-    // TODO
-    // 从后端获取数据
+    // get modelID info
+    const path = `/model/${this.modelID}`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        if (res.data.exist === true) {
+          this.modelDes = res.data.des;
+          this.modelType = res.data.type;
+          this.modelAlgo = res.data.algo;
+          this.modelTime = res.data.time;
+          this.modelInputs = res.data.inputs;
+          this.modelOutputs = res.data.outputs;
+        } else {
+          alert('模型不存在');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

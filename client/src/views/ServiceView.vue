@@ -58,6 +58,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
   const cont = document.getElementById('servicePageDivBox');
@@ -116,13 +117,32 @@ export default {
     changeStatus(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
+          let option = '';
           if (this.services[i].status === 'running') {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'stopped';
+            option = 'pause';
           } else {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'running';
+            option = 'start';
           }
+          // service change request
+          const path = `/model/${this.modelID}/service/${serviceID}`;
+          axios.post(getBackUrl(path), {
+            opr: option,
+          })
+            .then((res) => {
+              if (res.data.status === 'success') {
+                if (this.services[i].status === 'running') {
+                  this.services[i].status = 'stopped';
+                } else {
+                  this.services[i].status = 'running';
+                }
+              } else {
+                const mes = '更改服务状态失败';
+                alert(mes);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }
@@ -130,22 +150,73 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          // TODO 向后段发送删除服务请求，成功后执行下面代码
-          for (let j = i; j < this.services.length - 1; j += 1) {
-            this.services[j] = this.services[j + 1];
-          }
-          this.services.pop();
+          const option = 'delete';
+          // delete service request
+          const path = `/model/${this.modelID}/service/${serviceID}`;
+          axios.post(getBackUrl(path), {
+            opr: option,
+          })
+            .then((res) => {
+              if (res.data.status === 'success') {
+                for (let j = i; j < this.services.length - 1; j += 1) {
+                  this.services[j] = this.services[j + 1];
+                }
+                this.services.pop();
+              } else {
+                const mes = '删除服务失败';
+                alert(mes);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }
     },
     upload(event) {
-      // TODO 向后端添加一个新服务
+      // upload new service
+      const path = `/model/${this.modelID}/service`;
+      axios.post(getBackUrl(path), {
+        id: this.newServiceID,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            // Get Service List
+            const path2 = `/model/${this.modelID}/service`;
+            axios.get(getBackUrl(path2), {
+              params: {},
+            })
+              .then((res2) => {
+                this.services = res2.data.services;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            changeServicePageDivBoxSize();
+            window.onresize = changeServicePageDivBoxSize;
+          } else {
+            const mes = '新建服务失败';
+            alert(mes);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
+    // Get Service List
+    const path = `/model/${this.modelID}/service`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.services = res.data.services;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
   },

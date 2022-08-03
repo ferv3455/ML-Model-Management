@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTableSize() {
   const cont = document.getElementById('uploadPageImportModel');
@@ -49,9 +50,29 @@ export default {
   },
   methods: {
     uploadNewModel(event) {
-      // TODO
-      // 将上传信息提交给后端，后端回应后执行相应操作
-
+      // Model upload
+      const path = '/model';
+      const f = document.getElementById('uploadPageEnterModelFile').files[0];
+      axios.post(getBackUrl(path), {
+        id: this.modelID,
+        type: this.modelType,
+        des: this.modelDescription,
+        file: f,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            this.$router.push({
+              name: 'model',
+            });
+          } else {
+            const mes = `创建新模型失败：${res.data.reason}`;
+            alert(mes);
+          }
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     goToModelPage(event) {
       this.$router.push({

@@ -53,6 +53,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTextPageLeftRightBoxDirection() {
   const cont = document.getElementById('testPageLeftRight');
@@ -113,9 +114,19 @@ export default {
           }
         }
       }
-      // console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      console.log(submitObject);
+      // put submitObject
+      const path = `/model/${this.modelID}/test`;
+      axios.post(getBackUrl(path), {
+        submitObject,
+      })
+        .then((res) => {
+          this.output = res.data.output;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     backToModelIDPage(event) {
       this.$router.push({

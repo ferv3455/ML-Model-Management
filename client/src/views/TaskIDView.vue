@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTaskIDPageDivBoxSize() {
   const cont = document.getElementById('taskIDPageDivBox');
@@ -59,10 +60,21 @@ export default {
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
-    changeTaskIDPageDivBoxSize();
-    window.onresize = changeTaskIDPageDivBoxSize;
+    // getTaskInfo
+    const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.status = res.data.status;
+        if (this.status === 'finished') {
+          this.result = res.data.result;
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 </script>

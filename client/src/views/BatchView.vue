@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeBatchPageDivBoxSize() {
   const cont = document.getElementById('batchPageDivBox');
@@ -65,9 +66,23 @@ export default {
   },
   methods: {
     upload(event) {
-      // TODO
+      // FileUpload
       // 将上传文件提交给后端
-      // 将后端返回的任务ID提示给用户（通过alert方法）
+      const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
+      const f = document.getElementById('batchPageEnterModelFile').files[0];
+      axios.post(getBackUrl(path), {
+        // 上传文件
+        file: f,
+      })
+        .then((res) => {
+          // 将后端返回的任务ID提示给用户
+          const idMes = `任务ID：${res.data.id}`;
+          alert(idMes);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     goToPredictPage(event) {
       this.$router.push({
@@ -80,10 +95,18 @@ export default {
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
-    changeBatchPageDivBoxSize();
-    window.onresize = changeBatchPageDivBoxSize;
+    // getBatchInfo
+    const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.tasks = res.data.tasks;
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 

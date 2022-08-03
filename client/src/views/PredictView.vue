@@ -87,7 +87,7 @@ export default {
         curlCode = `${curlCode}${key}=${jsonObject[key]}&`;
         return null;
       });
-      curlCode.slice(0, curlCode.length - 1);
+      curlCode = curlCode.slice(0, curlCode.length - 1);
       curlCode += '" -X POST ';
       const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
       const posurl = getBackUrl(path);

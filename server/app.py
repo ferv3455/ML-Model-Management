@@ -1,6 +1,7 @@
 from gevent import pywsgi
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from requests import request
 from model import Model, MODELS
 import json
 
@@ -52,8 +53,23 @@ def testModel(modelID):
 @app.route('/model/<modelID>/service', methods=['GET'])
 def getAllServices(modelID):
     # TODO
+    #
+    dic = {
+        'services': [],
+    }
+    serdic = {
+        'id': request.get_json().get('id'),
+        'time': 'xxx',
+        'status': 'running',
+        'count': 'xxx',
+        'averResTime': 'xxx',
+        'maxResTime': 'xxx',
+        'minResTime': 'xxx',
+    }
+    dic['services'].append(serdic)
+    #
     pass
-    return jsonify('test!')
+    return jsonify(dic)
 
 
 @app.route('/model/<modelID>/service', methods=['POST'])

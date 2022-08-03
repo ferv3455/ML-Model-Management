@@ -117,19 +117,30 @@ export default {
     changeStatus(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-
+          let option = '';
+          if (this.services[i].status === 'running') {
+            option = 'pause';
+          }
+          else {
+            option = 'start'
+          }
           // service change request
           path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
           axios.post(getBackUrl(path), {
-            serviceStatus: this.services[i].status,
+            opr: option,
           })
             .then((res) => {
-              if (this.services[i].status === 'running') {
-                this.services[i].status = 'stopped';
-              } else {
-                this.services[i].status = 'running';
+              if (res.data.status === 'success') {
+                if (this.services[i].status === 'running') {
+                  this.services[i].status = 'stopped';
+                } else {
+                  this.services[i].status = 'running';
+                }
               }
-              signal = 1;
+              else {
+                let mes = '更改服务状态失败';
+                alert(mes);
+              }
             })
             .catch((error) => {
               console.log(error);
@@ -141,16 +152,23 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
+          let option = 'delete';
           // delete service request
           path = '/model/' + this.modelID.toString() + '/service/' + serviceID.toString();
           axios.post(getBackUrl(path), {
-            serviceStatus: this.services[i].status,
+            opr: option,
           })
             .then((res) => {
-              for (let j = i; j < this.services.length - 1; j += 1) {
-                this.services[j] = this.services[j + 1];
+              if (res.data.status === 'success') {
+                for (let j = i; j < this.services.length - 1; j += 1) {
+                  this.services[j] = this.services[j + 1];
+                }
+                this.services.pop();
               }
-              this.services.pop();
+              else {
+                let mes = '删除服务失败';
+                alert(mes);
+              }
             })
             .catch((error) => {
               console.log(error);
@@ -160,12 +178,38 @@ export default {
       }
     },
     upload(event) {
-      // TODO 向后端添加一个新服务
+      // upload new service
+      path = '/model/' + this.modelID.toString() + '/service';
+      axios.post(getBackUrl(path), {
+        id: this.newServiceID,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            // TODO
+            // 刷新列表信息（等待中）
+          }
+          else {
+            let mes = '新建服务失败';
+            alert(mes);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
+    // Get Service List
+    path = '/model/' + this.modelID.toString() + '/service';
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.services = res.data.services;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
   },

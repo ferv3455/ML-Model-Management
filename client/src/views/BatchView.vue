@@ -34,6 +34,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeBatchPageDivBoxSize() {
   const cont = document.getElementById('batchPageDivBox');
@@ -72,7 +73,9 @@ export default {
 
       })
         .then((res) => {
-          // 将后端返回的任务ID提示给用户（通过alert方法）
+          // 将后端返回的任务ID提示给用户
+          let id_mes = '任务ID：' + res.data.id.toString();
+          alert(id_mes);
         })
         .catch((error) => {
           // eslint-disable-next-line

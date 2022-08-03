@@ -56,6 +56,13 @@ def getAllServices(modelID):
     return jsonify('test!')
 
 
+@app.route('/model/<modelID>/service', methods=['POST'])
+def createService(modelID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
 @app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
     # TODO

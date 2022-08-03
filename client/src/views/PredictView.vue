@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changePredictPageBoxDirection() {
   const cont = document.getElementById('predictPageBox');
@@ -70,6 +71,7 @@ export default {
         submitObject: submitObject,
       })
         .then((res) => {
+          this.output = res.data.output;
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -78,8 +80,18 @@ export default {
     },
     generateCurl(event) {
       this.curlInput = 'Get curl code!!';
-      // TODO
-      // 需要生成向后端请求的curl代码
+      // 生成向后端请求的curl代码
+      let curlCode = 'curl -d \"';
+      const Object = JSON.parse(this.jsonInput);
+      for (key in Object) {
+        curlCode = curlCode + key + "=" + Object[key] + "&";
+      }
+      curlCode.slice(0, curlCode.length - 1);
+      curlCode += "\" -X POST ";
+      path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/quick';
+      let posurl = getBackUrl(path);
+      curlCode += posurl;
+      this.curlInput = curlCode;
     },
     goToBatchPage(event) {
       this.$router.push({

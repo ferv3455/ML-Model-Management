@@ -63,14 +63,11 @@ export default {
     // getTaskInfo
     path = '/model/' + this.modelID.toString() + '/service/' + this.serviceID.toString() + '/task/' + this.taskID.toString();
     axios.get(getBackUrl(path), {
-      params: {
-        modelID: this.modelID,
-        taskID: this.taskID,
-      }
+      params: {}
     })
       .then((res) => {
         this.status = res.data.status;
-        if (this.status == 'finished') {
+        if (this.status === 'finished') {
           this.result = res.data.result;
         }
       })

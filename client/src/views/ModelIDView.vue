@@ -171,12 +171,17 @@ export default {
       params: {},
     })
       .then((res) => {
-        this.modelDes = res.data.modelDes;
-        this.modelType = res.data.modelType;
-        this.modelAlgo = res.data.modelAlgo;
-        this.modelTime = res.data.modelTime;
-        this.modelInputs = res.data.modelInputs;
-        this.modelOutputs = res.data.modelOutputs;
+        if (res.data.exist === true) {
+          this.modelDes = res.data.des;
+          this.modelType = res.data.type;
+          this.modelAlgo = res.data.algo;
+          this.modelTime = res.data.time;
+          this.modelInputs = res.data.inputs;
+          this.modelOutputs = res.data.outputs;
+        }
+        else {
+          alert('模型不存在');
+        }
       })
       .catch((error) => {
         console.log(error);

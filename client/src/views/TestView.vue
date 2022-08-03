@@ -104,6 +104,7 @@ export default {
         submitObject: submitObject,
       })
         .then((res) => {
+          this.output = res.data.output;
         })
         .catch((error) => {
           // eslint-disable-next-line

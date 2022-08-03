@@ -1,42 +1,68 @@
 <template>
-  <div>
+  <div id="testPageDivBox">
     <h1>
       模型测试页面
+      <div class="modelNow">当前模型：{{ modelID }}</div>
     </h1>
-    <p>当前模型：{{ modelID }}</p>
     <div id="testPageLeftRight">
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输入</h2>
-        <button @click="changeMode" id="testPageChangeMode">{{ mode }}</button>
+        <div id="testPageShowMode">
+          <p>当前模式：{{ mode }}</p>
+          <button @click="changeMode" id="testPageChangeMode">
+            <img class="changeStatusIcon" title="切换输入模式" src="../assets/changeStatusIcon.png" alt="changeIcon">
+          </button>
+          <div style="flex-grow: 1"></div>
+          <button @dblclick="clear" id="testPageClearButton">
+            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
+          </button>
+        </div>
         <div v-if="mode === 'json'">
           <textarea v-model="jsonInput" id="testPageJsonInput"></textarea>
         </div>
         <div v-if="mode === 'form'">
-          <div v-for="variance in variances" :key="variance">
-            <p>{{ variance.name }}</p>
-            <input :id="'var_' + variance.name">
+          <div id="testPageFormArea">
+            <div class="testPageInputVariance" v-for="variance in variances" :key="variance">
+              <p>{{ variance.name }}</p>
+              <input :id="'var_' + variance.name">
+            </div>
           </div>
         </div>
-        <button @dblclick="clear" id="testPageClearButton">双击清除</button>
-        <button @click="submit" id="testPageSubmitButton">提交</button>
+        <div id="testPageButton">
+          <button @click="submit" id="testPageSubmitButton">提交</button>
+        </div>
       </div>
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输出</h2>
         <textarea v-model="output" readonly id="testPageOutput"></textarea>
       </div>
     </div>
   </div>
-  <button @click="backToModelIDPage">返回模型详细信息页面</button>
+  <button @click="backToModelIDPage" id="testPageReturnButton" class="roundButton returnButton">
+    <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+  </button>
 </template>
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
+
+function changeTextPageLeftRightBoxDirection() {
+  const cont = document.getElementById('testPageLeftRight');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.90}px`;
+    cont.style.flexDirection = 'column';
+  } else {
+    cont.style.width = `${window.innerWidth * 0.8}px`;
+    cont.style.flexDirection = 'row';
+  }
+}
 
 export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
-      mode: 'json',
+      mode: 'form',
       output: 'this is output!',
       jsonInput: '',
       variances: JSON.parse(this.$route.params.modelInputs),
@@ -73,8 +99,18 @@ export default {
         }
       }
       console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      // put submitObject
+      const path = `/model/${this.modelID}/test`;
+      axios.post(getBackUrl(path), {
+        submitObject,
+      })
+        .then((res) => {
+          this.output = res.data.output;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     backToModelIDPage(event) {
       this.$router.push({
@@ -85,6 +121,10 @@ export default {
       });
     },
   },
+  mounted() {
+    changeTextPageLeftRightBoxDirection();
+    window.onresize = changeTextPageLeftRightBoxDirection;
+  },
 };
 
 </script>
@@ -92,13 +132,86 @@ export default {
 <style>
 #testPageLeftRight {
   display: flex;
-  width: 100%;
 }
 
 .testPageSmallBox {
   flex-grow: 1;
-  width: 50%;
+  width: 100%;
   margin: 10px;
-  background-color: lightgray;
+  padding: 20px;
+}
+
+.testPageSmallBoxTitle {
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+#testPageDivBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#testPageClearButton {
+  width: 25px;
+  margin-right: 15px;
+  height: auto;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#testPageChangeMode {
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  width: 30px;
+  height: 30px;
+  margin-left: 30px;
+}
+
+#testPageShowMode {
+  display: flex;
+  align-items: center;
+  margin: 0px;
+  margin-top: -10px;
+  width: 100%;
+}
+
+#testPageShowMode p {
+  width: 150px;
+  margin: 0px;
+}
+
+#testPageJsonInput {
+  height: 250px;
+  width: 99%;
+}
+
+#testPageButton {
+  display: flex;
+  justify-content: center;
+}
+
+.testPageInputVariance p {
+  margin: 0px;
+  margin-bottom: 10px;
+  font-weight: bolder;
+}
+
+.testPageInputVariance input {
+  margin: 0px;
+  margin-bottom: 20px;
+  width: 99%;
+}
+
+#testPageFormArea {
+  height: 250px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#testPageOutput {
+  width: 99%;
+  height: 340px;
 }
 </style>

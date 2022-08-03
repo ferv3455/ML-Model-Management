@@ -1,0 +1,113 @@
+button {
+    width: 165px;
+    height: 55px;
+    border: none;
+    border-radius: 5px;
+    margin: 5px;
+    font-size: 18px;
+    box-shadow: 0px 5px 10px 5px var(--buttonTransColor);
+}
+
+input,
+select,
+textarea {
+    /*
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 5px;
+    */
+    border: none;
+    border-radius: 5px;
+    width: 90%;
+    height: 30px;
+    font-size: 18px;
+    line-height: 1.5;
+}
+
+img {
+    z-index: 20;
+}
+
+input::file-selector-button {
+    width: 120px;
+    height: 30px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    background-color: var(--buttonColor);
+    color: var(--navTextColor);
+}
+
+h1 {
+    text-align: center;
+    font-size: 35px;
+}
+
+body {
+    font-size: 20px;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.roundButton {
+    width: 55px;
+    height: 55px;
+    border-radius: 29px;
+    border-style: solid;
+    border-width: 3;
+    box-shadow: none;
+}
+
+.returnIcon {
+    width: 30px;
+    margin: 0px;
+    margin-top: 3px;
+}
+
+.returnButton {
+    position: absolute;
+    top: 80px;
+    left: 5px;
+}
+
+.binIcon {
+    width: 25px;
+}
+
+.copyIcon {
+    width: 25px;
+}
+
+.generateIcon {
+    width: 26px;
+}
+
+.changeStatusIcon {
+    width: 30px;
+    margin: 0px;
+}
+
+textarea {
+    resize: none;
+}
+
+.modelNow {
+    font-size: 18px;
+    margin-top: 5px;
+}
+
+.modelNowInService {
+    font-size: 16px;
+    margin-top: 3px;
+}
+
+.projectTitle {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.divUse {
+    border-style: solid;
+    border-color: var(--textColor);
+    border-radius: 10px;
+    border-width: 3px;
+    box-sizing: border-box;
+}

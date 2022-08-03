@@ -183,12 +183,12 @@ export default {
         .then((res) => {
           if (res.data.status === 'success') {
             // Get Service List
-            const path = `/model/${this.modelID}/service`;
-            axios.get(getBackUrl(path), {
+            const path2 = `/model/${this.modelID}/service`;
+            axios.get(getBackUrl(path2), {
               params: {},
             })
-              .then((res) => {
-                this.services = res.data.services;
+              .then((res2) => {
+                this.services = res2.data.services;
               })
               .catch((error) => {
                 console.log(error);

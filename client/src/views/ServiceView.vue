@@ -237,6 +237,7 @@ export default {
   margin-right: 10px;
   height: 25px;
   background-color: transparent;
+  color: transparent;
   box-shadow: none;
   padding: 0;
 }

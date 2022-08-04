@@ -53,11 +53,13 @@ export default {
       // Model upload
       const path = '/model';
       const f = document.getElementById('uploadPageEnterModelFile').files[0];
+      const fileName = f.name;
       axios.post(getBackUrl(path), {
         id: this.modelID,
         type: this.modelType,
         des: this.modelDescription,
         file: f,
+        fileName,
       })
         .then((res) => {
           if (res.data.status === 'success') {

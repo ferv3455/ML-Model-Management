@@ -56,6 +56,7 @@
       <div>
         <button @click="goToTestPage" id="modelIDPageGoToTestPage">进入模型测试</button>
         <button @click="goToServicePage" id="modelIDPageGoToServicePage">进入服务列表</button>
+        <button @click="goToPrePro" id="modelIDPageGoToPreProPage">进入预处理加载</button>
       </div>
     </div>
     <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton returnButton">
@@ -155,6 +156,14 @@ export default {
     goToServicePage(event) {
       this.$router.push({
         name: 'service',
+        params: {
+          modelID: this.modelID,
+        },
+      });
+    },
+    goToPrePro(event) {
+      this.$router.push({
+        name: 'preprocess',
         params: {
           modelID: this.modelID,
         },
@@ -263,7 +272,8 @@ export default {
   width: 60px;
 }
 
-#modelIDPageGoToTestPage {
+#modelIDPageGoToTestPage,
+#modelIDPageGoToServicePage {
   margin-right: 30px;
 }
 

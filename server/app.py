@@ -103,6 +103,27 @@ def testModel(modelID):
     return jsonify(res)
 
 
+@app.route('/model/<modelID>/preprocess', methods=['GET'])
+def getPreProcess(modelID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
+@app.route('/model/<modelID>/preprocess', methods=['POST'])
+def LoadPreProcess(modelID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
+@app.route('/model/<modelID>/preprocess/delete', methods=['POST'])
+def DeletePreProcess(modelID):
+    # TODO
+    pass
+    return jsonify('test!')
+
+
 @app.route('/model/<modelID>/service', methods=['GET'])
 def getAllServices(modelID):
     print('Getting all services of model {}'.format(modelID))

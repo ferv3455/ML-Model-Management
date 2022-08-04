@@ -20,20 +20,18 @@ app.config.from_object(__name__)
 # enable CORS
 CORS(app, supports_credentials=True)
 
-# sanity check route
+# all active services
+services = ServiceList()
 
-
+# View functions begin
 # TODO: It should be full of BUUUUUUGS now
-# TODO: Exception Processing
-
-services = ServiceList()  # TODO
 
 
 @app.route('/model', methods=['GET'])
 def getAllModels():
     print('Getting all models')
     try:
-        param_names = ('id', 'des', 'type', 'algo', 'time', 'status')
+        param_names = ('id', 'name', 'des', 'type', 'algo', 'time')
         res = {'models': [{key: m[key] for key in param_names}
                           for m in data.getAllModels()]}
     except:
@@ -46,13 +44,13 @@ def getAllModels():
 @app.route('/model', methods=['POST'])
 def createModel():
     try:
-        params = request.get_json()  # keys: id, des, type, file
+        params = request.get_json()  # keys: name, des, type, file
         print('Creating model:', params)
 
-        model = Model(**params)
+        model = Model(**params) # TODO: model initializer: name, des, type, file
         model.save()            # TODO: save the model to ./models/<id>.<type>
 
-        param_names = ('id', 'des', 'type', 'algo', 'time')
+        param_names = ('name', 'des', 'type', 'algo', 'time')
         data.addModel(tuple(getattr(model, key) for key in param_names))
 
         res = {'status': 'success'}
@@ -75,10 +73,11 @@ def getModelInfo(modelID):
 
     if res['exist']:
         try:
-            # TODO: load from file (according to id and type)
-            model = Model(model_params['id'], model_params['des'],
-                          model_params['type'], fromfile=True)
-            param_names = ('des', 'type', 'algo', 'time', 'input', 'output')
+            # TODO: model initializer: load from file (according to id and type)
+            model = Model(model_params['name'], 
+                          model_params['des'], model_params['type'])
+            param_names = ('name', 'des', 'type', 'algo',
+                           'time', 'input', 'output')
             res.update({key: getattr(model, key) for key in param_names})
         except:
             traceback.print_exc()
@@ -92,8 +91,8 @@ def testModel(modelID):
         input_data = request.get_json()
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
-        model = Model(model_params['id'], model_params['des'],
-                      model_params['type'], fromfile=True)
+        model = Model(model_params['name'],
+                      model_params['des'], model_params['type'])
         result = model.predict(input_data)
         res = {'output': result}
     except:
@@ -108,8 +107,10 @@ def getAllServices(modelID):
     print('Getting all services of model {}'.format(modelID))
     try:
         records = data.getServicesByModel(modelID)
-        assert records is not None
-        res = {'services': records}
+        param_names = ('id', 'name', 'time', 'status', 'count',
+                       'averResTime', 'maxResTime', 'minResTime')
+        res = {'services': [{key: r[key]
+                             for key in param_names} for r in records]}
     except:
         traceback.print_exc()
         res = {'services': []}
@@ -120,14 +121,14 @@ def getAllServices(modelID):
 @app.route('/model/<modelID>/service', methods=['POST'])
 def createService(modelID):
     try:
-        params = request.get_json()  # keys: id
+        params = request.get_json()  # keys: name
         print('Creating service:', params)
         serviceID = data.addService(
-            (modelID, params['id'], datetime.now(), 'on', 0))
+            (modelID, params['name'], datetime.now(), 'on', 0))
 
         model_params = data.getModelByID(modelID)
-        model = Model(model_params['id'], model_params['des'],
-                      model_params['type'], fromfile=True)
+        model = Model(model_params['name'],
+                      model_params['des'], model_params['type'])
         services.add(serviceID, Service(serviceID, model))
         res = {'status': 'success'}
 
@@ -189,7 +190,7 @@ def batchPredict(modelID, serviceID):
     try:
         service = services.get(serviceID)
         input_data = request.get_json()
-        task_id = service.batch(input_data)
+        task_id = service.batch(input_data['file'])
         res = {'id': task_id}
     except:
         traceback.print_exc()
@@ -229,6 +230,8 @@ def getTaskInfo(modelID, serviceID, taskID):
         res = None
 
     return jsonify(res)
+
+# View functions end
 
 
 if __name__ == '__main__':

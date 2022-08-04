@@ -18,7 +18,7 @@ class Service:
         return -1                    # TODO: return task id
 
     def getResult(self, taskID):
-        return None
+        return None                  # TODO: return task result (from json file)
 
 
 class ServiceList:

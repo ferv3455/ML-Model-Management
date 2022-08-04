@@ -3,10 +3,10 @@ import sqlite3
 '''
 Initialize database columns:
 
-TABLE models:    modelID (PRIMARY KEY), name, des, type, algo, time
-TABLE services:  serviceID (PRIMARY KEY), modelID, name, time, status, count
+TABLE models:    id (PRIMARY KEY), name, des, type, algo, time
+TABLE services:  id (PRIMARY KEY), modelID, name, time, status, count
 TABLE serv_response: id (PRIMARY KEY), serviceID, start, end, duration
-TABLE tasks:     taskID (PRIMARY KEY), serviceID, modelID, time, status
+TABLE tasks:     id (PRIMARY KEY), serviceID, modelID, time, status
 
 (use INTEGER PRIMARY KEY for the first column so that it increments automatically)
 '''

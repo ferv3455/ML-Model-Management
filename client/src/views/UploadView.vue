@@ -4,8 +4,8 @@
       模型导入页面
     </h1>
     <div id="uploadPageImportModel" class="divUse">
-      <p class="uploadPageImportModelDetail" id="uploadPageModelID">模型ID</p>
-      <input v-model="modelID" id="uploadPageEnterModelID">
+      <p class="uploadPageImportModelDetail" id="uploadPageModelName">模型名称</p>
+      <input v-model="modelName" id="uploadPageEnterModelName">
       <p class="uploadPageImportModelDetail" id="uploadPageModelDescription">模型描述</p>
       <textarea v-model="modelDescription" id="uploadPageEnterModelDescription"></textarea>
       <p class="uploadPageImportModelDetail" id="uploadPageModelType">模型类型</p>
@@ -43,7 +43,7 @@ export default {
   data() {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
-      modelID: '',
+      modelName: '',
       modelDescription: '',
       modelType: 'pmml',
     };
@@ -55,7 +55,7 @@ export default {
       const f = document.getElementById('uploadPageEnterModelFile').files[0];
       const fileName = f.name;
       axios.post(getBackUrl(path), {
-        id: this.modelID,
+        name: this.modelName,
         type: this.modelType,
         des: this.modelDescription,
         file: f,
@@ -104,7 +104,7 @@ export default {
   display: grid;
   grid-template-columns: 25% 75%;
   grid-template-rows: 45px 110px 45px 45px 85px;
-  grid-template-areas: 'ID enterID'
+  grid-template-areas: 'name enterName'
     'des enterDes'
     'type enterType'
     'file enterFile'
@@ -113,12 +113,12 @@ export default {
   align-items: center;
 }
 
-#uploadPageModelID {
-  grid-area: ID;
+#uploadPageModelName {
+  grid-area: name;
 }
 
-#uploadPageEnterModelID {
-  grid-area: enterID;
+#uploadPageEnterModelName {
+  grid-area: enterName;
 }
 
 #uploadPageModelDescription {

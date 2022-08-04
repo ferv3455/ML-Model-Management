@@ -2,11 +2,11 @@
   <div id="servicePageDivBox">
     <h1>
       服务列表页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <table id="servicePageServiceTable">
       <tr>
-        <th>服务ID</th>
+        <th>服务名称</th>
         <th>创建时间</th>
         <th>服务状态</th>
         <th>服务次数</th>
@@ -18,8 +18,9 @@
       <tr v-for="service in services" :key="service" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='transparent'">
         <td>
-          <router-link :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id } }">
-            {{ service.id }}
+          <router-link
+            :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id, modelName: modelName, serviceName: service.name } }">
+            {{ service.name }}
           </router-link>
         </td>
         <td>{{ service.time }}</td>
@@ -45,8 +46,8 @@
     <div id="servicePageAddServiceArea" class="divUse">
       <h2>添加新服务</h2>
       <div id="addServiceAreaDivBox">
-        <p>新服务ID :</p>
-        <input id="servicePageEnterServiceID" v-model="newServiceID">
+        <p>新服务名 :</p>
+        <input id="servicePageEnterServiceName" v-model="newServiceName">
       </div>
       <button @click="upload" id="servicePageUploadButton">添加</button>
     </div>
@@ -73,9 +74,11 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       services: [
         {
-          id: 'service1',
+          id: 1,
+          name: 'service1',
           time: 'xxx',
           status: 'running',
           count: 'xxx',
@@ -84,7 +87,8 @@ export default {
           minResTime: 'xxx',
         },
         {
-          id: 'service2',
+          id: 2,
+          name: 'service2',
           time: 'xxx',
           status: 'stopped',
           count: 'xxx',
@@ -93,7 +97,8 @@ export default {
           minResTime: 'xxx',
         },
         {
-          id: 'service3',
+          id: 3,
+          name: 'service3',
           time: 'xxx',
           status: 'stopped',
           count: 'xxx',
@@ -102,7 +107,7 @@ export default {
           minResTime: 'xxx',
         },
       ],
-      newServiceID: '',
+      newServiceName: '',
     };
   },
   methods: {
@@ -178,7 +183,7 @@ export default {
       // upload new service
       const path = `/model/${this.modelID}/service`;
       axios.post(getBackUrl(path), {
-        id: this.newServiceID,
+        name: this.newServiceName,
       })
         .then((res) => {
           if (res.data.status === 'success') {
@@ -304,10 +309,11 @@ export default {
 }
 
 .servicePageClearButton {
-  width: 30px;
+  width: 25px;
   margin-right: 10px;
-  height: auto;
+  height: 25px;
   background-color: transparent;
+  color: transparent;
   box-shadow: none;
   padding: 0;
 }

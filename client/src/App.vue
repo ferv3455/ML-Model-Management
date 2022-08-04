@@ -3,9 +3,13 @@
     <nav>
       <img id="logoImg" src="./assets/s02big.png" alt="logo">
       <p id="navTeamName" class="projectTitle">TeAM</p>
-      <router-link id="toHomeNav" to="/">
+      <router-link class="toOtherPageNav" to="/">
         <img id="homeIcon" src="./assets/homeIcon.png" alt="homeIcon">
         <p>主页</p>
+      </router-link>
+      <router-link class="toOtherPageNav" to="/model">
+        <img id="listIcon" src="./assets/listIcon.png" alt="listIcon">
+        <p>模型列表</p>
       </router-link>
     </nav>
     <div id="underNav">
@@ -86,11 +90,17 @@ nav {
   margin-right: 5px;
 }
 
-#toHomeNav {
+#listIcon {
+  margin-top: 2px;
+  height: 27px;
+  margin-right: 6px;
+}
+
+.toOtherPageNav {
   display: flex;
   align-items: center;
   color: var(--navTextColor);
-  margin-right: 20px;
+  margin-right: 25px;
   text-decoration: none;
 }
 

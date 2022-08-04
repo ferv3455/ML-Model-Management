@@ -2,7 +2,7 @@
   <div id="testPageDivBox">
     <h1>
       模型测试页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <div id="testPageLeftRight">
       <div class="testPageSmallBox divUse">
@@ -24,7 +24,15 @@
           <div id="testPageFormArea">
             <div class="testPageInputVariance" v-for="variance in variances" :key="variance">
               <p>{{ variance.name }}</p>
-              <input :id="'var_' + variance.name">
+              <div v-if="variance.type !== 'image'">
+                <input :id="'var_' + variance.name">
+              </div>
+              <div v-else>
+                <input :id="'var_' + variance.name" type="file" ref="file" accept=".png, .jpg, .jpeg, .bmp"
+                  @change="onImageChange(variance.name)">
+                <img :id="'var_' + variance.name + '_image'" class="testPageUploadImage" alt="inputImage"
+                  src="../assets/emptyPic.png">
+              </div>
             </div>
           </div>
         </div>
@@ -58,10 +66,21 @@ function changeTextPageLeftRightBoxDirection() {
   }
 }
 
+function getBase64Image(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  const dataURL = canvas.toDataURL('image/png');
+  return dataURL.replace('data:image/png;base64,', '');
+}
+
 export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       mode: 'form',
       output: 'this is output!',
       jsonInput: '',
@@ -85,6 +104,10 @@ export default {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
           inputBox.value = '';
+          if (this.variances[i].type === 'image') {
+            const imgFile = document.getElementById(`var_${this.variances[i].name}`);
+            document.getElementById(`var_${this.variances[i].name}_image`).classList.remove('testPageImageLoaded');
+          }
         }
       }
     },
@@ -95,7 +118,16 @@ export default {
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
-          submitObject[this.variances[i].name] = inputBox.value;
+          if (inputBox.value === '') {
+            alert(`变量 ${this.variances[i].name} 为空！`);
+            return;
+          }
+          if (this.variances[i].type !== 'image') {
+            submitObject[this.variances[i].name] = inputBox.value;
+          } else {
+            const inputImg = document.getElementById(`var_${this.variances[i].name}_image`);
+            submitObject[this.variances[i].name] = getBase64Image(inputImg);
+          }
         }
       }
       console.log(submitObject);
@@ -119,6 +151,16 @@ export default {
           modelID: this.modelID,
         },
       });
+    },
+    onImageChange(name) {
+      const imgFile = document.getElementById(`var_${name}`);
+      if (imgFile.files.length === 0) {
+        document.getElementById(`var_${name}_image`).classList.remove('testPageImageLoaded');
+      } else {
+        const imageToShow = window.URL.createObjectURL(imgFile.files[0]);
+        document.getElementById(`var_${name}_image`).src = imageToShow;
+        document.getElementById(`var_${name}_image`).classList.add('testPageImageLoaded');
+      }
     },
   },
   mounted() {
@@ -213,5 +255,13 @@ export default {
 #testPageOutput {
   width: 99%;
   height: 340px;
+}
+
+.testPageUploadImage {
+  width: 0px;
+}
+
+.testPageImageLoaded {
+  width: 150px;
 }
 </style>

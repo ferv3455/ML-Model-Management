@@ -5,8 +5,8 @@
     </h1>
     <div id="modelIDPageModelDetail">
       <div id="modelIDPageModelDetailBasic" class="divUse">
-        <p class="modelIDPageModelInfo">ID</p>
-        <p class="modelIDPageGetModelInfo">{{ modelID }}</p>
+        <p class="modelIDPageModelInfo">名称</p>
+        <p class="modelIDPageGetModelInfo">{{ modelName }}</p>
         <p class="modelIDPageModelInfo">类型</p>
         <p class="modelIDPageGetModelInfo">{{ modelType }}</p>
         <p class="modelIDPageModelInfo">算法</p>
@@ -65,6 +65,7 @@
 </template>
 
 <script>
+import getBackUrl from '@/getIP';
 import axios from 'axios';
 
 function changeModelDetailSize() {
@@ -84,6 +85,7 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: this.$route.params.modelID,
+      modelName: 'testName',
       modelDes: 'xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
@@ -137,17 +139,6 @@ export default {
     };
   },
   methods: {
-    changeModelStatus(event) {
-      if (this.modelStatus === 'run') {
-        // TODO
-        // 此处需要使用axios向后端发出切换模型状态的请求，成功后才可执行以下操作
-        this.modelStatus = 'stop';
-      } else {
-        // TODO
-        // 同上
-        this.modelStatus = 'run';
-      }
-    },
     backToModelPage(event) {
       this.$router.push({
         name: 'model',
@@ -158,6 +149,7 @@ export default {
         name: 'test',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           modelInputs: JSON.stringify(this.modelInputs),
         },
       });
@@ -167,6 +159,7 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
         },
       });
     },
@@ -175,8 +168,27 @@ export default {
     changeModelDetailSize();
     window.onresize = changeModelDetailSize;
 
-    // TODO
-    // 从后端获取数据
+    // get modelID info
+    const path = `/model/${this.modelID}`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        if (res.data.exist === true) {
+          this.modelName = res.data.name;
+          this.modelDes = res.data.des;
+          this.modelType = res.data.type;
+          this.modelAlgo = res.data.algo;
+          this.modelTime = res.data.time;
+          this.modelInputs = res.data.inputs;
+          this.modelOutputs = res.data.outputs;
+        } else {
+          alert('模型不存在');
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   },
 };
 </script>

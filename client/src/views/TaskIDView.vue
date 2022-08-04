@@ -2,8 +2,8 @@
   <div id="taskIDPageDivBox">
     <h1>
       任务详情页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <div id="taskIDPageInfoBox" class="divUse">
       <div class="taskIDPageInfoSmallBox">
@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTaskIDPageDivBoxSize() {
   const cont = document.getElementById('taskIDPageDivBox');
@@ -42,8 +43,10 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       taskID: this.$route.params.taskID,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       status: 'finished', // 从后端获取
       result: 'this is a result!', // 从后端获取
     };
@@ -54,15 +57,31 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
+          serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
     changeTaskIDPageDivBoxSize();
     window.onresize = changeTaskIDPageDivBoxSize;
+    // getTaskInfo
+    const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.status = res.data.status;
+        if (this.status === 'finished') {
+          this.result = res.data.result;
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 </script>

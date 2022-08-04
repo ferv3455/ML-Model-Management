@@ -2,8 +2,8 @@
   <div id="batchPageDivBox">
     <h1>
       批量任务列表页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <table id="batchPageTaskTable">
       <tr>
@@ -13,7 +13,8 @@
       <tr v-for="task in tasks" :key="task" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='transparent'">
         <td>
-          <router-link :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, taskID: task.id } }">
+          <router-link
+            :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, modelName: modelName, serviceName: serviceName, taskID: task.id } }">
             {{ task.id }}
           </router-link>
         </td>
@@ -34,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeBatchPageDivBoxSize() {
   const cont = document.getElementById('batchPageDivBox');
@@ -48,16 +50,18 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       // 需从后端请求当前存在的tasks
       tasks: [{
-        id: 'task1',
+        id: 1,
         status: 'waiting',
       }, {
-        id: 'task2',
+        id: 2,
         status: 'running',
       }, {
-        id: 'task3',
+        id: 3,
         status: 'finished',
       },
       ],
@@ -65,25 +69,51 @@ export default {
   },
   methods: {
     upload(event) {
-      // TODO
+      // FileUpload
       // 将上传文件提交给后端
-      // 将后端返回的任务ID提示给用户（通过alert方法）
+      const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
+      const f = document.getElementById('batchPageEnterModelFile').files[0];
+      axios.post(getBackUrl(path), {
+        // 上传文件
+        file: f,
+      })
+        .then((res) => {
+          // 将后端返回的任务ID提示给用户
+          const idMes = `任务ID：${res.data.id}`;
+          alert(idMes);
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     goToPredictPage(event) {
       this.$router.push({
         name: 'predict',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
     changeBatchPageDivBoxSize();
     window.onresize = changeBatchPageDivBoxSize;
+    // getBatchInfo
+    const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.tasks = res.data.tasks;
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
+      });
   },
 };
 

@@ -2,7 +2,7 @@
   <div id="testPageDivBox">
     <h1>
       模型测试页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <div id="testPageLeftRight">
       <div class="testPageSmallBox divUse">
@@ -53,6 +53,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeTextPageLeftRightBoxDirection() {
   const cont = document.getElementById('testPageLeftRight');
@@ -65,10 +66,21 @@ function changeTextPageLeftRightBoxDirection() {
   }
 }
 
+function getBase64Image(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  const dataURL = canvas.toDataURL('image/png');
+  return dataURL.replace('data:image/png;base64,', '');
+}
+
 export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       mode: 'form',
       output: 'this is output!',
       jsonInput: '',
@@ -106,16 +118,31 @@ export default {
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
+          if (inputBox.value === '') {
+            alert(`变量 ${this.variances[i].name} 为空！`);
+            return;
+          }
           if (this.variances[i].type !== 'image') {
             submitObject[this.variances[i].name] = inputBox.value;
           } else {
-            // TODO图片转base64
+            const inputImg = document.getElementById(`var_${this.variances[i].name}_image`);
+            submitObject[this.variances[i].name] = getBase64Image(inputImg);
           }
         }
       }
-      // console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      console.log(submitObject);
+      // put submitObject
+      const path = `/model/${this.modelID}/test`;
+      axios.post(getBackUrl(path), {
+        submitObject,
+      })
+        .then((res) => {
+          this.output = res.data.output;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     backToModelIDPage(event) {
       this.$router.push({

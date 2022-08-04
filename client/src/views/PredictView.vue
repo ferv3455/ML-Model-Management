@@ -2,8 +2,8 @@
   <div id="predictPageDivBox">
     <h1>
       部署接口页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <div id="predictPageBox">
       <div class="predictPageSmallBox divUse" id="predictPageInputBox">
@@ -38,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changePredictPageBoxDirection() {
   const cont = document.getElementById('predictPageBox');
@@ -54,7 +55,9 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       output: 'this is output!', // 测试用，提交后等待后端返回输出
       jsonInput: '',
       curlInput: '',
@@ -64,20 +67,43 @@ export default {
     submit(event) {
       const submitObject = JSON.parse(this.jsonInput);
       // console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      // put submitObject
+      const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
+      axios.post(getBackUrl(path), {
+        submitObject,
+      })
+        .then((res) => {
+          this.output = res.data.output;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     generateCurl(event) {
       this.curlInput = 'Get curl code!!';
-      // TODO
-      // 需要生成向后端请求的curl代码
+      // 生成向后端请求的curl代码
+      let curlCode = 'curl -d "';
+      const jsonObject = JSON.parse(this.jsonInput);
+      Object.keys(jsonObject).map((key) => {
+        curlCode = `${curlCode}${key}=${jsonObject[key]}&`;
+        return null;
+      });
+      curlCode = curlCode.slice(0, curlCode.length - 1);
+      curlCode += '" -X POST ';
+      const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
+      const posurl = getBackUrl(path);
+      curlCode += posurl;
+      this.curlInput = curlCode;
     },
     goToBatchPage(event) {
       this.$router.push({
         name: 'batch',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },
@@ -86,6 +112,7 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
         },
       });
     },

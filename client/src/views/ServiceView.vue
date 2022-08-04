@@ -2,11 +2,11 @@
   <div id="servicePageDivBox">
     <h1>
       服务列表页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <table id="servicePageServiceTable">
       <tr>
-        <th>服务ID</th>
+        <th>服务名称</th>
         <th>创建时间</th>
         <th>服务状态</th>
         <th>服务次数</th>
@@ -18,8 +18,9 @@
       <tr v-for="service in services" :key="service" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='transparent'">
         <td>
-          <router-link :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id } }">
-            {{ service.id }}
+          <router-link
+            :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id, modelName: modelName, serviceName: service.name } }">
+            {{ service.name }}
           </router-link>
         </td>
         <td>{{ service.time }}</td>
@@ -45,8 +46,8 @@
     <div id="servicePageAddServiceArea" class="divUse">
       <h2>添加新服务</h2>
       <div id="addServiceAreaDivBox">
-        <p>新服务ID :</p>
-        <input id="servicePageEnterServiceID" v-model="newServiceID">
+        <p>新服务名 :</p>
+        <input id="servicePageEnterServiceName" v-model="newServiceName">
       </div>
       <button @click="upload" id="servicePageUploadButton">添加</button>
     </div>
@@ -58,6 +59,7 @@
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
   const cont = document.getElementById('servicePageDivBox');
@@ -72,9 +74,11 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       services: [
         {
-          id: 'service1',
+          id: 1,
+          name: 'service1',
           time: 'xxx',
           status: 'running',
           count: 'xxx',
@@ -83,7 +87,8 @@ export default {
           minResTime: 'xxx',
         },
         {
-          id: 'service2',
+          id: 2,
+          name: 'service2',
           time: 'xxx',
           status: 'stopped',
           count: 'xxx',
@@ -92,7 +97,8 @@ export default {
           minResTime: 'xxx',
         },
         {
-          id: 'service3',
+          id: 3,
+          name: 'service3',
           time: 'xxx',
           status: 'stopped',
           count: 'xxx',
@@ -101,7 +107,7 @@ export default {
           minResTime: 'xxx',
         },
       ],
-      newServiceID: '',
+      newServiceName: '',
     };
   },
   methods: {
@@ -116,13 +122,32 @@ export default {
     changeStatus(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
+          let option = '';
           if (this.services[i].status === 'running') {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'stopped';
+            option = 'pause';
           } else {
-            // TODO 向后段发送更改服务状态请求，成功后执行下面代码
-            this.services[i].status = 'running';
+            option = 'start';
           }
+          // service change request
+          const path = `/model/${this.modelID}/service/${serviceID}`;
+          axios.post(getBackUrl(path), {
+            opr: option,
+          })
+            .then((res) => {
+              if (res.data.status === 'success') {
+                if (this.services[i].status === 'running') {
+                  this.services[i].status = 'stopped';
+                } else {
+                  this.services[i].status = 'running';
+                }
+              } else {
+                const mes = '更改服务状态失败';
+                alert(mes);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }
@@ -130,22 +155,73 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          // TODO 向后段发送删除服务请求，成功后执行下面代码
-          for (let j = i; j < this.services.length - 1; j += 1) {
-            this.services[j] = this.services[j + 1];
-          }
-          this.services.pop();
+          const option = 'delete';
+          // delete service request
+          const path = `/model/${this.modelID}/service/${serviceID}`;
+          axios.post(getBackUrl(path), {
+            opr: option,
+          })
+            .then((res) => {
+              if (res.data.status === 'success') {
+                for (let j = i; j < this.services.length - 1; j += 1) {
+                  this.services[j] = this.services[j + 1];
+                }
+                this.services.pop();
+              } else {
+                const mes = '删除服务失败';
+                alert(mes);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
           break;
         }
       }
     },
     upload(event) {
-      // TODO 向后端添加一个新服务
+      // upload new service
+      const path = `/model/${this.modelID}/service`;
+      axios.post(getBackUrl(path), {
+        name: this.newServiceName,
+      })
+        .then((res) => {
+          if (res.data.status === 'success') {
+            // Get Service List
+            const path2 = `/model/${this.modelID}/service`;
+            axios.get(getBackUrl(path2), {
+              params: {},
+            })
+              .then((res2) => {
+                this.services = res2.data.services;
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+            changeServicePageDivBoxSize();
+            window.onresize = changeServicePageDivBoxSize;
+          } else {
+            const mes = '新建服务失败';
+            alert(mes);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   mounted() {
-    // TODO
-    // 从后端获取数据
+    // Get Service List
+    const path = `/model/${this.modelID}/service`;
+    axios.get(getBackUrl(path), {
+      params: {},
+    })
+      .then((res) => {
+        this.services = res.data.services;
+      })
+      .catch((error) => {
+        console.log(error);
+      });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
   },

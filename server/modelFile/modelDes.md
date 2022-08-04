@@ -9,3 +9,8 @@ classifier.pmml：sklearn的iris数据集，逻辑回归的分类任务
 
 regression.pmml : sklearn的波士顿房价数据集，线性回归预测任务
 
+### onnx
+
+LeNet.onnx : 三层LeNet网络导出的onnx文件，MNIST数据集
+
+

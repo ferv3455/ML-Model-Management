@@ -2,7 +2,7 @@
   <div id="testPageDivBox">
     <h1>
       模型测试页面
-      <div class="modelNow">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <div id="testPageLeftRight">
       <div class="testPageSmallBox divUse">
@@ -70,6 +70,7 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       mode: 'form',
       output: 'this is output!',
       jsonInput: '',

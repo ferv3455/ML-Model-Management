@@ -2,8 +2,8 @@
   <div id="predictPageDivBox">
     <h1>
       部署接口页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <div id="predictPageBox">
       <div class="predictPageSmallBox divUse" id="predictPageInputBox">
@@ -55,7 +55,9 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       output: 'this is output!', // 测试用，提交后等待后端返回输出
       jsonInput: '',
       curlInput: '',
@@ -99,7 +101,9 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },
@@ -108,6 +112,7 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
         },
       });
     },

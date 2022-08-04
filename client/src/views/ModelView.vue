@@ -5,25 +5,23 @@
     </h1>
     <table id="mainPageUploadTable">
       <tr>
-        <th>模型ID</th>
+        <th>模型名称</th>
         <th>描述</th>
         <th>类型</th>
         <th>算法</th>
         <th>上传时间</th>
-        <th>服务状态</th>
       </tr>
       <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='white'">
         <td>
           <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
-            {{ model.id }}
+            {{ model.name }}
           </router-link>
         </td>
         <td>{{ model.des }}</td>
         <td>{{ model.type }}</td>
         <td>{{ model.algo }}</td>
         <td>{{ formatDate(model.time) }}</td>
-        <td>{{ model.status }}</td>
       </tr>
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton">

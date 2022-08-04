@@ -2,8 +2,8 @@
   <div id="taskIDPageDivBox">
     <h1>
       任务详情页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <div id="taskIDPageInfoBox" class="divUse">
       <div class="taskIDPageInfoSmallBox">
@@ -43,8 +43,10 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       taskID: this.$route.params.taskID,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       status: 'finished', // 从后端获取
       result: 'this is a result!', // 从后端获取
     };

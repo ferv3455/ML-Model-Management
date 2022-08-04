@@ -4,15 +4,15 @@
       <img id="logoImg" src="./assets/s02big.png" alt="logo">
       <p id="navTeamName" class="projectTitle">TeAM</p>
       <router-link class="toOtherPageNav" to="/">
-        <img id="homeIcon" src="./assets/homeIcon.png" alt="homeIcon">
+        <img id="homeIcon" class="themeImage" name="homeIcon.png" alt="homeIcon">
         <p>主页</p>
       </router-link>
       <router-link class="toOtherPageNav" to="/model">
-        <img id="listIcon" src="./assets/listIcon.png" alt="listIcon">
+        <img id="listIcon" class="themeImage" name="listIcon.png" alt="listIcon">
         <p>模型列表</p>
       </router-link>
       <div class="toOtherPageNav">
-        <img id="changeThemeIcon" src="./assets/changeThemeIcon.png" alt="changeThemeIcon">
+        <img id="changeThemeIcon" class="themeImage" name="changeThemeIcon.png" alt="changeThemeIcon">
         <select id="themeChoice" @change="changeTheme" v-model="nextTheme">
           <option value="default">默认主题</option>
           <option value="monotone">黑白主题</option>
@@ -28,13 +28,13 @@
       <div id="footerBox">
         <p id="footerWords"> 本网站仅为大作业使用，并无任何商业用途！ </p>
         <div class="footerInfo">
-          <img id="emailIcon" src="./assets/emailIcon.png" alt="emailIcon">
+          <img id="emailIcon" name="emailIcon.png" class="themeImage" alt="emailIcon">
           <p> 电子邮箱: yczddgj@126.com </p>
-          <img id="phoneIcon" src="./assets/phoneIcon.png" alt="phoneIcon">
+          <img id="phoneIcon" name="phoneIcon.png" class="themeImage" alt="phoneIcon">
           <p> 联络电话: +86-15611462910</p>
-          <img id="linkIcon" src="./assets/linkIcon.png" alt="linkIcon">
+          <img id="linkIcon" name="linkIcon.png" class="themeImage" alt="linkIcon">
           <p> 友情链接: <a href="http://www.yczddgj.com">韵城之都网站</a> </p>
-          <img id="teamIcon" src="./assets/teamIcon.png" alt="teamIcon">
+          <img id="teamIcon" name="teamIcon.png" class="themeImage" alt="teamIcon">
           <div id="teamAvatarBox">
             <p> 团队成员:</p>
             <img class="teamAvatar" src="./assets/avatar/gxy.png" title="郭心源" alt="avatar">
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { routeLocationKey } from 'vue-router';
+import changeAllImgUrl from '@/getThemeImg';
 
 export default {
   data() {
@@ -90,6 +90,7 @@ export default {
       doc.setAttribute('data-theme', this.nextTheme);
       this.changeFooterpic();
     }
+    changeAllImgUrl();
   },
 };
 </script>

@@ -66,6 +66,16 @@ function changeTextPageLeftRightBoxDirection() {
   }
 }
 
+function getBase64Image(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  const dataURL = canvas.toDataURL('image/png');
+  return dataURL.replace('data:image/png;base64,', '');
+}
+
 export default {
   data() {
     return {
@@ -107,10 +117,15 @@ export default {
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
+          if (inputBox.value === '') {
+            alert(`变量 ${this.variances[i].name} 为空！`);
+            return;
+          }
           if (this.variances[i].type !== 'image') {
             submitObject[this.variances[i].name] = inputBox.value;
           } else {
-            // TODO图片转base64
+            const inputImg = document.getElementById(`var_${this.variances[i].name}_image`);
+            submitObject[this.variances[i].name] = getBase64Image(inputImg);
           }
         }
       }

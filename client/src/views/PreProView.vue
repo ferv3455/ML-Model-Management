@@ -2,6 +2,7 @@
   <div id="PreProPageBox">
     <h1 id="PreProPageTitle">
       预处理文件载入页面
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
     <div id="uploadPageImportPrePro" class="divUse">
       <p class="loadedPrePRoFile" id="LoadedPreProInfo">当前预处理脚本文件：</p>
@@ -36,6 +37,7 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       ProDescription: '',
       LoadedProDescription: '并未加载预处理脚本文件',
       LoadedProPath: '',

@@ -169,6 +169,7 @@ export default {
         name: 'preprocess',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
         },
       });
     },

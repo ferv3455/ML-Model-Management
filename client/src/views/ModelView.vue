@@ -25,7 +25,7 @@
       </tr>
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton">
-      <img id="mainPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+      <img id="mainPageUploadIcon" class="themeImage" name="uploadIcon.png" alt="Icon">
       上传模型
     </button>
   </div>
@@ -33,6 +33,7 @@
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeMainPageDivBoxSize() {
@@ -79,6 +80,7 @@ export default {
   mounted() {
     changeMainPageDivBoxSize();
     window.onresize = changeMainPageDivBoxSize;
+    changeAllImgUrl();
 
     axios.get(getBackUrl('/model'), {
       params: {},

@@ -16,11 +16,11 @@
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" type="file" :accept="'.' + this.modelType">
       <button @click="uploadNewModel" id="uploadPageUploadButton">
-        <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+        <img id="uploadPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
         上传
       </button>
       <button @click="goToModelPage" id="goToModelPageButton" class="roundButton returnButton">
-        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+        <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
       </button>
     </div>
   </div>
@@ -28,6 +28,7 @@
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTableSize() {
@@ -83,6 +84,7 @@ export default {
     },
   },
   mounted() {
+    changeAllImgUrl();
     changeTableSize();
     window.onresize = changeTableSize;
   },

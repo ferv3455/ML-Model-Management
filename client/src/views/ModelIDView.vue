@@ -59,12 +59,13 @@
       </div>
     </div>
     <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '@/getIP';
 import axios from 'axios';
 
@@ -167,6 +168,7 @@ export default {
   mounted() {
     changeModelDetailSize();
     window.onresize = changeModelDetailSize;
+    changeAllImgUrl();
 
     // get modelID info
     const path = `/model/${this.modelID}`;

@@ -12,6 +12,7 @@
     "core-js": "^3.8.3",
     "vue": "^3.2.13",
     "vue-cli": "^2.9.6",
+    "vue-cookies": "^1.8.1",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
@@ -43,7 +44,9 @@
       "linebreak-style": "off",
       "no-unused-vars": "warn",
       "vuejs-accessibility/form-control-has-label": "off",
-      "max-len": "off"
+      "max-len": "off",
+      "global-require": "off",
+      "import/no-dynamic-require": "off"
     }
   },
   "browserslist": [

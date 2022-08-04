@@ -6,7 +6,7 @@
         <p id="mainPageDes">机器学习在线部署系统，提供多种机器学习的部署方案！实现机器学习自由！</p>
         <p class="projectTitle" id="mainPageProjectName">by TeAM</p>
       </div>
-      <img src="../assets/mainPagePic1.png" alt="robotPic" id="mainPageRobotPic">
+      <img name="mainPagePic1.png" class="themeImage" alt="robotPic" id="mainPageRobotPic">
     </div>
     <button @click="changePageToModel" id="mainPageToModelPageButton">
       开始
@@ -17,6 +17,7 @@
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 
 function changeMainPageDivBoxSize() {
   const cont = document.getElementById('mainPageDivBox');
@@ -56,6 +57,7 @@ export default {
   mounted() {
     changeMainPageDivBoxSize();
     window.onresize = changeMainPageDivBoxSize;
+    changeAllImgUrl();
   },
 };
 

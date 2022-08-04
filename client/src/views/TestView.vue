@@ -10,11 +10,11 @@
         <div id="testPageShowMode">
           <p>当前模式：{{ mode }}</p>
           <button @click="changeMode" id="testPageChangeMode">
-            <img class="changeStatusIcon" title="切换输入模式" src="../assets/changeStatusIcon.png" alt="changeIcon">
+            <img class="changeStatusIcon themeImage" title="切换输入模式" name="changeStatusIcon.png" alt="changeIcon">
           </button>
           <div style="flex-grow: 1"></div>
           <button @dblclick="clear" id="testPageClearButton">
-            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
+            <img name="binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon themeImage">
           </button>
         </div>
         <div v-if="mode === 'json'">
@@ -47,12 +47,13 @@
     </div>
   </div>
   <button @click="backToModelIDPage" id="testPageReturnButton" class="roundButton returnButton">
-    <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
   </button>
 </template>
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTextPageLeftRightBoxDirection() {
@@ -166,6 +167,7 @@ export default {
   mounted() {
     changeTextPageLeftRightBoxDirection();
     window.onresize = changeTextPageLeftRightBoxDirection;
+    changeAllImgUrl();
   },
 };
 

@@ -28,13 +28,14 @@
       <button @click="upload" id="batchPageUploadButton">添加</button>
     </div>
     <button @click="goToPredictPage" id="BatchPageGoTopredictPage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeBatchPageDivBoxSize() {
@@ -102,6 +103,7 @@ export default {
   mounted() {
     changeBatchPageDivBoxSize();
     window.onresize = changeBatchPageDivBoxSize;
+    changeAllImgUrl();
     // getBatchInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
     axios.get(getBackUrl(path), {

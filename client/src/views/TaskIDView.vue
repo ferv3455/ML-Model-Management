@@ -21,13 +21,14 @@
       </div>
     </div>
     <button @click="goToBatchPage" id="goToBatchPageButton" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTaskIDPageDivBoxSize() {
@@ -67,6 +68,7 @@ export default {
   mounted() {
     changeTaskIDPageDivBoxSize();
     window.onresize = changeTaskIDPageDivBoxSize;
+    changeAllImgUrl();
     // getTaskInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
     axios.get(getBackUrl(path), {

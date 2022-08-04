@@ -28,7 +28,7 @@
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
             <button @click="changeStatus(service.id)" class="changeStatusButton">
-              <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
+              <img class="changeStatusIcon themeImage" name="changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
             </button>
           </div>
         </td>
@@ -38,7 +38,7 @@
         <td>{{ service.minResTime }}</td>
         <td>
           <button @dblclick="clear(service.id)" class="servicePageClearButton">
-            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
+            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
           </button>
         </td>
       </tr>
@@ -52,13 +52,14 @@
       <button @click="upload" id="servicePageUploadButton">添加</button>
     </div>
     <button @click="goToModelIDPage" id="servicePageGoToModelIDPage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
@@ -224,6 +225,7 @@ export default {
       });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
+    changeAllImgUrl();
   },
 };
 </script>

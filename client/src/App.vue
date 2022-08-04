@@ -11,13 +11,20 @@
         <img id="listIcon" src="./assets/listIcon.png" alt="listIcon">
         <p>模型列表</p>
       </router-link>
+      <div class="toOtherPageNav">
+        <img id="changeThemeIcon" src="./assets/changeThemeIcon.png" alt="changeThemeIcon">
+        <select id="themeChoice" @change="changeTheme" v-model="nextTheme">
+          <option value="default">默认主题</option>
+          <option value="monotone">黑白主题</option>
+        </select>
+      </div>
     </nav>
     <div id="underNav">
     </div>
     <div id="appRouterView">
       <router-view />
     </div>
-    <footer>
+    <footer class="default">
       <div id="footerBox">
         <p id="footerWords"> 本网站仅为大作业使用，并无任何商业用途！ </p>
         <div class="footerInfo">
@@ -43,9 +50,49 @@
         </a>
       </div>
     </footer>
-    <img src="./assets/robotPic.png" alt="" id="backGroundRobotPic">
+    <img v-bind:src="require('./assets/theme/' + this.curTheme + '/robotPic.png')" alt="" id="backGroundRobotPic">
   </div>
 </template>
+
+<script>
+import { routeLocationKey } from 'vue-router';
+
+export default {
+  data() {
+    return {
+      curTheme: 'default',
+      nextTheme: '',
+    };
+  },
+  methods: {
+    changeTheme(event) {
+      const doc = document.getElementsByTagName('html')[0];
+      doc.setAttribute('data-theme', this.nextTheme);
+      this.curTheme = this.nextTheme;
+      if (this.$cookies.isKey('theme')) {
+        this.$cookies.remove('theme');
+      }
+      this.$cookies.config('1m');
+      this.$cookies.set('theme', this.curTheme);
+      this.changeFooterpic();
+      this.$router.go(0);
+    },
+    changeFooterpic() {
+      const myFooter = document.getElementsByTagName('footer')[0];
+      myFooter.classList = [this.curTheme];
+    },
+  },
+  mounted() {
+    if (this.$cookies.isKey('theme')) {
+      this.curTheme = this.$cookies.get('theme');
+      this.nextTheme = this.curTheme;
+      const doc = document.getElementsByTagName('html')[0];
+      doc.setAttribute('data-theme', this.nextTheme);
+      this.changeFooterpic();
+    }
+  },
+};
+</script>
 
 <style>
 #backGroundRobotPic {
@@ -96,6 +143,19 @@ nav {
   margin-right: 6px;
 }
 
+#changeThemeIcon {
+  margin-top: 2px;
+  height: 26px;
+  margin-right: 8px;
+}
+
+#themeChoice {
+  width: 110px;
+  height: 25px;
+  font-size: 18px;
+  margin-top: 2px;
+}
+
 .toOtherPageNav {
   display: flex;
   align-items: center;
@@ -107,9 +167,16 @@ nav {
 footer {
   width: 100%;
   height: 350px;
-  background: url('./assets/footer.png');
   text-align: center;
   position: relative;
+}
+
+footer.default {
+  background: url('./assets/theme/default/footer.png');
+}
+
+footer.monotone {
+  background: url('./assets/theme/monotone/footer.png');
 }
 
 #appRouterView {

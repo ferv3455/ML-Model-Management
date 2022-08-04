@@ -13,10 +13,10 @@
           <h2 class="predictPageSmallBoxTitle">Curl代码</h2>
           <div id="predictPageCurlBoxGrow"></div>
           <button @click="generateCurl" id="predictPageGenerateCurl">
-            <img src="../assets/generateIcon.png" title="生成curl代码" alt="generateIcon" class="generateIcon">
+            <img name="generateIcon.png" title="生成curl代码" alt="generateIcon" class="themeImage generateIcon">
           </button>
           <button @click="copyCurl" id="predictPageCopyCurl">
-            <img src="../assets/copyIcon.png" title="复制curl代码" alt="copyIcon" class="copyIcon">
+            <img name="copyIcon.png" title="复制curl代码" alt="copyIcon" class="themeImage copyIcon">
           </button>
         </div>
         <textarea v-model="curlInput" id="predictPageCurlInput" readonly></textarea>
@@ -31,13 +31,14 @@
     </div>
     <button @click="goToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
     <button @click="goToServicePage" id="predictPageGoToServicePage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changePredictPageBoxDirection() {
@@ -125,6 +126,7 @@ export default {
   mounted() {
     changePredictPageBoxDirection();
     window.onresize = changePredictPageBoxDirection;
+    changeAllImgUrl();
   },
 };
 </script>

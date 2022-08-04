@@ -2,8 +2,8 @@
   <div id="batchPageDivBox">
     <h1>
       批量任务列表页面
-      <div class="modelNow">当前服务：{{ serviceID }}</div>
-      <div class="modelNowInService">当前模型：{{ modelID }}</div>
+      <div class="modelNow">当前服务：{{ serviceName }}</div>
+      <div class="modelNowInService">当前模型：{{ modelName }}</div>
     </h1>
     <table id="batchPageTaskTable">
       <tr>
@@ -13,7 +13,8 @@
       <tr v-for="task in tasks" :key="task" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='transparent'">
         <td>
-          <router-link :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, taskID: task.id } }">
+          <router-link
+            :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, modelName: modelName, serviceName: serviceName, taskID: task.id } }">
             {{ task.id }}
           </router-link>
         </td>
@@ -49,7 +50,9 @@ export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
+      modelName: this.$route.params.modelName,
       serviceID: this.$route.params.serviceID,
+      serviceName: this.$route.params.serviceName,
       // 需从后端请求当前存在的tasks
       tasks: [{
         id: 'task1',
@@ -89,7 +92,9 @@ export default {
         name: 'predict',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },

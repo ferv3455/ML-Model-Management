@@ -5,8 +5,8 @@
     </h1>
     <div id="modelIDPageModelDetail">
       <div id="modelIDPageModelDetailBasic" class="divUse">
-        <p class="modelIDPageModelInfo">ID</p>
-        <p class="modelIDPageGetModelInfo">{{ modelID }}</p>
+        <p class="modelIDPageModelInfo">名称</p>
+        <p class="modelIDPageGetModelInfo">{{ modelName }}</p>
         <p class="modelIDPageModelInfo">类型</p>
         <p class="modelIDPageGetModelInfo">{{ modelType }}</p>
         <p class="modelIDPageModelInfo">算法</p>
@@ -85,6 +85,7 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: this.$route.params.modelID,
+      modelName: 'testName',
       modelDes: 'xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
@@ -148,6 +149,7 @@ export default {
         name: 'test',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
           modelInputs: JSON.stringify(this.modelInputs),
         },
       });
@@ -157,6 +159,7 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
         },
       });
     },
@@ -172,6 +175,7 @@ export default {
     })
       .then((res) => {
         if (res.data.exist === true) {
+          this.modelName = res.data.name;
           this.modelDes = res.data.des;
           this.modelType = res.data.type;
           this.modelAlgo = res.data.algo;

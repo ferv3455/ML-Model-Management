@@ -41,7 +41,7 @@ export default {
       ProDescription: '',
       LoadedProDescription: '并未加载预处理脚本文件',
       LoadedProPath: '',
-      LoadedProName: '',
+      LoadedProName: 'xxx',
       Loaded: false,
     };
   },
@@ -153,5 +153,10 @@ export default {
   display: flex;
   align-items: center;
   flex-direction: row;
+}
+
+#deletePrePro {
+  margin-left: 40px;
+  height: 70%;
 }
 </style>

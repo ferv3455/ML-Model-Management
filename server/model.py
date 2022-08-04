@@ -1,6 +1,8 @@
 import time
 import joblib
+import torch
 from pypmml import Model
+import torch
 
 
 class Model:
@@ -25,7 +27,7 @@ class Model:
             for i in range(0, len(self.model.inputNames)):
                 self.input[i]['name'] = self.model.inputNames[i]
 
-        if  len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
+        if len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
             output_type = 'integer'
             output_measure = 'nominal'
             output_value = self.model.classes
@@ -86,6 +88,35 @@ class Model:
         })
         pass
 
+    def pthInit(self, file):
+        # Has some problems
+        self.model = torch.load(file)
+        self.algo = 'Neural Networks'
+        self.input = []
+        self.output = []
+
+        # initial output to find number of classes
+        state_dict = self.model['state_dict']
+        net_len = len(state_dict)
+        state_keys = list(state_dict.keys())
+        num_classes = list(state_dict[state_keys[net_len - 1]].size())[0]
+
+        self.output.append({
+            'name': 'output',
+            'type': 'weight list',
+            'measure': 'any',
+            'value': str(num_classes)
+        })
+
+        # initial input, but can't find standard input size from model file pth
+        self.input.append({
+            'name': 'input',
+            'type': '2D Tensor',
+            'measure': 'any',
+            'value': 'sized'
+        })
+        pass
+
     def __init__(self, id, des, type, file):
         self.id = id
         self.des = des
@@ -100,6 +131,8 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
+        elif self.type == "pth":
+            self.pthInit(file)
 
     def predict(self, x_test):
         return self.model.predict(x_test)

@@ -57,11 +57,16 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
+          modelName: this.modelName,
+          serviceID: this.serviceID,
+          serviceName: this.serviceName,
         },
       });
     },
   },
   mounted() {
+    changeTaskIDPageDivBoxSize();
+    window.onresize = changeTaskIDPageDivBoxSize;
     // getTaskInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
     axios.get(getBackUrl(path), {

@@ -55,13 +55,13 @@ export default {
       serviceName: this.$route.params.serviceName,
       // 需从后端请求当前存在的tasks
       tasks: [{
-        id: 'task1',
+        id: 1,
         status: 'waiting',
       }, {
-        id: 'task2',
+        id: 2,
         status: 'running',
       }, {
-        id: 'task3',
+        id: 3,
         status: 'finished',
       },
       ],
@@ -100,6 +100,8 @@ export default {
     },
   },
   mounted() {
+    changeBatchPageDivBoxSize();
+    window.onresize = changeBatchPageDivBoxSize;
     // getBatchInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
     axios.get(getBackUrl(path), {

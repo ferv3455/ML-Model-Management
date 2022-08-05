@@ -1,6 +1,8 @@
 import time
 import joblib
 from pypmml import Model
+import onnx
+from google.protobuf.json_format import MessageToDict
 
 
 class Model:
@@ -53,7 +55,39 @@ class Model:
         # self.algo = xxx
         # self.input = xxx
         # self.output = xxx
+        self.model = onnx.load(file)
+        self.algo = '-'
+        self.input = []
+        self.output = []
+        graph_dict = MessageToDict(self.model.graph)
+        node_dict = graph_dict['node']
+        input_list = graph_dict['input']
+
+        if 'opType' in node_dict[0].keys():
+            self.algo = node_dict[0]['opType']
+
+        for i in range(len(input_list)):
+            input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
+            dim_input = []
+            for dim in input_dim_list:
+                if not dim:
+                    dim_input.append('1')
+                else:
+                    dim_input.append(dim['dim_value'])
+            dim_input = dim_input.join(', ')
+            self.input.append({
+                'name': input_list[i]['name'],
+                'type': 'tensor(float)',
+                'measure': '',
+                'dim': '(' + dim_input + ')',
+                'value': '',
+            })
+
+
+
+
         pass
+
 
     def pklInit(self, file):
         self.model = joblib.load(file)

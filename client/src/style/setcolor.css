@@ -15,6 +15,7 @@ input,
 select,
 textarea {
     background-color: var(--inputColor);
+    color: var(--textColor);
 }
 
 body {
@@ -36,7 +37,7 @@ nav {
 }
 
 .roundButton {
-    background-color: transparent;
+    background-color: var(--backgroundColor);
     border-color: var(--textColor);
 }
 

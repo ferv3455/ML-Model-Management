@@ -12,7 +12,7 @@
         <th>上传时间</th>
       </tr>
       <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='white'">
+        onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td>
           <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
             {{ model.name }}

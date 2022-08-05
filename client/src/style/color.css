@@ -29,3 +29,35 @@
     --importantColor: #ff002a;
     --mainPageNotImportantTextColor: #6f6f6f;
 }
+
+:root[data-theme=cyberpunk] {
+    --textColor: #05d9e8;
+    --backgroundColor: #01012b;
+    --buttonColor: #ff2a6d;
+    --buttonHoverColor: #ff4782;
+    --buttonActiveColor: #ff6c9a;
+    --roundButtonColor: #ff2a6d;
+    --hrefColor: #05d9e8;
+    --inputColor: #0a0a53;
+    --navColor: #ff2a6d;
+    --navTextColor: #01012b;
+    --buttonTransColor: #16687f;
+    --importantColor: #0a6cf5;
+    --mainPageNotImportantTextColor: #ff2a6d;
+}
+
+:root[data-theme=goldDigger] {
+    --textColor: #893448;
+    --backgroundColor: rgba(242, 234, 191, 0.15);
+    --buttonColor: #ffb248;
+    --buttonHoverColor: #ed8146;
+    --buttonActiveColor: #d95850;
+    --roundButtonColor: #ffb248;
+    --hrefColor: #893448;
+    --inputColor: #faefc8;
+    --navColor: #581318;
+    --navTextColor: #fbf6ee;
+    --buttonTransColor: #faefc8;
+    --importantColor: #2A0944;
+    --mainPageNotImportantTextColor: #ffb248;
+}

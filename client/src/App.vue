@@ -16,6 +16,8 @@
         <select id="themeChoice" @change="changeTheme" v-model="nextTheme">
           <option value="default">默认主题</option>
           <option value="monotone">黑白主题</option>
+          <option value="cyberpunk">赛博朋克</option>
+          <option value="goldDigger">掘金者</option>
         </select>
       </div>
     </nav>
@@ -178,6 +180,14 @@ footer.default {
 
 footer.monotone {
   background: url('./assets/theme/monotone/footer.png');
+}
+
+footer.cyberpunk {
+  background: url('./assets/theme/cyberpunk/footer.png');
+}
+
+footer.goldDigger {
+  background: url('./assets/theme/goldDigger/footer.png');
 }
 
 #appRouterView {

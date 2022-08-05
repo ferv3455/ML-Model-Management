@@ -16,7 +16,7 @@
         <th>删除服务</th>
       </tr>
       <tr v-for="service in services" :key="service" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='transparent'">
+        onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td>
           <router-link
             :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id, modelName: modelName, serviceName: service.name } }">

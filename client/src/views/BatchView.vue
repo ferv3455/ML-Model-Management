@@ -11,7 +11,7 @@
         <th>任务状态</th>
       </tr>
       <tr v-for="task in tasks" :key="task" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='transparent'">
+        onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td>
           <router-link
             :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, modelName: modelName, serviceName: serviceName, taskID: task.id } }">

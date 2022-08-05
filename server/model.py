@@ -60,12 +60,12 @@ class Model:
         self.input = []
         self.output = []
         graph_dict = MessageToDict(self.model.graph)
-        node_dict = graph_dict['node']
-        input_list = graph_dict['input']
 
+        node_dict = graph_dict['node']
         if 'opType' in node_dict[0].keys():
             self.algo = node_dict[0]['opType']
 
+        input_list = graph_dict['input']
         for i in range(len(input_list)):
             input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
             dim_input = []
@@ -74,7 +74,7 @@ class Model:
                     dim_input.append('1')
                 else:
                     dim_input.append(dim['dim_value'])
-            dim_input = dim_input.join(', ')
+            dim_input = ', '.join(dim_input)
             self.input.append({
                 'name': input_list[i]['name'],
                 'type': 'tensor(float)',
@@ -83,9 +83,28 @@ class Model:
                 'value': '',
             })
 
+        output_list = graph_dict['output']
+        for i in range(len(output_list)):
+            type = output_list[i]['type'].keys()[0]
 
-
-
+            if type == 'tensorType':
+                dim_output = []
+                output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
+                for dim in output_dim_list:
+                    if not dim:
+                        dim_output.append('1')
+                    else:
+                        dim_output.append(dim['dim_value'])
+                dim_output = ', '.join(dim_output)
+            else:
+                dim_output = ''
+            self.output.append({
+                'name': output_list[i]['name'],
+                'type': type,
+                'measure': '',
+                'dim': '(' + dim_output + ')',
+                'value': '',
+            })
         pass
 
 

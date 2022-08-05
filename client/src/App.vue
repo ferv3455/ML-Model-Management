@@ -51,6 +51,7 @@
           <img id="gitIcon" src="./assets/gitIcon.png" alt="gitIcon">
         </a>
       </div>
+      <img class="themeImage" name="footer.png" alt="footerPic" id="footerImage">
     </footer>
     <img v-bind:src="require('./assets/theme/' + this.curTheme + '/robotPic.png')" alt="" id="backGroundRobotPic">
   </div>
@@ -76,12 +77,7 @@ export default {
       }
       this.$cookies.config('1m');
       this.$cookies.set('theme', this.curTheme);
-      this.changeFooterpic();
       this.$router.go(0);
-    },
-    changeFooterpic() {
-      const myFooter = document.getElementsByTagName('footer')[0];
-      myFooter.classList = [this.curTheme];
     },
   },
   mounted() {
@@ -90,7 +86,6 @@ export default {
       this.nextTheme = this.curTheme;
       const doc = document.getElementsByTagName('html')[0];
       doc.setAttribute('data-theme', this.nextTheme);
-      this.changeFooterpic();
     }
     changeAllImgUrl();
   },
@@ -174,20 +169,14 @@ footer {
   position: relative;
 }
 
-footer.default {
-  background: url('./assets/theme/default/footer.png');
-}
-
-footer.monotone {
-  background: url('./assets/theme/monotone/footer.png');
-}
-
-footer.cyberpunk {
-  background: url('./assets/theme/cyberpunk/footer.png');
-}
-
-footer.goldDigger {
-  background: url('./assets/theme/goldDigger/footer.png');
+#footerImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: -13;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 #appRouterView {

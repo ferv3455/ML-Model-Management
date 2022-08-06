@@ -73,9 +73,8 @@ class Model:
             dim_input = ', '.join(dim_input)
             self.input.append({
                 'name': input_list[i]['name'],
-                'type': 'tensor(float)',
+                'type': 'tensor(float) ' + '(' + dim_input + ')',
                 'measure': '',
-                'dim': '(' + dim_input + ')',
                 'value': '',
             })
 
@@ -96,9 +95,8 @@ class Model:
                 dim_output = ''
             self.output.append({
                 'name': output_list[i]['name'],
-                'type': type,
+                'type': type + ' (' + dim_output + ')',
                 'measure': '',
-                'dim': '(' + dim_output + ')',
                 'value': '',
             })
         pass

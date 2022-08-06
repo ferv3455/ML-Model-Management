@@ -51,10 +51,6 @@ class Model:
 
     def onnxInit(self, file):
         # TODO
-        # self.model = xxx
-        # self.algo = xxx
-        # self.input = xxx
-        # self.output = xxx
         self.model = onnx.load(file)
         self.algo = '-'
         self.input = []
@@ -73,7 +69,7 @@ class Model:
                 if not dim:
                     dim_input.append('1')
                 else:
-                    dim_input.append(dim['dim_value'])
+                    dim_input.append(dim['dimValue'])
             dim_input = ', '.join(dim_input)
             self.input.append({
                 'name': input_list[i]['name'],
@@ -85,7 +81,7 @@ class Model:
 
         output_list = graph_dict['output']
         for i in range(len(output_list)):
-            type = output_list[i]['type'].keys()[0]
+            type = list(output_list[i]['type'].keys())[0]
 
             if type == 'tensorType':
                 dim_output = []
@@ -94,7 +90,7 @@ class Model:
                     if not dim:
                         dim_output.append('1')
                     else:
-                        dim_output.append(dim['dim_value'])
+                        dim_output.append(dim['dimValue'])
                 dim_output = ', '.join(dim_output)
             else:
                 dim_output = ''

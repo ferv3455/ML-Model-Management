@@ -65,6 +65,7 @@ export default {
     return {
       curTheme: 'default',
       nextTheme: '',
+      myWaifu: 'koharu',
     };
   },
   methods: {
@@ -88,6 +89,28 @@ export default {
       doc.setAttribute('data-theme', this.nextTheme);
     }
     changeAllImgUrl();
+  },
+  created() {
+    setTimeout(() => {
+      window.L2Dwidget.init({
+        pluginRootPath: '/live2dw/',
+        pluginJsPath: 'lib/',
+        pluginModelPath: `live2d-widget-model-${this.myWaifu}/assets/`,
+
+        model: { jsonPath: `/live2dw/live2d-widget-model-${this.myWaifu}/assets/${this.myWaifu}.model.json` },
+        display: { position: 'left', width: 200, height: 400 },
+        mobile: { show: true },
+        log: true,
+
+        dialog: {
+          enable: true,
+          script: {
+            'every idle 1s': '遇到问题了吗？？？',
+            'tap face': '有什么需要帮忙的吗？',
+          },
+        },
+      });
+    }, 10);
   },
 };
 </script>

@@ -10,12 +10,12 @@ def predict(model, data):
 
 
 '''
->>> res = mul.delay(3, 5)
+>>> res = mul.apply_async(args=(3, 5), queue='service1')
 >>> res.ready()
 True
 >>> res.get()
 15
->>> mul.apply_async(args=[1,2], queue='service2') 
+>>> mul.apply_async(args=[1, 2], queue='service1') 
 <AsyncResult: 51d86f25-7db8-4b5d-bc6a-b81faa516562>
 '''
 

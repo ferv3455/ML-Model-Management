@@ -25,6 +25,7 @@ services = ServiceList()
 
 # View functions begin
 # TODO: It should be full of BUUUUUUGS now
+# TODO: use session to identify models in use: keep them in the memory
 
 
 @app.route('/model', methods=['GET'])
@@ -47,7 +48,8 @@ def createModel():
         params = request.get_json()  # keys: name, des, type, file
         print('Creating model:', params)
 
-        model = Model(**params) # TODO: model initializer: name, des, type, file
+        # TODO: model initializer: name, des, type, file
+        model = Model(**params)
         model.save()            # TODO: save the model to ./models/<id>.<type>
 
         param_names = ('name', 'des', 'type', 'algo', 'time')
@@ -74,8 +76,8 @@ def getModelInfo(modelID):
     if res['exist']:
         try:
             # TODO: model initializer: load from file (according to id and type)
-            model = Model(model_params['name'], 
-                          model_params['des'], model_params['type'])
+            model = Model(model_params['name'],
+                          model_params['des'], model_params['type'], id=modelID)
             param_names = ('name', 'des', 'type', 'algo',
                            'time', 'input', 'output')
             res.update({key: getattr(model, key) for key in param_names})
@@ -92,7 +94,7 @@ def testModel(modelID):
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
         model = Model(model_params['name'],
-                      model_params['des'], model_params['type'])
+                      model_params['des'], model_params['type'], id=modelID)
         result = model.predict(input_data)
         res = {'output': result}
     except:
@@ -128,7 +130,7 @@ def createService(modelID):
 
         model_params = data.getModelByID(modelID)
         model = Model(model_params['name'],
-                      model_params['des'], model_params['type'])
+                      model_params['des'], model_params['type'], id=modelID)
         services.add(serviceID, Service(serviceID, model))
         res = {'status': 'success'}
 
@@ -143,6 +145,8 @@ def createService(modelID):
 
 @app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
+    begin = datetime.now()
+
     try:
         cmd = request.get_json()
         status = cmd['opr']
@@ -152,6 +156,7 @@ def changeServiceStatus(modelID, serviceID):
         if status == 'start' or status == 'pause':
             services.get(serviceID).changeStatus(status)
         else:
+            services.get(serviceID).close()
             services.delete(serviceID)
 
         res = {'status': 'success'}
@@ -159,6 +164,8 @@ def changeServiceStatus(modelID, serviceID):
         traceback.print_exc()
         res = {'status': 'fail'}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
@@ -178,7 +185,6 @@ def quickPredict(modelID, serviceID):
 
     end = datetime.now()
     data.addResponse(serviceID, begin, end)
-
     return jsonify(res)
 
 
@@ -190,8 +196,10 @@ def batchPredict(modelID, serviceID):
     try:
         service = services.get(serviceID)
         input_data = request.get_json()
-        task_id = service.batch(input_data['file'])
-        res = {'id': task_id}
+        # taskID = data.addTask((serviceID, modelID, datetime.now(), 'waiting'))
+        # TODO: read file
+        taskID = service.batch(readFile(input_data['file']))
+        res = {'id': taskID}
     except:
         traceback.print_exc()
         res = None
@@ -204,31 +212,42 @@ def batchPredict(modelID, serviceID):
 @app.route('/model/<modelID>/service/<serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
     print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
+    begin = datetime.now()
+
     try:
-        records = data.getTasksByService(serviceID)
-        param_name = ('id', 'status')
-        res = {'tasks': [{key: r[key] for key in param_name} for r in records]}
+        # records = data.getTasksByService(serviceID)
+        records = services.get(serviceID).getTasks()
+        # param_name = ('id', 'status')
+        # res = {'tasks': [{key: r[key] for key in param_name} for r in records]}
+        res = {'tasks': list(records)}
     except:
         traceback.print_exc()
         res = {'tasks': []}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
 @app.route('/model/<modelID>/service/<serviceID>/task/<taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
     print('Getting task {}'.format(taskID))
+    begin = datetime.now()
+
     try:
-        task = data.getTaskByID(taskID)
-        res = {'status': task['status']}
+        # task = data.getTaskByID(taskID)
+        # res = {'status': task['status']}
+        service = services.get(serviceID)
+        res = {'status': service.getTaskStatus(taskID)}
 
         if res['status'] == 'finished':
-            service = services.get(serviceID)
             res['result'] = service.getResult(taskID)
     except:
         traceback.print_exc()
         res = None
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 # View functions end

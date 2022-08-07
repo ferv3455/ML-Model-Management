@@ -1,0 +1,34 @@
+from celery import Celery
+
+app = Celery('task', backend='redis://localhost:6379/1',
+             broker='redis://localhost:6379/2')
+
+
+@app.task
+def predict(model, data):
+    return model.predict(data)
+
+
+'''
+>>> res = mul.delay(3, 5)
+>>> res.ready()
+True
+>>> res.get()
+15
+>>> mul.apply_async(args=[1,2], queue='service2') 
+<AsyncResult: 51d86f25-7db8-4b5d-bc6a-b81faa516562>
+'''
+
+if __name__ == '__main__':
+    args = [
+        'worker',
+        '--loglevel=INFO',
+        '-Q',
+        'service1',
+        '--without-gossip',
+        '--without-mingle',
+        '--without-heartbeat',
+        '-Ofair',
+        '--purge'
+    ]
+    app.worker_main(argv=args)

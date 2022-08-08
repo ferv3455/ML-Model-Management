@@ -88,6 +88,11 @@ export default {
       const target = document.getElementById('live2d-widget');
       target.style.opacity = 1 - target.style.opacity;
       setDialog('嘿嘿！٩(｡・ω・｡)و我来啦！', 1500);
+      if (this.$cookies.isKey('live2D')) {
+        this.$cookies.remove('live2D');
+      }
+      this.$cookies.config('1m');
+      this.$cookies.set('live2D', target.style.opacity);
     },
   },
   mounted() {
@@ -111,6 +116,15 @@ export default {
       this.nextTheme = this.curTheme;
       const doc = document.getElementsByTagName('html')[0];
       doc.setAttribute('data-theme', this.nextTheme);
+    }
+
+    if (this.$cookies.isKey('live2D')) {
+      console.log('hhh');
+      setTimeout(() => {
+        const target = document.getElementById('live2d-widget');
+        target.style.opacity = this.$cookies.get('live2D');
+        setDialog('嘿嘿！٩(｡・ω・｡)و我来啦！', 1500);
+      }, 100);
     }
     changeAllImgUrl();
   },
@@ -281,7 +295,7 @@ footer {
 }
 
 #assistantButton {
-  position: absolute;
+  position: fixed;
   bottom: 15px;
   left: 10px;
   width: 30px;

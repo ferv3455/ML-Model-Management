@@ -1,5 +1,6 @@
 from datetime import datetime
 import traceback
+import os
 
 from gevent import pywsgi
 from flask import Flask, jsonify, request
@@ -240,6 +241,8 @@ def getTaskInfo(modelID, serviceID, taskID):
 
 
 if __name__ == '__main__':
+    if not os.path.exists('./models'):
+        os.makedirs('./models')
     server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
     server.serve_forever()
     # app.run('0.0.0.0', port=5000, debug=True)

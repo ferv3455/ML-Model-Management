@@ -61,8 +61,9 @@ def getAllModels():
 
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
+    print(models_list)
     for temp_model in models_list:
-        if temp_model['modelID'] == modelID:
+        if temp_model['id'] == modelID:
             return temp_model
     zero_model = {}
     return zero_model
@@ -77,9 +78,9 @@ def addModel(record):  # add new model to models_list
     param_names = ('name', 'des', 'type', 'algo', 'time')
     temp_dict = dict(zip(param_names, record))
 
-    temp_dict['modelID'] = model_id_count
+    global model_id_count
+    temp_dict['id'] = model_id_count
     model_id_count = model_id_count+1
-
     models_list.append(temp_dict)
     return model_id_count-1
 
@@ -92,7 +93,7 @@ def getServicesByModel(modelID):
     records = []
 
     for temp_service in services:
-        if temp_service['serviceID'] == modelID:
+        if temp_service['id'] == modelID:
             # TODO:search in response and find the times
             records.append(temp_service)
     return records

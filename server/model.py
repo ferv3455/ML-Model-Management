@@ -65,9 +65,6 @@ class Model:
             self.pklInit(file)
 
     def predict(self, x_test):
-        data.newTask()
-        # wqj:
-        # TODO:args of new Task,such as modelID,serviceID
         return self.model.predict(x_test)
 
 

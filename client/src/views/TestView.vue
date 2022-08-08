@@ -119,7 +119,12 @@ export default {
     submit(event) {
       let submitObject = {};
       if (this.mode === 'json') {
-        submitObject = JSON.parse(this.jsonInput);
+        try {
+          submitObject = JSON.parse(this.jsonInput);
+        } catch (err) {
+          alert(err);
+          return;
+        }
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);

@@ -68,7 +68,13 @@ export default {
   },
   methods: {
     submit(event) {
-      const submitObject = JSON.parse(this.jsonInput);
+      let submitObject;
+      try {
+        submitObject = JSON.parse(this.jsonInput);
+      } catch (err) {
+        alert(err);
+        return;
+      }
       // console.log(submitObject);
       // put submitObject
       const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
@@ -87,7 +93,15 @@ export default {
       this.curlInput = 'Get curl code!!';
       // 生成向后端请求的curl代码
       let curlCode = 'curl -d "';
-      const jsonObject = JSON.parse(this.jsonInput);
+
+      let jsonObject;
+      try {
+        jsonObject = JSON.parse(this.jsonInput);
+      } catch (err) {
+        alert(err);
+        return;
+      }
+
       Object.keys(jsonObject).map((key) => {
         curlCode = `${curlCode}${key}=${jsonObject[key]}&`;
         return null;

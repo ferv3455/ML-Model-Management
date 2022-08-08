@@ -50,7 +50,7 @@ def createModel():
 
         # TODO: model initializer: name, des, type, file
         model = Model(**params)
-        model.save()            # TODO: save the model to ./models/<id>.<type>
+        # model.save()            # TODO: save the model to ./models/<id>.<type>
 
         param_names = ('name', 'des', 'type', 'algo', 'time')
         data.addModel(tuple(getattr(model, key) for key in param_names))

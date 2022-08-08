@@ -1,5 +1,6 @@
 import time
 import joblib
+import data
 
 
 class Model:

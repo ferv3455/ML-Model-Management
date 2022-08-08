@@ -45,12 +45,13 @@ def getAllModels():
 @app.route('/model', methods=['POST'])
 def createModel():
     try:
-        params = request.get_json()  # keys: name, des, type, file
+        params = request.form.to_dict()  # keys: name, des, type, file
         print('Creating model:', params)
 
-        # TODO: model initializer: name, des, type, file
+        id = data.model_id_count
+        params['file'] = './models/{}.{}'.format(id, params['type'])
+        request.files['file'].save(params['file'])
         model = Model(**params)
-        # model.save()            # TODO: save the model to ./models/<id>.<type>
 
         param_names = ('name', 'des', 'type', 'algo', 'time')
         data.addModel(tuple(getattr(model, key) for key in param_names))
@@ -67,20 +68,22 @@ def createModel():
     return jsonify(res)
 
 
-@app.route('/model/<modelID>', methods=['GET'])
+@app.route('/model/<int:modelID>', methods=['GET'])
 def getModelInfo(modelID):
     model_params = data.getModelByID(modelID)
+    print(model_params)
     res = {'exist': (model_params is not None)}
     print('Searching for model {}: {}'.format(modelID, res['exist']))
 
     if res['exist']:
         try:
-            # TODO: model initializer: load from file (according to id and type)
             model = Model(model_params['name'],
-                          model_params['des'], model_params['type'])
+                          model_params['des'], model_params['type'],
+                          './models/{}.{}'.format(modelID, model_params['type']))
             param_names = ('name', 'des', 'type', 'algo',
                            'time', 'input', 'output')
             res.update({key: getattr(model, key) for key in param_names})
+            print(res)
         except:
             traceback.print_exc()
 
@@ -104,7 +107,7 @@ def testModel(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['GET'])
+@app.route('/model/<int:modelID>/service', methods=['GET'])
 def getAllServices(modelID):
     print('Getting all services of model {}'.format(modelID))
     try:
@@ -120,7 +123,7 @@ def getAllServices(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['POST'])
+@app.route('/model/<int:modelID>/service', methods=['POST'])
 def createService(modelID):
     try:
         params = request.get_json()  # keys: name
@@ -143,7 +146,7 @@ def createService(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
     try:
         cmd = request.get_json()
@@ -164,7 +167,7 @@ def changeServiceStatus(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/quick', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/quick', methods=['POST'])
 def quickPredict(modelID, serviceID):
     print('Quick Predict on model {}, service {}'.format(modelID, serviceID))
     begin = datetime.now()
@@ -184,7 +187,7 @@ def quickPredict(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['POST'])
 def batchPredict(modelID, serviceID):
     print('Batch Predict on model {}, service {}'.format(modelID, serviceID))
     begin = datetime.now()
@@ -203,7 +206,7 @@ def batchPredict(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task', methods=['GET'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
     print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
     try:
@@ -217,7 +220,7 @@ def getAllTasks(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task/<taskID>', methods=['GET'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task/<int:taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
     print('Getting task {}'.format(taskID))
     try:

@@ -1,21 +1,33 @@
 <template>
-    <div id="errorPageDivBox">
-        <img src="../assets/404Pic.png" id="errorImg" alt="404pic">
-    </div>
+  <div id="errorPageDivBox">
+    <img name="404Pic.png" id="errorImg" class="themeImage" alt="404pic">
+  </div>
 </template>
 
 <script>
+import changeAllImgUrl from '@/getThemeImg';
+
+export default {
+  data() {
+    return {
+    };
+  },
+  mounted() {
+    changeAllImgUrl();
+  },
+};
+
 </script>
 
 <style>
 #errorPageDivBox {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #errorImg {
-    width: 60%;
+  width: 60%;
 }
 </style>

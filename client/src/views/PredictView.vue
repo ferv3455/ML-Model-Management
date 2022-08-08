@@ -12,16 +12,16 @@
         <div id="predictPageCurlBox">
           <h2 class="predictPageSmallBoxTitle">Curl代码</h2>
           <div id="predictPageCurlBoxGrow"></div>
-          <button @click="generateCurl" id="predictPageGenerateCurl">
-            <img src="../assets/generateIcon.png" title="生成curl代码" alt="generateIcon" class="generateIcon">
+          <button @click="generateCurl" @mouseover="dialogClickToGenerateCurl" id="predictPageGenerateCurl">
+            <img name="generateIcon.png" title="生成curl代码" alt="generateIcon" class="themeImage generateIcon">
           </button>
-          <button @click="copyCurl" id="predictPageCopyCurl">
-            <img src="../assets/copyIcon.png" title="复制curl代码" alt="copyIcon" class="copyIcon">
+          <button @click="copyCurl" @mouseover="dialogClickToCopyCurl" id="predictPageCopyCurl">
+            <img name="copyIcon.png" title="复制curl代码" alt="copyIcon" class="themeImage copyIcon">
           </button>
         </div>
         <textarea v-model="curlInput" id="predictPageCurlInput" readonly></textarea>
         <div id="predictPageButton">
-          <button @click="submit" id="predictPageSubmitButton">提交</button>
+          <button @click="submit" @mouseover="dialogClickToSummit" id="predictPageSubmitButton">提交</button>
         </div>
       </div>
       <div class="predictPageSmallBox divUse" id="predictPageOutputBox">
@@ -29,15 +29,18 @@
         <textarea v-model="output" id="predictPageOutput" readonly></textarea>
       </div>
     </div>
-    <button @click="goToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
-    <button @click="goToServicePage" id="predictPageGoToServicePage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    <button @click="goToBatchPage" @mouseover="dialogClickToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
+    <button @click="goToServicePage" @mouseover="dialogClickToServicePage" id="predictPageGoToServicePage"
+      class="roundButton returnButton">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changePredictPageBoxDirection() {
@@ -121,10 +124,27 @@ export default {
       copyElement.select();
       document.execCommand('copy');
     },
+    dialogClickToServicePage(event) {
+      setDialog('点击可以返回服务列表页哟(*´∀`)~♥', 1500);
+    },
+    dialogClickToGenerateCurl(event) {
+      setDialog('点击生成curl代码前记得确保json格式的正确性哟!~♥', 1500);
+    },
+    dialogClickToCopyCurl(event) {
+      setDialog('一键复制curl代码,解放Ctrl-C Ctrl-V(◍>o<◍)✩', 1500);
+    },
+    dialogClickToSummit(event) {
+      setDialog('(๑ơ₃ơ)♥提交前记得确保输入的json格式是正确的哟~', 1500);
+    },
+    dialogClickToBatchPage(event) {
+      setDialog('想要布置新任务，可以前往批量任务列表页哟(*´∀`)', 1500);
+    },
   },
   mounted() {
     changePredictPageBoxDirection();
     window.onresize = changePredictPageBoxDirection;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 </script>

@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import setDialog from '@/live2dSetDialog';
 import MainView from '../views/MainView.vue';
 
 const routes = [

@@ -16,8 +16,8 @@
         <th>删除服务</th>
       </tr>
       <tr v-for="service in services" :key="service" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='transparent'">
-        <td>
+        onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
+        <td @mouseover="dialogClickToPredictPage">
           <router-link
             :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id, modelName: modelName, serviceName: service.name } }">
             {{ service.name }}
@@ -27,8 +27,8 @@
         <td>
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
-            <button @click="changeStatus(service.id)" class="changeStatusButton">
-              <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换模型状态" alt="changeIcon">
+            <button @click="changeStatus(service.id)" @mouseover="dialogClickToChangeStatus" class="changeStatusButton">
+              <img class="changeStatusIcon themeImage" name="changeStatusIcon.png" title="切换服务状态" alt="changeIcon">
             </button>
           </div>
         </td>
@@ -37,8 +37,8 @@
         <td>{{ service.maxResTime }}</td>
         <td>{{ service.minResTime }}</td>
         <td>
-          <button @dblclick="clear(service.id)" class="servicePageClearButton">
-            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
+          <button @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
+            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
           </button>
         </td>
       </tr>
@@ -49,16 +49,19 @@
         <p>新服务名 :</p>
         <input id="servicePageEnterServiceName" v-model="newServiceName">
       </div>
-      <button @click="upload" id="servicePageUploadButton">添加</button>
+      <button @click="upload" @mouseover="dialogClickToAddNewService" id="servicePageUploadButton">添加</button>
     </div>
-    <button @click="goToModelIDPage" id="servicePageGoToModelIDPage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    <button @click="goToModelIDPage" @mouseover="dialogClickToGoToModelIDPage" id="servicePageGoToModelIDPage"
+      class="roundButton returnButton">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
@@ -209,6 +212,21 @@ export default {
           console.log(error);
         });
     },
+    dialogClickToGoToModelIDPage(event) {
+      setDialog('੭˙ᗜ˙)੭ ♡点击返回上一页，那里可以查看模型详情', 1500);
+    },
+    dialogClickToPredictPage(event) {
+      setDialog('想要部署服务接口,请点击这里!_(:3 ⌒ﾞ)_', 1500);
+    },
+    dialogClickToChangeStatus(event) {
+      setDialog('点击转换服务状态(•ㅅ•)♡', 1500);
+    },
+    dialogClickToDeleteService(event) {
+      setDialog('点击后就找不回了இдஇ！千万不要点错哟！！', 1500);
+    },
+    dialogClickToAddNewService(event) {
+      setDialog('⁽⁽٩(๑˃̶͈̀ ᗨ ˂̶͈́)۶⁾⁾可以添加新的服务哟！', 1500);
+    },
   },
   mounted() {
     // Get Service List
@@ -224,6 +242,8 @@ export default {
       });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 </script>

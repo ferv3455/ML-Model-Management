@@ -3,7 +3,6 @@ import joblib
 from pypmml import Model
 import onnx
 from google.protobuf.json_format import MessageToDict
-import torch
 
 
 class Model:
@@ -132,34 +131,14 @@ class Model:
         })
         pass
 
-    def ptInit(self, file):
-        self.model = torch.load(file)
-        self.algo = 'Neural Network'
+    def blankInit(self):
+        self.model = None
+        self.algo = 'unknown'
         self.input = []
         self.output = []
 
-        self.input.append({
-            'name': 'input',
-            'type': '2D tensor',
-            'measure': 'any',
-            'value': 'sized',
-        })
-
-        state_dict = self.model['state_dict']
-        net_len = len(state_dict)
-        state_key = list(state_dict.keys())
-        num_classes = list(state_dict[state_key[net_len - 1]].size())[0]
-
-        self.output.append({
-            'name': 'output',
-            'type': 'weight list',
-            'measure': 'any',
-            'value': str(num_classes)
-        })
-        pass
-
-    def __init__(self, id, des, type, file):
-        self.id = id
+    def __init__(self, name,  des, type, file):
+        self.name = name
         self.des = des
         self.type = type
         self.time = time.time()
@@ -172,8 +151,8 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
-        elif self.type == 'pt':
-            self.ptInit(file)
+        else:
+            self.blankInit()
 
     def predict(self, x_test):
         return self.model.predict(x_test)

@@ -1,42 +1,87 @@
 <template>
-  <div>
+  <div id="testPageDivBox">
     <h1>
       模型测试页面
+      <div class="modelNow">当前模型：{{ modelName }}</div>
     </h1>
-    <p>当前模型：{{ modelID }}</p>
     <div id="testPageLeftRight">
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输入</h2>
-        <button @click="changeMode" id="testPageChangeMode">{{ mode }}</button>
+        <div id="testPageShowMode">
+          <p>当前模式：{{ mode }}</p>
+          <button @click="changeMode" id="testPageChangeMode">
+            <img class="changeStatusIcon" title="切换输入模式" src="../assets/changeStatusIcon.png" alt="changeIcon">
+          </button>
+          <div style="flex-grow: 1"></div>
+          <button @dblclick="clear" id="testPageClearButton">
+            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
+          </button>
+        </div>
         <div v-if="mode === 'json'">
           <textarea v-model="jsonInput" id="testPageJsonInput"></textarea>
         </div>
         <div v-if="mode === 'form'">
-          <div v-for="variance in variances" :key="variance">
-            <p>{{ variance.name }}</p>
-            <input :id="'var_' + variance.name">
+          <div id="testPageFormArea">
+            <div class="testPageInputVariance" v-for="variance in variances" :key="variance">
+              <p>{{ variance.name }}</p>
+              <div v-if="variance.type !== 'image'">
+                <input :id="'var_' + variance.name">
+              </div>
+              <div v-else>
+                <input :id="'var_' + variance.name" type="file" ref="file" accept=".png, .jpg, .jpeg, .bmp"
+                  @change="onImageChange(variance.name)">
+                <img :id="'var_' + variance.name + '_image'" class="testPageUploadImage" alt="inputImage"
+                  src="../assets/emptyPic.png">
+              </div>
+            </div>
           </div>
         </div>
-        <button @dblclick="clear" id="testPageClearButton">双击清除</button>
-        <button @click="submit" id="testPageSubmitButton">提交</button>
+        <div id="testPageButton">
+          <button @click="submit" id="testPageSubmitButton">提交</button>
+        </div>
       </div>
-      <div class="testPageSmallBox">
+      <div class="testPageSmallBox divUse">
         <h2 class="testPageSmallBoxTitle"> 输出</h2>
         <textarea v-model="output" readonly id="testPageOutput"></textarea>
       </div>
     </div>
   </div>
-  <button @click="backToModelIDPage">返回模型详细信息页面</button>
+  <button @click="backToModelIDPage" id="testPageReturnButton" class="roundButton returnButton">
+    <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+  </button>
 </template>
 
 <script>
 import axios from 'axios';
+import getBackUrl from '../getIP';
+
+function changeTextPageLeftRightBoxDirection() {
+  const cont = document.getElementById('testPageLeftRight');
+  if (window.innerWidth <= 800) {
+    cont.style.width = `${window.innerWidth * 0.90}px`;
+    cont.style.flexDirection = 'column';
+  } else {
+    cont.style.width = `${window.innerWidth * 0.8}px`;
+    cont.style.flexDirection = 'row';
+  }
+}
+
+function getBase64Image(img) {
+  const canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  const ctx = canvas.getContext('2d');
+  ctx.drawImage(img, 0, 0, img.width, img.height);
+  const dataURL = canvas.toDataURL('image/png');
+  return dataURL.replace('data:image/png;base64,', '');
+}
 
 export default {
   data() {
     return {
       modelID: this.$route.params.modelID,
-      mode: 'json',
+      modelName: this.$route.params.modelName,
+      mode: 'form',
       output: 'this is output!',
       jsonInput: '',
       variances: JSON.parse(this.$route.params.modelInputs),
@@ -59,6 +104,10 @@ export default {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
           inputBox.value = '';
+          if (this.variances[i].type === 'image') {
+            const imgFile = document.getElementById(`var_${this.variances[i].name}`);
+            document.getElementById(`var_${this.variances[i].name}_image`).classList.remove('testPageImageLoaded');
+          }
         }
       }
     },
@@ -69,12 +118,31 @@ export default {
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
-          submitObject[this.variances[i].name] = inputBox.value;
+          if (inputBox.value === '') {
+            alert(`变量 ${this.variances[i].name} 为空！`);
+            return;
+          }
+          if (this.variances[i].type !== 'image') {
+            submitObject[this.variances[i].name] = inputBox.value;
+          } else {
+            const inputImg = document.getElementById(`var_${this.variances[i].name}_image`);
+            submitObject[this.variances[i].name] = getBase64Image(inputImg);
+          }
         }
       }
       console.log(submitObject);
-      // TODO
-      // 将submitObject（格式：JS对象——已经处理好了）作为输入参数提交给后端
+      // put submitObject
+      const path = `/model/${this.modelID}/test`;
+      axios.post(getBackUrl(path), {
+        submitObject,
+      })
+        .then((res) => {
+          this.output = res.data.output;
+        })
+        .catch((error) => {
+          // eslint-disable-next-line
+          console.error(error);
+        });
     },
     backToModelIDPage(event) {
       this.$router.push({
@@ -84,6 +152,20 @@ export default {
         },
       });
     },
+    onImageChange(name) {
+      const imgFile = document.getElementById(`var_${name}`);
+      if (imgFile.files.length === 0) {
+        document.getElementById(`var_${name}_image`).classList.remove('testPageImageLoaded');
+      } else {
+        const imageToShow = window.URL.createObjectURL(imgFile.files[0]);
+        document.getElementById(`var_${name}_image`).src = imageToShow;
+        document.getElementById(`var_${name}_image`).classList.add('testPageImageLoaded');
+      }
+    },
+  },
+  mounted() {
+    changeTextPageLeftRightBoxDirection();
+    window.onresize = changeTextPageLeftRightBoxDirection;
   },
 };
 
@@ -92,13 +174,94 @@ export default {
 <style>
 #testPageLeftRight {
   display: flex;
-  width: 100%;
 }
 
 .testPageSmallBox {
   flex-grow: 1;
-  width: 50%;
+  width: 100%;
   margin: 10px;
-  background-color: lightgray;
+  padding: 20px;
+}
+
+.testPageSmallBoxTitle {
+  margin: 0px;
+  margin-bottom: 10px;
+}
+
+#testPageDivBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#testPageClearButton {
+  width: 25px;
+  margin-right: 15px;
+  height: auto;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#testPageChangeMode {
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  width: 30px;
+  height: 30px;
+  margin-left: 30px;
+}
+
+#testPageShowMode {
+  display: flex;
+  align-items: center;
+  margin: 0px;
+  margin-top: -10px;
+  width: 100%;
+}
+
+#testPageShowMode p {
+  width: 150px;
+  margin: 0px;
+}
+
+#testPageJsonInput {
+  height: 250px;
+  width: 99%;
+}
+
+#testPageButton {
+  display: flex;
+  justify-content: center;
+}
+
+.testPageInputVariance p {
+  margin: 0px;
+  margin-bottom: 10px;
+  font-weight: bolder;
+}
+
+.testPageInputVariance input {
+  margin: 0px;
+  margin-bottom: 20px;
+  width: 99%;
+}
+
+#testPageFormArea {
+  height: 250px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
+
+#testPageOutput {
+  width: 99%;
+  height: 340px;
+}
+
+.testPageUploadImage {
+  width: 0px;
+}
+
+.testPageImageLoaded {
+  width: 150px;
 }
 </style>

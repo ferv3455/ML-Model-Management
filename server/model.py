@@ -1,6 +1,6 @@
 import time
 import joblib
-from pypmml import Model
+from pypmml import Model as pmmlModel
 import onnx
 from google.protobuf.json_format import MessageToDict
 
@@ -12,7 +12,7 @@ class Model:
         # self.algo = xxx
         # self.input = xxx
         # self.output = xxx
-        self.model = Model.fromFile(file)
+        self.model = pmmlModel.fromFile(file)
         self.algo = self.model.algorithmName
         self.input = []
         self.output = []
@@ -27,7 +27,7 @@ class Model:
             for i in range(0, len(self.model.inputNames)):
                 self.input[i]['name'] = self.model.inputNames[i]
 
-        if  len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
+        if len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
             output_type = 'integer'
             output_measure = 'nominal'
             output_value = self.model.classes
@@ -47,7 +47,8 @@ class Model:
                 'measure': output_measure,
                 'value': output_value
             })
-        pass
+        print(self.input)
+        print(self.output)
 
     def onnxInit(self, file):
         # TODO
@@ -101,7 +102,6 @@ class Model:
             })
         pass
 
-
     def pklInit(self, file):
         self.model = joblib.load(file)
         self.algo = self.model.__class__.__name__
@@ -137,7 +137,7 @@ class Model:
         self.input = []
         self.output = []
 
-    def __init__(self, name,  des, type, file):
+    def __init__(self, name, des, type, file):
         self.name = name
         self.des = des
         self.type = type
@@ -158,8 +158,10 @@ class Model:
         return self.model.predict(x_test)
 
 
-# models dictionary, created with two test models
+'''
+models dictionary, created with two test models
 MODELS = {
     'testModel1': Model('testModel1', 'This is a test model.', 'pmml', None),
     'testModel2': Model('testModel2', 'This is another test model.', 'onnx', None)
 }
+'''

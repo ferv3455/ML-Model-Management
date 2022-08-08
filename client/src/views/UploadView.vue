@@ -12,6 +12,8 @@
       <select v-model="modelType" id="uploadPageEnterModelType" value="pmml">
         <option value="pmml">PMML</option>
         <option value="onnx">ONNX</option>
+        <option value="pkl">PKL</option>
+        <option value="pth">PTH</option>
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">

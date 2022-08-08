@@ -1,5 +1,8 @@
 import time
 import joblib
+from pypmml import Model as pmmlModel
+import onnx
+from google.protobuf.json_format import MessageToDict
 
 
 class Model:
@@ -9,14 +12,94 @@ class Model:
         # self.algo = xxx
         # self.input = xxx
         # self.output = xxx
-        pass
+        self.model = pmmlModel.fromFile(file)
+        self.algo = self.model.algorithmName
+        self.input = []
+        self.output = []
+        for i in range(0, len(self.model.inputNames)):
+            self.input.append({
+                'name': 'feature{}'.format(i+1),
+                'type': 'double',
+                'measure': 'continuous',
+                'value': 'any',
+            })
+        if hasattr(self.model, 'inputNames'):
+            for i in range(0, len(self.model.inputNames)):
+                self.input[i]['name'] = self.model.inputNames[i]
+
+        if len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
+            output_type = 'integer'
+            output_measure = 'nominal'
+            output_value = self.model.classes
+        elif len(self.model.classes):
+            output_type = 'double'
+            output_measure = 'nominal'
+            output_value = self.model.classes
+        else:
+            output_type = 'double'
+            output_measure = 'continuous'
+            output_value = 'any'
+
+        for i in range(0, len(self.model.targetNames)):
+            self.output.append({
+                'name': self.model.targetNames[i],
+                'type': output_type,
+                'measure': output_measure,
+                'value': output_value
+            })
+        print(self.input)
+        print(self.output)
 
     def onnxInit(self, file):
         # TODO
-        # self.model = xxx
-        # self.algo = xxx
-        # self.input = xxx
-        # self.output = xxx
+        self.model = onnx.load(file)
+        self.algo = '-'
+        self.input = []
+        self.output = []
+        graph_dict = MessageToDict(self.model.graph)
+
+        node_dict = graph_dict['node']
+        if 'opType' in node_dict[0].keys():
+            self.algo = node_dict[0]['opType']
+
+        input_list = graph_dict['input']
+        for i in range(len(input_list)):
+            input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
+            dim_input = []
+            for dim in input_dim_list:
+                if not dim:
+                    dim_input.append('1')
+                else:
+                    dim_input.append(dim['dimValue'])
+            dim_input = ', '.join(dim_input)
+            self.input.append({
+                'name': input_list[i]['name'],
+                'type': 'tensor(float) ' + '(' + dim_input + ')',
+                'measure': '',
+                'value': '',
+            })
+
+        output_list = graph_dict['output']
+        for i in range(len(output_list)):
+            type = list(output_list[i]['type'].keys())[0]
+
+            if type == 'tensorType':
+                dim_output = []
+                output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
+                for dim in output_dim_list:
+                    if not dim:
+                        dim_output.append('1')
+                    else:
+                        dim_output.append(dim['dimValue'])
+                dim_output = ', '.join(dim_output)
+            else:
+                dim_output = ''
+            self.output.append({
+                'name': output_list[i]['name'],
+                'type': type + ' (' + dim_output + ')',
+                'measure': '',
+                'value': '',
+            })
         pass
 
     def pklInit(self, file):
@@ -48,8 +131,14 @@ class Model:
         })
         pass
 
-    def __init__(self, id, des, type, file):
-        self.id = id
+    def blankInit(self):
+        self.model = None
+        self.algo = 'unknown'
+        self.input = []
+        self.output = []
+
+    def __init__(self, name, des, type, file):
+        self.name = name
         self.des = des
         self.type = type
         self.time = time.time()
@@ -62,13 +151,17 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
+        else:
+            self.blankInit()
 
     def predict(self, x_test):
         return self.model.predict(x_test)
 
 
-# models dictionary, created with two test models
+'''
+models dictionary, created with two test models
 MODELS = {
     'testModel1': Model('testModel1', 'This is a test model.', 'pmml', None),
     'testModel2': Model('testModel2', 'This is another test model.', 'onnx', None)
 }
+'''

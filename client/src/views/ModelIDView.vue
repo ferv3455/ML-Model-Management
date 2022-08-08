@@ -190,8 +190,8 @@ export default {
           this.modelType = res.data.type;
           this.modelAlgo = res.data.algo;
           this.modelTime = res.data.time;
-          this.modelInputs = res.data.inputs;
-          this.modelOutputs = res.data.outputs;
+          this.modelInputs = res.data.input;
+          this.modelOutputs = res.data.output;
         } else {
           alert('模型不存在');
         }

@@ -26,3 +26,5 @@ pnpm-debug.log*
 # python test
 tester.py
 
+# temp models
+models

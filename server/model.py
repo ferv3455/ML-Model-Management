@@ -1,6 +1,6 @@
 import time
 import joblib
-import data
+# import data
 
 
 class Model:
@@ -49,8 +49,14 @@ class Model:
         })
         pass
 
-    def __init__(self, id, des, type, file):
-        self.id = id
+    def blankInit(self):
+        self.model = None
+        self.algo = 'unknown'
+        self.input = []
+        self.output = []
+
+    def __init__(self, name,  des, type, file):
+        self.name = name
         self.des = des
         self.type = type
         self.time = time.time()
@@ -63,6 +69,8 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
+        else:
+            self.blankInit()
 
     def predict(self, x_test):
         return self.model.predict(x_test)

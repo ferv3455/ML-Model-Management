@@ -91,14 +91,16 @@ def getModelInfo(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/test', methods=['POST'])
+@app.route('/model/<int:modelID>/test', methods=['POST'])
 def testModel(modelID):
     try:
-        input_data = request.get_json()
+        input_data = request.get_json()['submitObject']
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
+        print(model_params)
         model = Model(model_params['name'],
-                      model_params['des'], model_params['type'])
+                      model_params['des'], model_params['type'],
+                      './models/{}.{}'.format(modelID, model_params['type']))
         result = model.predict(input_data)
         res = {'output': result}
     except:
@@ -130,11 +132,12 @@ def createService(modelID):
         params = request.get_json()  # keys: name
         print('Creating service:', params)
         serviceID = data.addService(
-            (modelID, params['name'], datetime.now(), 'on', 0))
+            modelID, params['name'], datetime.now(), 'running', 0)
 
         model_params = data.getModelByID(modelID)
         model = Model(model_params['name'],
-                      model_params['des'], model_params['type'])
+                      model_params['des'], model_params['type'],
+                      './models/{}.{}'.format(modelID, model_params['type']))
         services.add(serviceID, Service(serviceID, model))
         res = {'status': 'success'}
 

@@ -1,11 +1,16 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import ModelView from '../views/ModelView.vue';
+import MainView from '../views/MainView.vue';
 
 const routes = [
   {
     path: '/',
+    name: 'main',
+    component: MainView,
+  },
+  {
+    path: '/model',
     name: 'model',
-    component: ModelView,
+    component: () => import('../views/ModelView.vue'),
   },
   {
     path: '/upload',
@@ -42,11 +47,26 @@ const routes = [
     name: 'task',
     component: () => import('../views/TaskIDView.vue'),
   },
+  {
+    path: '/:catchAll(.*)',
+    name: 'error',
+    component: () => import('../views/404View.vue'),
+  },
 ];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  // chrome
+  document.body.scrollTop = 0;
+  // firefox
+  document.documentElement.scrollTop = 0;
+  // safari
+  window.pageYOffset = 0;
+  next();
 });
 
 export default router;

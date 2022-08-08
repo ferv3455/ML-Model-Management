@@ -50,6 +50,9 @@
         <a href="https://git.tsinghua.edu.cn/xy-guo20/ml-model-manage-system">
           <img id="gitIcon" src="./assets/gitIcon.png" alt="gitIcon">
         </a>
+        <button @click="showAssistant" id="assistantButton">
+          <img id="assistantIcon" src="./assets/assistantIcon.png" alt="assistantIcon">
+        </button>
       </div>
       <img class="themeImage" name="footer.png" alt="footerPic" id="footerImage">
     </footer>
@@ -58,6 +61,7 @@
 </template>
 
 <script>
+import setDialog from '@/live2dSetDialog';
 import changeAllImgUrl from '@/getThemeImg';
 
 export default {
@@ -80,8 +84,28 @@ export default {
       this.$cookies.set('theme', this.curTheme);
       this.$router.go(0);
     },
+    showAssistant(event) {
+      const target = document.getElementById('live2d-widget');
+      target.style.opacity = 1 - target.style.opacity;
+      setDialog('嘿嘿！٩(｡・ω・｡)و我来啦！', 1500);
+    },
   },
   mounted() {
+    window.L2Dwidget.init({
+      pluginRootPath: '/live2dw/',
+      pluginJsPath: 'lib/',
+      pluginModelPath: `live2d-widget-model-${this.myWaifu}/assets/`,
+
+      model: { jsonPath: `/live2dw/live2d-widget-model-${this.myWaifu}/assets/${this.myWaifu}.model.json` },
+      display: { position: 'left', width: 180, height: 300 },
+      mobile: { show: true },
+      log: true,
+
+      dialog: {
+        enable: true,
+      },
+    });
+
     if (this.$cookies.isKey('theme')) {
       this.curTheme = this.$cookies.get('theme');
       this.nextTheme = this.curTheme;
@@ -89,28 +113,6 @@ export default {
       doc.setAttribute('data-theme', this.nextTheme);
     }
     changeAllImgUrl();
-  },
-  created() {
-    setTimeout(() => {
-      window.L2Dwidget.init({
-        pluginRootPath: '/live2dw/',
-        pluginJsPath: 'lib/',
-        pluginModelPath: `live2d-widget-model-${this.myWaifu}/assets/`,
-
-        model: { jsonPath: `/live2dw/live2d-widget-model-${this.myWaifu}/assets/${this.myWaifu}.model.json` },
-        display: { position: 'left', width: 200, height: 400 },
-        mobile: { show: true },
-        log: true,
-
-        dialog: {
-          enable: true,
-          script: {
-            'every idle 1s': '遇到问题了吗？？？',
-            'tap face': '有什么需要帮忙的吗？',
-          },
-        },
-      });
-    }, 10);
   },
 };
 </script>
@@ -276,5 +278,19 @@ footer {
   position: absolute;
   bottom: 15px;
   right: 15px;
+}
+
+#assistantButton {
+  position: absolute;
+  bottom: 15px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+#assistantIcon {
+  width: 30px;
 }
 </style>

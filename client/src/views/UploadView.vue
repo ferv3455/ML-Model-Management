@@ -14,12 +14,13 @@
         <option value="onnx">ONNX</option>
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
-      <input id="uploadPageEnterModelFile" type="file" :accept="'.' + this.modelType">
-      <button @click="uploadNewModel" id="uploadPageUploadButton">
+      <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">
+      <button @click="uploadNewModel" @mouseover="dialogClickToUpload" id="uploadPageUploadButton">
         <img id="uploadPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
         上传
       </button>
-      <button @click="goToModelPage" id="goToModelPageButton" class="roundButton returnButton">
+      <button @click="goToModelPage" @mouseover="dialogClickToModelPage" id="goToModelPageButton"
+        class="roundButton returnButton">
         <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
       </button>
     </div>
@@ -28,6 +29,7 @@
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
 import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
@@ -82,11 +84,21 @@ export default {
         },
       });
     },
+    dialogClickToModelPage(event) {
+      setDialog('点击返回模型列表页ʕ•̀ o •́ʔ', 1500);
+    },
+    dialogClickToUpload(event) {
+      setDialog('(◍>o<◍)✩记得要填完所有选项才点击提交哟！', 1500);
+    },
+    dialogUploadFileType(event) {
+      setDialog('记得上传和上边模型类型相同的文件哟~(=´ω`=)', 1500);
+    },
   },
   mounted() {
     changeAllImgUrl();
     changeTableSize();
     window.onresize = changeTableSize;
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 

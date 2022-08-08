@@ -13,7 +13,7 @@
       <tr v-for="task in tasks" :key="task" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td>
-          <router-link
+          <router-link @mouseover="dialogClickToTaskPage"
             :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, modelName: modelName, serviceName: serviceName, taskID: task.id } }">
             {{ task.id }}
           </router-link>
@@ -23,11 +23,11 @@
     </table>
     <div id="batchPageAddTaskArea" class="divUse">
       <h2>创建新任务</h2>
-      <!--TODO 还未确定可输入文件的类型！（跟后端沟通后再加上）-->
       <input id="batchPageEnterModelFile" type="file">
-      <button @click="upload" id="batchPageUploadButton">添加</button>
+      <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">添加</button>
     </div>
-    <button @click="goToPredictPage" id="BatchPageGoTopredictPage" class="roundButton returnButton">
+    <button @click="goToPredictPage" @mouseover="dialogClickToPredictPage" id="BatchPageGoTopredictPage"
+      class="roundButton returnButton">
       <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
@@ -35,6 +35,7 @@
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
 import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
@@ -99,11 +100,21 @@ export default {
         },
       });
     },
+    dialogClickToTaskPage(event) {
+      setDialog('点击前往模型详情页面♡◝(\'ω\'◝)', 1500);
+    },
+    dialogClickToUpload(event) {
+      setDialog('添加新任务了~(｡・ω・｡)', 1500);
+    },
+    dialogClickToPredictPage(event) {
+      setDialog('点击返回部署接口页面٩(๑❛ᴗ❛๑)۶', 1500);
+    },
   },
   mounted() {
     changeBatchPageDivBoxSize();
     window.onresize = changeBatchPageDivBoxSize;
     changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
     // getBatchInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
     axios.get(getBackUrl(path), {

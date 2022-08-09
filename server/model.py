@@ -4,6 +4,8 @@ from pypmml import Model
 import onnx
 from google.protobuf.json_format import MessageToDict
 import torch
+import pandas as pd
+import onnxruntime
 
 
 class Model:
@@ -28,7 +30,7 @@ class Model:
             for i in range(0, len(self.model.inputNames)):
                 self.input[i]['name'] = self.model.inputNames[i]
 
-        if  len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
+        if len(self.model.classes) and not 'float' in [type(x) for x in self.model.classes]:
             output_type = 'integer'
             output_measure = 'nominal'
             output_value = self.model.classes
@@ -52,51 +54,75 @@ class Model:
 
     def onnxInit(self, file):
         # TODO
-        self.model = onnx.load(file)
+        # self.model = onnx.load(file)
+        # self.algo = '-'
+        # self.input = []
+        # self.output = []
+        # graph_dict = MessageToDict(self.model.graph)
+        #
+        # node_dict = graph_dict['node']
+        # if 'opType' in node_dict[0].keys():
+        #     self.algo = node_dict[0]['opType']
+        #
+        # input_list = graph_dict['input']
+        # for i in range(len(input_list)):
+        #     input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
+        #     dim_input = []
+        #     for dim in input_dim_list:
+        #         if not dim:
+        #             dim_input.append('1')
+        #         else:
+        #             dim_input.append(dim['dimValue'])
+        #     dim_input = ', '.join(dim_input)
+        #     self.input.append({
+        #         'name': input_list[i]['name'],
+        #         'type': 'tensor(float) ' + '(' + dim_input + ')',
+        #         'measure': '',
+        #         'value': '',
+        #     })
+        #
+        # output_list = graph_dict['output']
+        # for i in range(len(output_list)):
+        #     type = list(output_list[i]['type'].keys())[0]
+        #
+        #     if type == 'tensorType':
+        #         dim_output = []
+        #         output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
+        #         for dim in output_dim_list:
+        #             if not dim:
+        #                 dim_output.append('1')
+        #             else:
+        #                 dim_output.append(dim['dimValue'])
+        #         dim_output = ', '.join(dim_output)
+        #     else:
+        #         dim_output = ''
+        #     self.output.append({
+        #         'name': output_list[i]['name'],
+        #         'type': type + ' (' + dim_output + ')',
+        #         'measure': '',
+        #         'value': '',
+        #     })
+        self.model = onnxruntime.InferenceSession(file)
         self.algo = '-'
         self.input = []
         self.output = []
-        graph_dict = MessageToDict(self.model.graph)
-
+        graph_dict = MessageToDict(onnx.load(file).graph)
         node_dict = graph_dict['node']
         if 'opType' in node_dict[0].keys():
             self.algo = node_dict[0]['opType']
-
-        input_list = graph_dict['input']
-        for i in range(len(input_list)):
-            input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
-            dim_input = []
-            for dim in input_dim_list:
-                if not dim:
-                    dim_input.append('1')
-                else:
-                    dim_input.append(dim['dimValue'])
-            dim_input = ', '.join(dim_input)
+        input_tensors = self.model.get_inputs()
+        for input_tensor in input_tensors:
             self.input.append({
-                'name': input_list[i]['name'],
-                'type': 'tensor(float) ' + '(' + dim_input + ')',
+                'name': input_tensor.name,
+                'type': input_tensor.type + ' ' +str(input_tensor.shape),
                 'measure': '',
                 'value': '',
             })
-
-        output_list = graph_dict['output']
-        for i in range(len(output_list)):
-            type = list(output_list[i]['type'].keys())[0]
-
-            if type == 'tensorType':
-                dim_output = []
-                output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
-                for dim in output_dim_list:
-                    if not dim:
-                        dim_output.append('1')
-                    else:
-                        dim_output.append(dim['dimValue'])
-                dim_output = ', '.join(dim_output)
-            else:
-                dim_output = ''
+        output_tensors = self.model.get_outputs()
+        for output_tensor in output_tensors:
             self.output.append({
-                'name': output_list[i]['name'],
-                'type': type + ' (' + dim_output + ')',
+                'name': output_tensor.name,
+                'type': output_tensor.type + ' ' + str(output_tensor.shape),
                 'measure': '',
                 'value': '',
             })
@@ -176,7 +202,18 @@ class Model:
             self.ptInit(file)
 
     def predict(self, x_test):
-        return self.model.predict(x_test)
+        result = []
+        if self.type == 'pmml':
+            x = pd.read_json(x_test)
+            result = self.model.predict(x).values.tolist()
+        elif self.type == 'onnx':
+
+            pass
+        elif self.type == 'pkl':
+            pass
+        elif self.type == 'pt':
+            pass
+        return result
 
 
 # models dictionary, created with two test models

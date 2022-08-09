@@ -1,12 +1,12 @@
 import time
 import joblib
-from pypmml import Model
+from pypmml import Model as PMMLModel
 import onnx
 from google.protobuf.json_format import MessageToDict
 import torch
 import pandas as pd
 import onnxruntime
-
+import json
 
 class Model:
     def pmmlInit(self, file):
@@ -15,7 +15,7 @@ class Model:
         # self.algo = xxx
         # self.input = xxx
         # self.output = xxx
-        self.model = Model.fromFile(file)
+        self.model = PMMLModel.fromFile(file)
         self.algo = self.model.algorithmName
         self.input = []
         self.output = []
@@ -114,7 +114,7 @@ class Model:
         for input_tensor in input_tensors:
             self.input.append({
                 'name': input_tensor.name,
-                'type': input_tensor.type + ' ' +str(input_tensor.shape),
+                'type': input_tensor.type + ' ' + str(input_tensor.shape),
                 'measure': '',
                 'value': '',
             })
@@ -204,11 +204,12 @@ class Model:
     def predict(self, x_test):
         result = []
         if self.type == 'pmml':
-            x = pd.read_json(x_test)
+            x = pd.DataFrame([x_test])
             result = self.model.predict(x).values.tolist()
         elif self.type == 'onnx':
-
-            pass
+            input_name = self.model.get_inputs()[0].name
+            output_names = [output.name for output in self.model.get_outputs()]
+            result = self.model.run(output_names, {input_name : [x_test.values()]})
         elif self.type == 'pkl':
             pass
         elif self.type == 'pt':

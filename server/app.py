@@ -196,7 +196,7 @@ def DeletePreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['GET'])
+@app.route('/model/<int:modelID>/service', methods=['GET'])
 def getAllServices(modelID):
     print('Getting all services of model {}'.format(modelID))
     try:

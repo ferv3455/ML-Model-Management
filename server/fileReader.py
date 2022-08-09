@@ -1,3 +1,10 @@
+import io
+import zipfile
+import numpy as np
+
+from PIL import Image
+
+
 def readCSV(data):
     # Convert to generator
     gen = iter(data.stream)
@@ -13,5 +20,13 @@ def readCSV(data):
 
 
 def readZIP(data):
-    yield 0
+    # Open zip
+    zipObj = zipfile.ZipFile(data.stream._file)
+    filenames = zipObj.namelist()
 
+    # Open each file
+    for filename in filenames:
+        with zipObj.open(filename, 'r') as fp:
+            img = Image.open(io.BytesIO(fp.read()))
+            arr = np.asarray(img)
+            yield arr

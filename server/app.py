@@ -9,7 +9,7 @@ from flask_cors import CORS
 from model import Model
 from service import Service, ServiceList
 import data
-from fileReader import readCSV, readZIP
+from fileReader import readCSV, readZIP, decodeFile
 
 
 # configuration
@@ -96,12 +96,17 @@ def getModelInfo(modelID):
 def testModel(modelID):
     try:
         input_data = request.get_json()['submitObject']
+        for key, value in input_data.items():
+            if isinstance(value, str) and value.startswith('data:'):
+                input_data[key] = decodeFile(value)          # decode base64
+
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
         print(model_params)
         model = Model(model_params['name'],
                       model_params['des'], model_params['type'],
                       './models/{}.{}'.format(modelID, model_params['type']))
+
         result = model.predict(input_data)
         res = {'output': result}
     except:
@@ -184,6 +189,11 @@ def quickPredict(modelID, serviceID):
     try:
         service = services.get(serviceID)
         input_data = request.get_json()
+
+        for key, value in input_data.items():
+            if isinstance(value, str) and value.startswith('data:'):
+                input_data[key] = decodeFile(value)          # decode base64
+
         result = service.predict(input_data)
         res = {'output': result}
     except:
@@ -209,7 +219,7 @@ def batchPredict(modelID, serviceID):
         if ext == '.csv':
             data_gen = readCSV(batch_data)
         elif ext == '.zip':
-            data_gen = readZIP(batch_data)
+            data_gen = readZIP(batch_data, service.model.input[0]['name'])
         else:
             raise ValueError('File format not readable')
 

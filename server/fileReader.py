@@ -1,3 +1,4 @@
+import base64
 import io
 import zipfile
 import numpy as np
@@ -19,7 +20,7 @@ def readCSV(data):
         yield dict(zip(header, numbers))
 
 
-def readZIP(data):
+def readZIP(data, param_name):
     # Open zip
     zipObj = zipfile.ZipFile(data.stream._file)
     filenames = zipObj.namelist()
@@ -29,4 +30,23 @@ def readZIP(data):
         with zipObj.open(filename, 'r') as fp:
             img = Image.open(io.BytesIO(fp.read()))
             arr = np.asarray(img)
-            yield arr
+            yield {param_name: arr}
+
+
+def decodeFile(string: str):
+    '''Converting base64-encoded string into numpy ndarray.'''
+    # Identify header
+    try:
+        header, string = string.split(',')
+        fmt, encoding = header.split(';')
+        assert encoding == 'base64'
+        print(fmt)
+        # TODO: different formats can be processed
+    except:
+        print('No header in string')
+
+    # Decoding
+    result = base64.b64decode(string)
+    img = Image.open(io.BytesIO(result))
+    arr = np.asarray(img)
+    return arr

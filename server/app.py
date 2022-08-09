@@ -9,6 +9,7 @@ from flask_cors import CORS
 from model import Model
 from service import Service, ServiceList
 import data
+from fileReader import readCSV, readZIP
 
 
 # configuration
@@ -138,7 +139,7 @@ def createService(modelID):
         model = Model(model_params['name'],
                       model_params['des'], model_params['type'],
                       './models/{}.{}'.format(modelID, model_params['type']))
-        services.add(serviceID, Service(serviceID, model))
+        services.add(serviceID, Service(serviceID, model, modelID))
         res = {'status': 'success'}
 
     except Exception as exc:
@@ -152,6 +153,8 @@ def createService(modelID):
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
+    begin = datetime.now()
+
     try:
         cmd = request.get_json()
         status = cmd['opr']
@@ -168,6 +171,8 @@ def changeServiceStatus(modelID, serviceID):
         traceback.print_exc()
         res = {'status': 'fail'}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
@@ -198,9 +203,19 @@ def batchPredict(modelID, serviceID):
 
     try:
         service = services.get(serviceID)
-        input_data = request.get_json()
-        task_id = service.batch(input_data['file'])
-        res = {'id': task_id}
+        batch_data = request.files['file']
+        _, ext = os.path.splitext(batch_data.filename)
+
+        if ext == '.csv':
+            data_gen = readCSV(batch_data)
+        elif ext == '.zip':
+            data_gen = readZIP(batch_data)
+        else:
+            raise ValueError('File format not readable')
+
+        taskID = service.batch(data_gen)
+        res = {'id': taskID}
+        batch_data.close()
     except:
         traceback.print_exc()
         res = None
@@ -213,31 +228,38 @@ def batchPredict(modelID, serviceID):
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
     print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
+    begin = datetime.now()
+
     try:
-        records = data.getTasksByService(serviceID)
-        param_name = ('id', 'status')
-        res = {'tasks': [{key: r[key] for key in param_name} for r in records]}
+        records = services.get(serviceID).getTasks()
+        res = {'tasks': list(records)}
+
     except:
         traceback.print_exc()
         res = {'tasks': []}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task/<int:taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
     print('Getting task {}'.format(taskID))
+    begin = datetime.now()
+
     try:
-        task = data.getTaskByID(taskID)
-        res = {'status': task['status']}
+        service = services.get(serviceID)
+        res = {'status': service.getTaskStatus(taskID)}
 
         if res['status'] == 'finished':
-            service = services.get(serviceID)
             res['result'] = service.getResult(taskID)
     except:
         traceback.print_exc()
         res = None
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 # View functions end

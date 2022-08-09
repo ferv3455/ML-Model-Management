@@ -1,10 +1,6 @@
 from signal import signal
 import sqlite3
-
-from service import Service, ServiceList
-
 # all active services
-from app import services
 
 '''
 Initialize database columns:
@@ -36,6 +32,7 @@ FUNCTION newTask()
 '''
 # models\response
 models_list = []
+services_list = []
 response_list = []
 tasks_list = []
 preprocess_list = []
@@ -97,8 +94,8 @@ def getServicesByModel(modelID):
     Return a list of dicts.'''
     records = []
 
-    for temp_service in services:
-        if temp_service['id'] == modelID:
+    for temp_service in services_list:
+        if temp_service['modelID'] == modelID:
             # TODO:search in response and find the times
             records.append(temp_service)
     return records
@@ -111,23 +108,34 @@ def addService(modelID, name, time, status, count):
        Return service ID.'''
     temp_service = {}
 
+    global service_id_count
+
     temp_service['id'] = service_id_count
     temp_service['name'] = name
     temp_service['time'] = time
     temp_service['status'] = status
     temp_service['count'] = count
     temp_service['modelID'] = modelID
+    temp_service['averResTime'] = 0
+    temp_service['maxResTime'] = 0
+    temp_service['minResTime'] = 0
 
     service_id_count = service_id_count+1
 
-    services.append(temp_service)
+    services_list.append(temp_service)
     return service_id_count-1
 
 
 def setServiceStatus(serviceID, status):
     '''Change service status in table:services.'''
-    services.get(serviceID)['status'] = status
-    return
+    for temp_service in services_list:
+        if temp_service['id'] == serviceID:
+            if (status == 'delete'):
+                services_list.remove(temp_service)
+                return
+            else:
+                temp_service['status'] = status
+                return
 
 
 def addResponse(serviceID, begin, end):

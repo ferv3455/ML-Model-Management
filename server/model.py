@@ -3,6 +3,7 @@ import joblib
 from pypmml import Model as pmmlModel
 import onnx
 from google.protobuf.json_format import MessageToDict
+import pandas as pd
 
 
 class Model:
@@ -155,7 +156,18 @@ class Model:
             self.blankInit()
 
     def predict(self, x_test):
-        return self.model.predict(x_test)
+        result = []
+        if self.type == "pmml":
+            pass
+        elif self.type == "onnx":
+            pass
+        elif self.type == "pkl":
+            x_test = pd.DataFrame([x_test])
+            print(x_test)
+            result = self.model.predict(x_test).tolist()
+        else:
+            pass
+        return result
 
 
 '''

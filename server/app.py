@@ -9,6 +9,7 @@ from flask_cors import CORS
 from model import Model
 from service import Service, ServiceList
 import data
+from fileReader import readCSV, readZIP
 
 
 # configuration
@@ -198,9 +199,19 @@ def batchPredict(modelID, serviceID):
 
     try:
         service = services.get(serviceID)
-        input_data = request.get_json()
-        task_id = service.batch(input_data['file'])
+        batch_data = request.files['file']
+        _, ext = os.path.splitext(batch_data.filename)
+
+        if ext == '.csv':
+            data_gen = readCSV(batch_data)
+        elif ext == '.zip':
+            data_gen = readZIP(batch_data)
+        else:
+            raise ValueError('File format not readable')
+
+        task_id = service.batch(data_gen)
         res = {'id': task_id}
+        batch_data.close()
     except:
         traceback.print_exc()
         res = None

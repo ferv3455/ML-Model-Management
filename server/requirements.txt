@@ -7,3 +7,4 @@ onnx==1.12.0
 pandas==1.4.2
 protobuf==4.21.4
 pypmml==0.9.16
+sklearn==1.0.2

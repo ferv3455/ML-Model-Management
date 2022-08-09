@@ -42,12 +42,12 @@ class Service:
         self.count += 1
         taskID = self.count
 
-        tasks = list()
+        sub_tasks = list()
         for d in data:
-            tasks.append(task.predict.apply_async(
+            sub_tasks.append(task.predict.apply_async(
                 args=(self.model, d), queue='service{}'.format(self.id)))
 
-        self.tasks[taskID] = tasks
+        self.tasks[taskID] = sub_tasks
         return taskID
 
     def getResult(self, taskID):

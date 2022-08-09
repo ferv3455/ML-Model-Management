@@ -67,8 +67,7 @@ def getModelByID(modelID):
     for temp_model in models_list:
         if temp_model['id'] == modelID:
             return temp_model
-    zero_model = {}
-    return zero_model
+    return None
 
 
 def addModel(record):  # add new model to models_list
@@ -182,12 +181,13 @@ def newTask():
     return task_id_count-1
 
 
-def addPreProcess(modelID, prodes, path, name):
+def addPreProcess(modelID, prodes, path, name, type):
     prepro = {}
     prepro['modelID'] = modelID
     prepro['prodes'] = prodes
     prepro['path'] = path
     prepro['name'] = name
+    prepro['type'] = type
     global preprocess_id_count
     global preprocess_list
     signal = False
@@ -196,6 +196,7 @@ def addPreProcess(modelID, prodes, path, name):
             preprocess_list[i]['prodes'] = prodes
             preprocess_list[i]['path'] = path
             preprocess_list[i]['name'] = name
+            preprocess_list[i]['type'] = type
             signal = True
             break
     if not signal:
@@ -229,4 +230,4 @@ def getPreProcessByID(modelID):
     for i in range(len(preprocess_list)):
         if preprocess_list[i]['modelID'] == modelID:
             return preprocess_list[i]
-    return {}
+    return None

@@ -121,12 +121,15 @@ def getPreProcess(modelID):
 
     if res['exist']:
         try:
-            param_names = ('prodes', 'path', 'name')
-            res.update({key: getattr(prepro_params, key)
+            print('PreProcess exist')
+            param_names = ('prodes', 'path', 'name', 'type')
+            res.update({key: prepro_params[key]
                        for key in param_names})
             res['state'] = 'success'
             # test print, don't want to print des
             print(res)
+            f = open(res['path'], 'r')
+            res['f'] = f.read()
         except:
             res['state'] = 'fail'
             traceback.print_exc()
@@ -148,11 +151,11 @@ def LoadPreProcess(modelID):
         params['type'] = 'py'
 
         params['file'] = './preprocesses/{}.{}'.format(id, params['type'])
-        params['name'] = '{}.{}'.format(id, params['type'])
+        params['name'] = params['filename']
         request.files['file'].save(params['file'])
 
         data.addPreProcess(
-            modelID, params['prodes'], params['file'], params['name'])
+            modelID, params['prodes'], params['file'], params['name'], params['type'])
 
         res = {'status': 'success'}
 
@@ -171,7 +174,7 @@ def DeletePreProcess(modelID):
     try:
         print('Delete PreProcess:', modelID)
         data_dict = {}
-        data_dict['exist'], data_dict['prodes'], data_dict['path'], data_dict['name'] = data.deletePreProcess(
+        data_dict['exist'], data_dict['prodes'], data_dict['path'], data_dict['name'], data_dict['type'] = data.deletePreProcess(
             modelID)
 
         if (data_dict['exist']):
@@ -329,6 +332,11 @@ def getTaskInfo(modelID, serviceID, taskID):
 if __name__ == '__main__':
     if not os.path.exists('./models'):
         os.makedirs('./models')
+    if not os.path.exists('./preprocesses'):
+        os.makedirs('./preprocesses')
+
+    print('Server Running...')
+
     server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
     server.serve_forever()
     # app.run('0.0.0.0', port=5000, debug=True)

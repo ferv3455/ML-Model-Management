@@ -23,14 +23,17 @@ def initWorker(serviceID):
 
 
 class Service:
-    def __init__(self, serviceID, model):
+    def __init__(self, serviceID, model, modelID):
         self.id = serviceID
         self.model = model
+        self.modelID = modelID
         self.status = True          # True for ON, False for OFF
         self.tasks = dict()
+
         self.proc = Process(target=initWorker, args=(self.id,))
         self.proc.daemon = True
         self.proc.start()
+
         self.count = 0
 
     def predict(self, data):
@@ -45,7 +48,7 @@ class Service:
         sub_tasks = list()
         for d in data:
             sub_tasks.append(task.predict.apply_async(
-                args=(self.model, d), queue='service{}'.format(self.id)))
+                args=(self.modelID, self.model.type, d), queue='service{}'.format(self.id)))
 
         self.tasks[taskID] = sub_tasks
         return taskID

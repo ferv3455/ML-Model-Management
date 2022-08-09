@@ -1,3 +1,4 @@
+from signal import signal
 import sqlite3
 
 from service import Service, ServiceList
@@ -37,6 +38,7 @@ FUNCTION newTask()
 models_list = []
 response_list = []
 tasks_list = []
+preprocess_list = []
 
 # model count
 model_id_count = 0
@@ -46,6 +48,9 @@ service_id_count = 0
 
 # task count
 task_id_count = 0
+
+# preprocess count
+preprocess_id_count = 0
 
 
 def getAllModels():
@@ -167,3 +172,53 @@ def newTask():
 
     task_id_count = task_id_count+1
     return task_id_count-1
+
+
+def addPreProcess(modelID, prodes, path, name):
+    prepro = {}
+    prepro['modelID'] = modelID
+    prepro['prodes'] = prodes
+    prepro['path'] = path
+    prepro['name'] = name
+    global preprocess_id_count
+    global preprocess_list
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            preprocess_list[i]['prodes'] = prodes
+            preprocess_list[i]['path'] = path
+            preprocess_list[i]['name'] = name
+            signal = True
+            break
+    if not signal:
+        preprocess_id_count = preprocess_id_count + 1
+        preprocess_list.append(prepro)
+
+    return preprocess_id_count
+
+
+def deletePreProcess(modelID):
+    global preprocess_list
+    global preprocess_id_count
+    data_tuple = ()
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            data_tuple = (
+                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'])
+            preprocess_list.pop(i)
+            preprocess_id_count = preprocess_id_count - 1
+            signal = True
+            break
+    if not signal:
+        data_tuple = (False, '', '', '')
+
+    return data_tuple
+
+
+def getPreProcessByID(modelID):
+    global preprocess_list
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            return preprocess_list[i]
+    return {}

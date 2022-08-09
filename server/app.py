@@ -110,23 +110,85 @@ def testModel(modelID):
 
 @app.route('/model/<modelID>/preprocess', methods=['GET'])
 def getPreProcess(modelID):
-    # TODO
-    pass
-    return jsonify('test!')
+    prepro_params = data.getPreProcessByID(modelID)
+    # test print, don't want to print des
+    print(prepro_params)
+
+    res = {'exist': (prepro_params is not None)}
+    print('Searching for process {}: {}'.format(modelID, res['exist']))
+
+    if res['exist']:
+        try:
+            param_names = ('prodes', 'path', 'name')
+            res.update({key: getattr(prepro_params, key)
+                       for key in param_names})
+            res['state'] = 'success'
+            # test print, don't want to print des
+            print(res)
+        except:
+            res['state'] = 'fail'
+            traceback.print_exc()
+    else:
+        res['state'] = 'empty'
+
+    return jsonify(res)
 
 
 @app.route('/model/<modelID>/preprocess', methods=['POST'])
 def LoadPreProcess(modelID):
-    # TODO
-    pass
-    return jsonify('test!')
+    try:
+        params = request.form.to_dict()  # keys: prodes, file
+        print('Creating PreProcess:', params)
+
+        id = modelID
+
+        # now only python
+        params['type'] = 'py'
+
+        params['file'] = './preprocesses/{}.{}'.format(id, params['type'])
+        params['name'] = '{}.{}'.format(id, params['type'])
+        request.files['file'].save(params['file'])
+
+        data.addPreProcess(
+            modelID, params['prodes'], params['file'], params['name'])
+
+        res = {'status': 'success'}
+
+    except Exception as exc:
+        traceback.print_exc()
+        res = {
+            'status': 'fail',
+            'reason': exc
+        }
+
+    return jsonify(res)
 
 
 @app.route('/model/<modelID>/preprocess/delete', methods=['POST'])
 def DeletePreProcess(modelID):
-    # TODO
-    pass
-    return jsonify('test!')
+    try:
+        print('Delete PreProcess:', modelID)
+        data_dict = {}
+        data_dict['exist'], data_dict['prodes'], data_dict['path'], data_dict['name'] = data.deletePreProcess(
+            modelID)
+
+        if (data_dict['exist']):
+            res = {'status': 'success'}
+            os.remove(data_dict['path'])
+        else:
+            res = {
+                'status': 'fail',
+                'reason': 'Model has no preprocess file'
+            }
+
+    except Exception as exc:
+        traceback.print_exc()
+        res = {
+            'status': 'fail',
+            'reason': exc
+        }
+
+    return jsonify(res)
 
 
 @app.route('/model/<modelID>/service', methods=['GET'])

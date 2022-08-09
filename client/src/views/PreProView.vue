@@ -53,9 +53,9 @@ export default {
       })
         .then((res) => {
           if (res.data.state === 'success') {
-            this.LoadedProDescription = res.data.ProDescription;
-            this.LoadedProPath = res.data.LoadedProPath;
-            this.LoadedProName = res.data.LoadedProName;
+            this.LoadedProDescription = res.data.prodes;
+            this.LoadedProPath = res.data.path;
+            this.LoadedProName = res.data.name;
             this.Loaded = true;
           } else if (res.data.state === 'empty') {
             this.LoadedProDescription = '并未加载预处理脚本文件';
@@ -95,11 +95,13 @@ export default {
     uploadNewPreprocess(event) {
       const path = `/model/${this.modelID}/preprocess`;
       const f = document.getElementById('uploadPageEnterPreProFile').files[0];
-      const fileName = f.name;
-      axios.post(getBackUrl(path), {
-        ProDescription: this.ProDescription,
-        file: f,
-        fileName,
+      const postRequest = new FormData();
+      postRequest.append('prodes', this.ProDescription);
+      postRequest.append('file', f);
+      axios.post(getBackUrl(path), postRequest, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
         .then((res) => {
           this.getPrePro();

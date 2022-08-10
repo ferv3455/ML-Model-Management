@@ -218,13 +218,14 @@ class Model:
     def predict(self, x_test):
         result = []
         if self.type == 'pmml':
-            x = pd.DataFrame([x_test])
-            result = self.model.predict(x).values.tolist()
+            if isinstance(x_test, list):
+                x = pd.DataFrame([x_test[0]])
+                result = self.model.predict(x).values.tolist()
         elif self.type == 'onnx':
             if isinstance(x_test, list):
                 input_name = self.model.get_inputs()[0].name
                 output_names = [output.name for output in self.model.get_outputs()]
-                result = self.model.run(output_names, {input_name : [x_test.values()]})
+                result = self.model.run(output_names, {input_name : [x_test[0].values()]})
             elif isinstance(x_test, dict):
                 input_name = self.model.get_inputs()[0].name
                 output_names = [output.name for output in self.model.get_outputs()]
@@ -233,9 +234,12 @@ class Model:
                 img = self.pre_process(img, device)
                 result = self.model.run(output_names, {input_name : img.numpy()})
         elif self.type == 'pkl':
-            x_test = pd.DataFrame([x_test])
-            result = self.model.predict(x_test).tolist()
+            if isinstance(x_test, list):
+                x = pd.DataFrame([x_test[0]])
+                result = self.model.predict(x).tolist()
         elif self.type == 'pt':
+            pass
+        else:
             pass
         return result
 

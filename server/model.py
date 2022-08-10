@@ -6,7 +6,9 @@ from google.protobuf.json_format import MessageToDict
 import torch
 import pandas as pd
 import onnxruntime
-import json
+import cv2
+import numpy as np
+
 
 class Model:
     def pmmlInit(self, file):
@@ -201,17 +203,38 @@ class Model:
         elif self.type == 'pt':
             self.ptInit(file)
 
+    def pre_process(self, img, device):
+        size_tuple = tuple(self.model.get_inputs()[0].shape[2:])
+        img = cv2.resize(img, size_tuple)
+        img = img / 255
+        img = np.ascontiguousarray(img)
+        img = torch.from_numpy(img).to(device)
+        img = img.float()
+        img = img.unsqueeze(0)
+        if img.ndimension() == 3:
+            img = img.unsqueeze(0)
+        return img
+
     def predict(self, x_test):
         result = []
         if self.type == 'pmml':
             x = pd.DataFrame([x_test])
             result = self.model.predict(x).values.tolist()
         elif self.type == 'onnx':
-            input_name = self.model.get_inputs()[0].name
-            output_names = [output.name for output in self.model.get_outputs()]
-            result = self.model.run(output_names, {input_name : [x_test.values()]})
+            if isinstance(x_test, list):
+                input_name = self.model.get_inputs()[0].name
+                output_names = [output.name for output in self.model.get_outputs()]
+                result = self.model.run(output_names, {input_name : [x_test.values()]})
+            elif isinstance(x_test, dict):
+                input_name = self.model.get_inputs()[0].name
+                output_names = [output.name for output in self.model.get_outputs()]
+                device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+                img = x_test['value']
+                img = self.pre_process(img, device)
+                result = self.model.run(output_names, {input_name : img.numpy()})
         elif self.type == 'pkl':
-            pass
+            x_test = pd.DataFrame([x_test])
+            result = self.model.predict(x_test).tolist()
         elif self.type == 'pt':
             pass
         return result

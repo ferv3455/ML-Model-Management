@@ -95,7 +95,7 @@ def getModelInfo(modelID):
 @app.route('/model/<int:modelID>/test', methods=['POST'])
 def testModel(modelID):
     try:
-        input_data = request.get_json()['submitObject']
+        input_data = request.get_json()
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64

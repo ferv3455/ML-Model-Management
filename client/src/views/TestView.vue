@@ -143,9 +143,7 @@ export default {
       console.log(submitObject);
       // put submitObject
       const path = `/model/${this.modelID}/test`;
-      axios.post(getBackUrl(path), {
-        submitObject,
-      })
+      axios.post(getBackUrl(path), submitObject)
         .then((res) => {
           this.output = res.data.output;
         })

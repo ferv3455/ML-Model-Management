@@ -27,9 +27,9 @@
         <td>
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
-            <button @click="changeStatus(service.id)" @mouseover="dialogClickToChangeStatus" class="changeStatusButton">
+            <div @click="changeStatus(service.id)" @mouseover="dialogClickToChangeStatus" class="changeStatusButton">
               <img class="changeStatusIcon themeImage" name="changeStatusIcon.png" title="切换服务状态" alt="changeIcon">
-            </button>
+            </div>
           </div>
         </td>
         <td>{{ service.count }}</td>
@@ -37,9 +37,9 @@
         <td>{{ service.maxResTime }}</td>
         <td>{{ service.minResTime }}</td>
         <td>
-          <button @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
+          <div @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
             <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
-          </button>
+          </div>
         </td>
       </tr>
     </table>
@@ -324,13 +324,15 @@ export default {
   box-shadow: none;
   width: 30px;
   height: 30px;
-  margin-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
   padding: 0;
 }
 
 .servicePageClearButton {
   width: 25px;
-  margin-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
   height: 25px;
   background-color: transparent;
   color: transparent;

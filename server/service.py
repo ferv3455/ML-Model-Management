@@ -76,7 +76,8 @@ class Service:
             self.status = False
 
     def close(self):
-        self.proc.kill()
+        self.proc.terminate()
+        self.proc.join()
         self.proc.close()
 
 
@@ -92,4 +93,5 @@ class ServiceList:
 
     def delete(self, serviceID):
         if serviceID in self.services:
+            self.services[serviceID].close()
             del self.services[serviceID]

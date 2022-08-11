@@ -12,15 +12,18 @@
       <select v-model="modelType" id="uploadPageEnterModelType" value="pmml">
         <option value="pmml">PMML</option>
         <option value="onnx">ONNX</option>
+        <option value="pkl">PKL</option>
+        <option value="pth">PTH</option>
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
-      <input id="uploadPageEnterModelFile" type="file" :accept="'.' + this.modelType">
-      <button @click="uploadNewModel" id="uploadPageUploadButton">
-        <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+      <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">
+      <button @click="uploadNewModel" @mouseover="dialogClickToUpload" id="uploadPageUploadButton">
+        <img id="uploadPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
         上传
       </button>
-      <button @click="goToModelPage" id="goToModelPageButton" class="roundButton returnButton">
-        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+      <button @click="goToModelPage" @mouseover="dialogClickToModelPage" id="goToModelPageButton"
+        class="roundButton returnButton">
+        <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
       </button>
     </div>
   </div>
@@ -28,6 +31,8 @@
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTableSize() {
@@ -53,11 +58,15 @@ export default {
       // Model upload
       const path = '/model';
       const f = document.getElementById('uploadPageEnterModelFile').files[0];
-      axios.post(getBackUrl(path), {
-        name: this.modelName,
-        type: this.modelType,
-        des: this.modelDescription,
-        file: f,
+      const postRequest = new FormData();
+      postRequest.append('name', this.modelName);
+      postRequest.append('type', this.modelType);
+      postRequest.append('des', this.modelDescription);
+      postRequest.append('file', f);
+      axios.post(getBackUrl(path), postRequest, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
         .then((res) => {
           if (res.data.status === 'success') {
@@ -81,10 +90,21 @@ export default {
         },
       });
     },
+    dialogClickToModelPage(event) {
+      setDialog('点击返回模型列表页ʕ•̀ o •́ʔ', 1500);
+    },
+    dialogClickToUpload(event) {
+      setDialog('(◍>o<◍)✩记得要填完所有选项才点击提交哟！', 1500);
+    },
+    dialogUploadFileType(event) {
+      setDialog('记得上传和上边模型类型相同的文件哟~(=´ω`=)', 1500);
+    },
   },
   mounted() {
+    changeAllImgUrl();
     changeTableSize();
     window.onresize = changeTableSize;
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 

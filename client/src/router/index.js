@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import setDialog from '@/live2dSetDialog';
 import MainView from '../views/MainView.vue';
 
 const routes = [
@@ -31,6 +32,11 @@ const routes = [
     path: '/service/:modelID',
     name: 'service',
     component: () => import('../views/ServiceView.vue'),
+  },
+  {
+    path: '/service/:modelID/preprocess',
+    name: 'preprocess',
+    component: () => import('../views/PreProView.vue'),
   },
   {
     path: '/predict/:modelID/:serviceID',

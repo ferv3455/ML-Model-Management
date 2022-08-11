@@ -48,7 +48,8 @@ class Model:
                 'measure': output_measure,
                 'value': output_value
             })
-        pass
+        print(self.input)
+        print(self.output)
 
     def onnxInit(self, file):
         # TODO
@@ -126,7 +127,6 @@ class Model:
             })
         pass
 
-
     def pklInit(self, file):
         self.model = joblib.load(file)
         self.algo = self.model.__class__.__name__
@@ -156,34 +156,14 @@ class Model:
         })
         pass
 
-    # def ptInit(self, file):
-    #     self.model = torch.load(file)
-    #     self.algo = 'Neural Network'
-    #     self.input = []
-    #     self.output = []
-    #
-    #     self.input.append({
-    #         'name': 'input',
-    #         'type': '2D tensor',
-    #         'measure': 'any',
-    #         'value': 'sized',
-    #     })
-    #
-    #     state_dict = self.model['state_dict']
-    #     net_len = len(state_dict)
-    #     state_key = list(state_dict.keys())
-    #     num_classes = list(state_dict[state_key[net_len - 1]].size())[0]
-    #
-    #     self.output.append({
-    #         'name': 'output',
-    #         'type': 'weight list',
-    #         'measure': 'any',
-    #         'value': str(num_classes)
-    #     })
-    #     pass
+    def blankInit(self):
+        self.model = None
+        self.algo = 'unknown'
+        self.input = []
+        self.output = []
 
-    def __init__(self, id, des, type, file):
-        self.id = id
+    def __init__(self, name, des, type, file):
+        self.name = name
         self.des = des
         self.type = type
         self.time = time.time()
@@ -236,8 +216,10 @@ class Model:
         return result
 
 
-# models dictionary, created with two test models
+'''
+models dictionary, created with two test models
 MODELS = {
     'testModel1': Model('testModel1', 'This is a test model.', 'pmml', None),
     'testModel2': Model('testModel2', 'This is another test model.', 'onnx', None)
 }
+'''

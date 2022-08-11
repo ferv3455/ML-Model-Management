@@ -6,9 +6,9 @@
         <p id="mainPageDes">机器学习在线部署系统，提供多种机器学习的部署方案！实现机器学习自由！</p>
         <p class="projectTitle" id="mainPageProjectName">by TeAM</p>
       </div>
-      <img src="../assets/mainPagePic1.png" alt="robotPic" id="mainPageRobotPic">
+      <img name="mainPagePic1.png" class="themeImage" alt="robotPic" id="mainPageRobotPic">
     </div>
-    <button @click="changePageToModel" id="mainPageToModelPageButton">
+    <button @click="changePageToModel" @mouseover="dialogClickToStart" id="mainPageToModelPageButton">
       开始
     </button>
     <div id="blockRobotPic"></div>
@@ -17,6 +17,8 @@
 
 <script>
 import axios from 'axios';
+import changeAllImgUrl from '@/getThemeImg';
+import setDialog from '@/live2dSetDialog';
 
 function changeMainPageDivBoxSize() {
   const cont = document.getElementById('mainPageDivBox');
@@ -52,10 +54,15 @@ export default {
         name: 'model',
       });
     },
+    dialogClickToStart(event) {
+      setDialog('点击开始来开启你的机器学习之旅吧！', 1000);
+    },
   },
   mounted() {
     changeMainPageDivBoxSize();
     window.onresize = changeMainPageDivBoxSize;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 

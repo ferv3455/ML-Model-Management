@@ -5,17 +5,19 @@
     </h1>
     <div id="modelIDPageModelDetail">
       <div id="modelIDPageModelDetailBasic" class="divUse">
-        <p class="modelIDPageModelInfo">名称</p>
+        <p class="modelIDPageModelInfo">模型名称</p>
         <p class="modelIDPageGetModelInfo">{{ modelName }}</p>
-        <p class="modelIDPageModelInfo">类型</p>
+        <p class="modelIDPageModelInfo">模型类型</p>
         <p class="modelIDPageGetModelInfo">{{ modelType }}</p>
-        <p class="modelIDPageModelInfo">算法</p>
-        <p class="modelIDPageGetModelInfo">{{ modelAlgo }}</p>
+        <p class="modelIDPageModelInfo">模型算法</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPageModelAlgo">{{ modelAlgo }}</p>
         <p class="modelIDPageModelInfo">上传时间</p>
-        <p class="modelIDPageGetModelInfo">{{ modelTime }}</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPageModelTime">{{ modelTime }}</p>
         <!--TODO 添加换行时的自适应 -->
-        <p class="modelIDPageModelInfo">描述</p>
+        <p class="modelIDPageModelInfo">模型描述</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelDes">{{ modelDes }}</p>
+        <p class="modelIDPageModelInfo">预处理文件</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPagePrePro">{{ PreProName }}</p>
       </div>
       <div id="modelIDPageModelVar" class="divUse">
         <div class="modelIDPageModelVarTable">
@@ -54,18 +56,23 @@
         </div>
       </div>
       <div>
-        <button @click="goToTestPage" id="modelIDPageGoToTestPage">进入模型测试</button>
-        <button @click="goToServicePage" id="modelIDPageGoToServicePage">进入服务列表</button>
+        <button @click="goToTestPage" id="modelIDPageGoToTestPage" @mouseover="clickToGoToTestPage">进入模型测试</button>
+        <button @click="goToServicePage" id="modelIDPageGoToServicePage"
+          @mouseover="clickToGoToServicePage">进入服务列表</button>
+        <button @click="goToPrePro" id="modelIDPageGoToPreProPage" @mouseover="clickToGoToPreProPage">进入预处理加载</button>
       </div>
     </div>
-    <button @click="backToModelPage" id="modelIDPageBackToModelPage" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    <button @click="backToModelPage" @mouseover="clickToGoToModelPage" id="modelIDPageBackToModelPage"
+      class="roundButton returnButton">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '@/getIP';
+import setDialog from '@/live2dSetDialog';
 import axios from 'axios';
 
 function changeModelDetailSize() {
@@ -90,6 +97,7 @@ export default {
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
       modelTime: '13:20',
+      PreProName: '无',
       modelInputs: [
         {
           name: 'input1',
@@ -163,10 +171,33 @@ export default {
         },
       });
     },
+    clickToGoToTestPage(event) {
+      setDialog('从这可以进入模型测试页❤︎', 1500);
+    },
+    clickToGoToModelPage(event) {
+      setDialog('点击返回模型列表页ʕ•̀ o •́ʔ', 1500);
+    },
+    clickToGoToServicePage(event) {
+      setDialog('(◍>o<◍)✩这里可以查看此模型有多少个服务', 1500);
+    },
+    clickToGoToPreProPage(event) {
+      setDialog('(๑>؂<๑)点这里可以加载自定义的预处理文件哦', 1500);
+    },
+    goToPrePro(event) {
+      this.$router.push({
+        name: 'preprocess',
+        params: {
+          modelID: this.modelID,
+          modelName: this.modelName,
+        },
+      });
+    },
   },
   mounted() {
     changeModelDetailSize();
     window.onresize = changeModelDetailSize;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
 
     // get modelID info
     const path = `/model/${this.modelID}`;
@@ -180,14 +211,32 @@ export default {
           this.modelType = res.data.type;
           this.modelAlgo = res.data.algo;
           this.modelTime = res.data.time;
-          this.modelInputs = res.data.inputs;
-          this.modelOutputs = res.data.outputs;
+          this.modelInputs = res.data.input;
+          this.modelOutputs = res.data.output;
         } else {
           alert('模型不存在');
         }
       })
       .catch((error) => {
         console.log(error);
+      });
+    // get preprocess name
+    const path2 = `/model/${this.modelID}/preprocess`;
+    axios.get(getBackUrl(path2), {
+      params: {},
+    })
+      .then((res) => {
+        if (res.data.state === 'success') {
+          this.PreProName = res.data.name;
+        } else if (res.data.state === 'empty') {
+          this.PreProName = '无';
+        } else {
+          alert('加载预处理脚本信息失败');
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
       });
   },
 };
@@ -204,13 +253,21 @@ export default {
   padding: 20px;
   padding-bottom: 25px;
   display: grid;
-  grid-template-columns: 20% 20% 25% 35%;
-  grid-template-rows: 50px 50px auto;
+  grid-template-columns: 20% 20% 35% 25%;
+  grid-template-rows: 50px 50px 50px auto;
+}
+
+#modelIDPageModelAlgo {
+  grid-column: span 3;
+}
+
+#modelIDPageModelTime {
+  grid-column: span 3;
 }
 
 #modelIDPageModelDetailBasic .modelIDPageModelInfo {
   text-align: right;
-  margin-right: 30px;
+  margin-right: 25px;
   font-weight: bolder;
 }
 
@@ -267,7 +324,8 @@ export default {
   width: 60px;
 }
 
-#modelIDPageGoToTestPage {
+#modelIDPageGoToTestPage,
+#modelIDPageGoToServicePage {
   margin-right: 30px;
 }
 

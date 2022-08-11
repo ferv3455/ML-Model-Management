@@ -12,8 +12,8 @@
         <th>上传时间</th>
       </tr>
       <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
-        onmouseout="this.style.backgroundColor='white'">
-        <td>
+        onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
+        <td @mouseover="dialogCheckModelDetail">
           <router-link :to="{ name: 'modelID', params: { modelID: model.id } }">
             {{ model.name }}
           </router-link>
@@ -24,8 +24,8 @@
         <td>{{ formatDate(model.time) }}</td>
       </tr>
     </table>
-    <button @click="changePageToUpload" id="mainPageUploadButton">
-      <img id="mainPageUploadIcon" src="../assets/uploadIcon.png" alt="Icon">
+    <button @click="changePageToUpload" id="mainPageUploadButton" @mouseover="dialogClickToUploadModel">
+      <img id="mainPageUploadIcon" class="themeImage" name="uploadIcon.png" alt="Icon">
       上传模型
     </button>
   </div>
@@ -33,6 +33,8 @@
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeMainPageDivBoxSize() {
@@ -75,10 +77,18 @@ export default {
       const date = new Date(value * 1000);
       return date.toLocaleString();
     },
+    dialogCheckModelDetail(event) {
+      setDialog('*⸜( •ᴗ• )⸝*点击这里可以查看此模型的详情', 1500);
+    },
+    dialogClickToUploadModel(event) {
+      setDialog('点击这里可以上传新模型哟๐•ᴗ•๐', 1500);
+    },
   },
   mounted() {
     changeMainPageDivBoxSize();
     window.onresize = changeMainPageDivBoxSize;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
 
     axios.get(getBackUrl('/model'), {
       params: {},

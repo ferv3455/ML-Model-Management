@@ -16,6 +16,8 @@
         <!--TODO 添加换行时的自适应 -->
         <p class="modelIDPageModelInfo">模型描述</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelDes">{{ modelDes }}</p>
+        <p class="modelIDPageModelInfo">预处理文件</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPagePrePro">{{ PreProName }}</p>
       </div>
       <div id="modelIDPageModelVar" class="divUse">
         <div class="modelIDPageModelVarTable">
@@ -57,6 +59,7 @@
         <button @click="goToTestPage" id="modelIDPageGoToTestPage" @mouseover="clickToGoToTestPage">进入模型测试</button>
         <button @click="goToServicePage" id="modelIDPageGoToServicePage"
           @mouseover="clickToGoToServicePage">进入服务列表</button>
+        <button @click="goToPrePro" id="modelIDPageGoToPreProPage" @mouseover="clickToGoToPreProPage">进入预处理加载</button>
       </div>
     </div>
     <button @click="backToModelPage" @mouseover="clickToGoToModelPage" id="modelIDPageBackToModelPage"
@@ -94,6 +97,7 @@ export default {
       modelType: 'pmml',
       modelAlgo: 'xxxxxx',
       modelTime: '13:20',
+      PreProName: '无',
       modelInputs: [
         {
           name: 'input1',
@@ -176,6 +180,18 @@ export default {
     clickToGoToServicePage(event) {
       setDialog('(◍>o<◍)✩这里可以查看此模型有多少个服务', 1500);
     },
+    clickToGoToPreProPage(event) {
+      setDialog('(๑>؂<๑)点这里可以加载自定义的预处理文件哦', 1500);
+    },
+    goToPrePro(event) {
+      this.$router.push({
+        name: 'preprocess',
+        params: {
+          modelID: this.modelID,
+          modelName: this.modelName,
+        },
+      });
+    },
   },
   mounted() {
     changeModelDetailSize();
@@ -203,6 +219,24 @@ export default {
       })
       .catch((error) => {
         console.log(error);
+      });
+    // get preprocess name
+    const path2 = `/model/${this.modelID}/preprocess`;
+    axios.get(getBackUrl(path2), {
+      params: {},
+    })
+      .then((res) => {
+        if (res.data.state === 'success') {
+          this.PreProName = res.data.name;
+        } else if (res.data.state === 'empty') {
+          this.PreProName = '无';
+        } else {
+          alert('加载预处理脚本信息失败');
+        }
+      })
+      .catch((error) => {
+        // eslint-disable-next-line
+        console.error(error);
       });
   },
 };
@@ -290,7 +324,8 @@ export default {
   width: 60px;
 }
 
-#modelIDPageGoToTestPage {
+#modelIDPageGoToTestPage,
+#modelIDPageGoToServicePage {
   margin-right: 30px;
 }
 

@@ -1,3 +1,4 @@
+from signal import signal
 import sqlite3
 # all active services
 
@@ -34,6 +35,7 @@ models_list = []
 services_list = []
 response_list = []
 tasks_list = []
+preprocess_list = []
 
 # model count
 model_id_count = 0
@@ -43,6 +45,9 @@ service_id_count = 0
 
 # task count
 task_id_count = 0
+
+# preprocess count
+preprocess_id_count = 0
 
 
 def getAllModels():
@@ -62,8 +67,7 @@ def getModelByID(modelID):
     for temp_model in models_list:
         if temp_model['id'] == modelID:
             return temp_model
-    zero_model = {}
-    return zero_model
+    return None
 
 
 def addModel(record):  # add new model to models_list
@@ -175,3 +179,55 @@ def newTask():
 
     task_id_count = task_id_count+1
     return task_id_count-1
+
+
+def addPreProcess(modelID, prodes, path, name, type):
+    prepro = {}
+    prepro['modelID'] = modelID
+    prepro['prodes'] = prodes
+    prepro['path'] = path
+    prepro['name'] = name
+    prepro['type'] = type
+    global preprocess_id_count
+    global preprocess_list
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            preprocess_list[i]['prodes'] = prodes
+            preprocess_list[i]['path'] = path
+            preprocess_list[i]['name'] = name
+            preprocess_list[i]['type'] = type
+            signal = True
+            break
+    if not signal:
+        preprocess_id_count = preprocess_id_count + 1
+        preprocess_list.append(prepro)
+
+    return preprocess_id_count
+
+
+def deletePreProcess(modelID):
+    global preprocess_list
+    global preprocess_id_count
+    data_tuple = ()
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            data_tuple = (
+                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'])
+            preprocess_list.pop(i)
+            preprocess_id_count = preprocess_id_count - 1
+            signal = True
+            break
+    if not signal:
+        data_tuple = (False, '', '', '')
+
+    return data_tuple
+
+
+def getPreProcessByID(modelID):
+    global preprocess_list
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            return preprocess_list[i]
+    return None

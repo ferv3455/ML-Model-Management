@@ -53,3 +53,11 @@ table {
 .modelNowInService {
     color: var(--mainPageNotImportantTextColor);
 }
+
+.loadedLink:hover {
+    color: var(--linkHoverColor);
+}
+
+.loadedLink:active {
+    color: var(--linkActiveColor);
+}

@@ -214,13 +214,13 @@ def deletePreProcess(modelID):
     for i in range(len(preprocess_list)):
         if preprocess_list[i]['modelID'] == modelID:
             data_tuple = (
-                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'])
+                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
             preprocess_list.pop(i)
             preprocess_id_count = preprocess_id_count - 1
             signal = True
             break
     if not signal:
-        data_tuple = (False, '', '', '')
+        data_tuple = (False, '', '', '', '')
 
     return data_tuple
 

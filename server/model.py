@@ -13,10 +13,6 @@ import numpy as np
 class Model:
     def pmmlInit(self, file):
         # TODO
-        # self.model = xxx
-        # self.algo = xxx
-        # self.input = xxx
-        # self.output = xxx
         self.model = PMMLModel.fromFile(file)
         self.algo = self.model.algorithmName
         self.input = []
@@ -160,31 +156,31 @@ class Model:
         })
         pass
 
-    def ptInit(self, file):
-        self.model = torch.load(file)
-        self.algo = 'Neural Network'
-        self.input = []
-        self.output = []
-
-        self.input.append({
-            'name': 'input',
-            'type': '2D tensor',
-            'measure': 'any',
-            'value': 'sized',
-        })
-
-        state_dict = self.model['state_dict']
-        net_len = len(state_dict)
-        state_key = list(state_dict.keys())
-        num_classes = list(state_dict[state_key[net_len - 1]].size())[0]
-
-        self.output.append({
-            'name': 'output',
-            'type': 'weight list',
-            'measure': 'any',
-            'value': str(num_classes)
-        })
-        pass
+    # def ptInit(self, file):
+    #     self.model = torch.load(file)
+    #     self.algo = 'Neural Network'
+    #     self.input = []
+    #     self.output = []
+    #
+    #     self.input.append({
+    #         'name': 'input',
+    #         'type': '2D tensor',
+    #         'measure': 'any',
+    #         'value': 'sized',
+    #     })
+    #
+    #     state_dict = self.model['state_dict']
+    #     net_len = len(state_dict)
+    #     state_key = list(state_dict.keys())
+    #     num_classes = list(state_dict[state_key[net_len - 1]].size())[0]
+    #
+    #     self.output.append({
+    #         'name': 'output',
+    #         'type': 'weight list',
+    #         'measure': 'any',
+    #         'value': str(num_classes)
+    #     })
+    #     pass
 
     def __init__(self, id, des, type, file):
         self.id = id
@@ -200,8 +196,6 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
-        elif self.type == 'pt':
-            self.ptInit(file)
 
     def pre_process(self, img, device):
         size_tuple = tuple(self.model.get_inputs()[0].shape[2:])
@@ -237,8 +231,6 @@ class Model:
             if isinstance(x_test, list):
                 x = pd.DataFrame([x_test[0]])
                 result = self.model.predict(x).tolist()
-        elif self.type == 'pt':
-            pass
         else:
             pass
         return result

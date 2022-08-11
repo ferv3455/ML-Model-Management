@@ -192,25 +192,23 @@ class Model:
     def predict(self, x_test):
         result = []
         if self.type == 'pmml':
-            if isinstance(x_test, list):
-                x = pd.DataFrame([x_test[0]])
-                result = self.model.predict(x).values.tolist()
+            x = pd.DataFrame([x_test])
+            result = self.model.predict(x).values.tolist()
         elif self.type == 'onnx':
             if isinstance(x_test, list):
-                input_name = self.model.get_inputs()[0].name
+                input_name = self.model.get_inputs().name
                 output_names = [output.name for output in self.model.get_outputs()]
-                result = self.model.run(output_names, {input_name : [x_test[0].values()]})
+                result = self.model.run(output_names, {input_name : [x_test.values()]})
             elif isinstance(x_test, dict):
-                input_name = self.model.get_inputs()[0].name
+                input_name = self.model.get_inputs().name
                 output_names = [output.name for output in self.model.get_outputs()]
                 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
                 img = x_test['value']
                 img = self.pre_process(img, device)
                 result = self.model.run(output_names, {input_name : img.numpy()})
         elif self.type == 'pkl':
-            if isinstance(x_test, list):
-                x = pd.DataFrame([x_test[0]])
-                result = self.model.predict(x).tolist()
+            x = pd.DataFrame([x_test])
+            result = self.model.predict(x).tolist()
         else:
             pass
         return result

@@ -179,14 +179,20 @@ class Model:
 
     def pre_process(self, img, device):
         size_tuple = tuple(self.model.get_inputs()[0].shape[2:])
+        print(img.shape)
         img = cv2.resize(img, size_tuple)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        print(img.shape)
         img = img / 255
         img = np.ascontiguousarray(img)
         img = torch.from_numpy(img).to(device)
         img = img.float()
         img = img.unsqueeze(0)
+        print(img.shape)
         if img.ndimension() == 3:
             img = img.unsqueeze(0)
+        img.resize_(256, 1, 28, 28)
+        print(img.shape)
         return img
 
     def predict(self, x_test):
@@ -195,22 +201,19 @@ class Model:
             x = pd.DataFrame([x_test])
             result = self.model.predict(x).values.tolist()
         elif self.type == 'onnx':
-            if isinstance(x_test, list):
-                input_name = self.model.get_inputs().name
-                output_names = [output.name for output in self.model.get_outputs()]
-                result = self.model.run(output_names, {input_name : [x_test.values()]})
-            elif isinstance(x_test, dict):
-                input_name = self.model.get_inputs().name
-                output_names = [output.name for output in self.model.get_outputs()]
-                device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-                img = x_test['value']
-                img = self.pre_process(img, device)
-                result = self.model.run(output_names, {input_name : img.numpy()})
+            input_name = self.model.get_inputs()[0].name
+            output_names = [output.name for output in self.model.get_outputs()]
+            device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+            img = x_test[input_name]
+            img = self.pre_process(img, device)
+            result = self.model.run(output_names, {input_name : img.numpy()})
+            result = [tmp.tolist() for tmp in result]
         elif self.type == 'pkl':
             x = pd.DataFrame([x_test])
             result = self.model.predict(x).tolist()
         else:
             pass
+        print(result)
         return result
 
 

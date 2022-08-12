@@ -1,5 +1,6 @@
 from signal import signal
 import sqlite3
+import pymongo
 # all active services
 
 '''
@@ -29,6 +30,10 @@ FUNCTION getTasksByService(serviceID)
 FUNCTION getTaskByID(taskID)
 FUNCTION newTask()
 
+'''
+
+'''
+try to use noSQL:mongodb
 '''
 # models\response
 models_list = []
@@ -84,6 +89,7 @@ def addModel(record):  # add new model to models_list
     model_id_count = model_id_count+1
     models_list.append(temp_dict)
     return model_id_count-1
+
 
 def deleteModel(modelID):
     for temp_model in models_list:

@@ -11,6 +11,8 @@ from service import Service, ServiceList
 import data
 from fileReader import readCSV, readZIP, decodeFile
 
+from importlib import import_module
+
 
 # configuration
 DEBUG = True
@@ -96,6 +98,13 @@ def getModelInfo(modelID):
 def testModel(modelID):
     try:
         input_data = request.get_json()
+
+        # try to get pre_process
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            pre_pro_module = import_module(pre_processer['path'])
+            input_data = pre_pro_module.pre_process(input_data)
+
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
@@ -126,13 +135,13 @@ def deleteModel(modelID):
         for temp_service in services_to_delete:
             data.setServiceStatus(temp_service['id'], 'delete')
             services.delete(temp_service['id'])
-        
+
         data.deleteModel(modelID)
-        res = {'status' : 'success'}
+        res = {'status': 'success'}
     except:
         traceback.print_exc()
-        res = {'status' : 'fail'}
-    
+        res = {'status': 'fail'}
+
     return jsonify(res)
 
 

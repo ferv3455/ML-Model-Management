@@ -1,19 +1,19 @@
 import time
 import joblib
-from pypmml import Model as pmmlModel
+from pypmml import Model as PMMLModel
 import onnx
 from google.protobuf.json_format import MessageToDict
+import torch
 import pandas as pd
+import onnxruntime
+import cv2
+import numpy as np
 
 
 class Model:
     def pmmlInit(self, file):
         # TODO
-        # self.model = xxx
-        # self.algo = xxx
-        # self.input = xxx
-        # self.output = xxx
-        self.model = pmmlModel.fromFile(file)
+        self.model = PMMLModel.fromFile(file)
         self.algo = self.model.algorithmName
         self.input = []
         self.output = []
@@ -53,51 +53,75 @@ class Model:
 
     def onnxInit(self, file):
         # TODO
-        self.model = onnx.load(file)
+        # self.model = onnx.load(file)
+        # self.algo = '-'
+        # self.input = []
+        # self.output = []
+        # graph_dict = MessageToDict(self.model.graph)
+        #
+        # node_dict = graph_dict['node']
+        # if 'opType' in node_dict[0].keys():
+        #     self.algo = node_dict[0]['opType']
+        #
+        # input_list = graph_dict['input']
+        # for i in range(len(input_list)):
+        #     input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
+        #     dim_input = []
+        #     for dim in input_dim_list:
+        #         if not dim:
+        #             dim_input.append('1')
+        #         else:
+        #             dim_input.append(dim['dimValue'])
+        #     dim_input = ', '.join(dim_input)
+        #     self.input.append({
+        #         'name': input_list[i]['name'],
+        #         'type': 'tensor(float) ' + '(' + dim_input + ')',
+        #         'measure': '',
+        #         'value': '',
+        #     })
+        #
+        # output_list = graph_dict['output']
+        # for i in range(len(output_list)):
+        #     type = list(output_list[i]['type'].keys())[0]
+        #
+        #     if type == 'tensorType':
+        #         dim_output = []
+        #         output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
+        #         for dim in output_dim_list:
+        #             if not dim:
+        #                 dim_output.append('1')
+        #             else:
+        #                 dim_output.append(dim['dimValue'])
+        #         dim_output = ', '.join(dim_output)
+        #     else:
+        #         dim_output = ''
+        #     self.output.append({
+        #         'name': output_list[i]['name'],
+        #         'type': type + ' (' + dim_output + ')',
+        #         'measure': '',
+        #         'value': '',
+        #     })
+        self.model = onnxruntime.InferenceSession(file)
         self.algo = '-'
         self.input = []
         self.output = []
-        graph_dict = MessageToDict(self.model.graph)
-
+        graph_dict = MessageToDict(onnx.load(file).graph)
         node_dict = graph_dict['node']
         if 'opType' in node_dict[0].keys():
             self.algo = node_dict[0]['opType']
-
-        input_list = graph_dict['input']
-        for i in range(len(input_list)):
-            input_dim_list = input_list[i]['type']['tensorType']['shape']['dim']
-            dim_input = []
-            for dim in input_dim_list:
-                if not dim:
-                    dim_input.append('1')
-                else:
-                    dim_input.append(dim['dimValue'])
-            dim_input = ', '.join(dim_input)
+        input_tensors = self.model.get_inputs()
+        for input_tensor in input_tensors:
             self.input.append({
-                'name': input_list[i]['name'],
-                'type': 'tensor(float) ' + '(' + dim_input + ')',
+                'name': input_tensor.name,
+                'type': input_tensor.type + ' ' + str(input_tensor.shape),
                 'measure': '',
                 'value': '',
             })
-
-        output_list = graph_dict['output']
-        for i in range(len(output_list)):
-            type = list(output_list[i]['type'].keys())[0]
-
-            if type == 'tensorType':
-                dim_output = []
-                output_dim_list = output_list[i]['type']['tensorType']['shape']['dim']
-                for dim in output_dim_list:
-                    if not dim:
-                        dim_output.append('1')
-                    else:
-                        dim_output.append(dim['dimValue'])
-                dim_output = ', '.join(dim_output)
-            else:
-                dim_output = ''
+        output_tensors = self.model.get_outputs()
+        for output_tensor in output_tensors:
             self.output.append({
-                'name': output_list[i]['name'],
-                'type': type + ' (' + dim_output + ')',
+                'name': output_tensor.name,
+                'type': output_tensor.type + ' ' + str(output_tensor.shape),
                 'measure': '',
                 'value': '',
             })
@@ -152,21 +176,44 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
-        else:
-            self.blankInit()
+
+    def pre_process(self, img, device):
+        size_tuple = tuple(self.model.get_inputs()[0].shape[2:])
+        print(img.shape)
+        img = cv2.resize(img, size_tuple)
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        print(img.shape)
+        img = img / 255
+        img = np.ascontiguousarray(img)
+        img = torch.from_numpy(img).to(device)
+        img = img.float()
+        img = img.unsqueeze(0)
+        print(img.shape)
+        if img.ndimension() == 3:
+            img = img.unsqueeze(0)
+        img.resize_(256, 1, 28, 28)
+        print(img.shape)
+        return img
 
     def predict(self, x_test):
         result = []
-        if self.type == "pmml":
-            pass
-        elif self.type == "onnx":
-            pass
-        elif self.type == "pkl":
-            x_test = pd.DataFrame([x_test])
-            print(x_test)
-            result = self.model.predict(x_test).tolist()
+        if self.type == 'pmml':
+            x = pd.DataFrame([x_test])
+            result = self.model.predict(x).values.tolist()
+        elif self.type == 'onnx':
+            input_name = self.model.get_inputs()[0].name
+            output_names = [output.name for output in self.model.get_outputs()]
+            device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+            img = x_test[input_name]
+            img = self.pre_process(img, device)
+            result = self.model.run(output_names, {input_name : img.numpy()})
+            result = [tmp.tolist() for tmp in result]
+        elif self.type == 'pkl':
+            x = pd.DataFrame([x_test])
+            result = self.model.predict(x).tolist()
         else:
             pass
+        print(result)
         return result
 
 

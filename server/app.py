@@ -116,6 +116,26 @@ def testModel(modelID):
     return jsonify(res)
 
 
+@app.route('/model/<int:modelID>/delete', methods=['POST'])
+def deleteModel(modelID):
+    try:
+        services_to_delete = data.getServicesByModel(modelID)
+
+        print('Deleting model {}'.format(modelID))
+
+        for temp_service in services_to_delete:
+            data.setServiceStatus(temp_service['id'], 'delete')
+            services.delete(temp_service['id'])
+        
+        data.deleteModel(modelID)
+        res = {'status' : 'success'}
+    except:
+        traceback.print_exc()
+        res = {'status' : 'fail'}
+    
+    return jsonify(res)
+
+
 @app.route('/model/<modelID>/preprocess', methods=['GET'])
 def getPreProcess(modelID):
     prepro_params = data.getPreProcessByID(modelID)

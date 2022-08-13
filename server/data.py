@@ -85,6 +85,12 @@ def addModel(record):  # add new model to models_list
     models_list.append(temp_dict)
     return model_id_count-1
 
+def deleteModel(modelID):
+    for temp_model in models_list:
+        if temp_model['id'] == modelID:
+            models_list.remove(temp_model)
+    return
+
 
 def getServicesByModel(modelID):
     '''Get services from table:services according to modelID.

@@ -59,7 +59,14 @@ preprocess_id_count = 0
     connect to mongodb and set up database "mmms"
 '''
 data_client = pymongo.Mongoclient("mongodb://localhost:27017/")
-data_base = data_client["mmms"]
+data_base = data_client['mmms']
+
+# set up lists in data_base
+models_list = data_base['models_list']
+services_list = data_base['services_list']
+response_list = data_base['response_list']
+tasks_list = data_base['tasks_list']
+preprocess_list = data_base['preprocess_list']
 
 
 def getAllModels():

@@ -1,6 +1,7 @@
 from signal import signal
 import sqlite3
 import pymongo
+from urllib import parse
 # all active services
 
 '''
@@ -56,10 +57,13 @@ preprocess_id_count = 0
 
 # connect to mongodb
 '''
-    connect to mongodb and set up database "mmms"
+    connect to mongodb and set up database "mmms", you can use your own username & password in mongodb and authenticate here
 '''
-data_client = pymongo.Mongoclient("mongodb://localhost:27017/")
+
+data_client = pymongo.MongoClient(
+    "mongodb://localhost:27017/", username="admin", password="2333333")
 data_base = data_client['mmms']
+
 
 # set up lists in data_base
 mongo_models_list = data_base['mongo_models_list']
@@ -72,8 +76,10 @@ mongo_preprocess_list = data_base['mongo_preprocess_list']
 def getAllModels():
     '''Get all models from table:models. Return a list of dicts.'''
 
-    models_list = models_list.find()
-    return models_list
+    all_models_list = mongo_models_list.find()
+    print(all_models_list)
+    # return all_models_list
+    return {}
     # EXAMPLE:
     # with sqlite3.connect('database.db') as con:
     #     cur = con.cursor()
@@ -92,7 +98,7 @@ def getAllModels():
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
     model_by_id = mongo_models_list.find({"_id": modelID})
-    return model_by_id
+    return None
 
 
 def addModel(record):  # add new model to models_list

@@ -10,7 +10,5 @@ def pre_process(img):
     img = img.float()
     img = img.unsqueeze(0)
     print(img.shape)
-    if img.ndimension() == 3:
-       img = img.unsqueeze(0)
-    img.resize_(256, 1, 28, 28)
+    img = img.unsqueeze(0)
     return img.numpy()

@@ -107,7 +107,7 @@ def testModel(modelID):
         pre_processer = data.getPreProcessByID(modelID)
         if (pre_processer is not None):
             for key, value in input_data.items():
-                pre_pro_module = import_module('preprocesses.0')
+                pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
                 input_data[key] = pre_pro_module.pre_process(value)
 
         print('Testing on model {}: {}'.format(modelID, input_data))
@@ -309,6 +309,12 @@ def quickPredict(modelID, serviceID):
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
+        
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for key, value in input_data.items():
+                pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+                input_data[key] = pre_pro_module.pre_process(value)
 
         result = service.predict(input_data)
         res = {'output': result}
@@ -338,6 +344,13 @@ def batchPredict(modelID, serviceID):
             data_gen = readZIP(batch_data, service.model.input[0]['name'])
         else:
             raise ValueError('File format not readable')
+        
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for d in data_gen:
+                for key, value in d.items():
+                    pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+                    d[key] = pre_pro_module.pre_process(value)
 
         taskID = service.batch(data_gen)
         res = {'id': taskID}

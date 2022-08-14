@@ -1,11 +1,13 @@
 from celery import Celery
+from model import Model
 
 app = Celery('task', backend='redis://localhost:6379/1',
              broker='redis://localhost:6379/2')
 
 
 @app.task
-def predict(model, data):
+def predict(modelID, type, data):
+    model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data)
 
 

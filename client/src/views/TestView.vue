@@ -10,11 +10,13 @@
         <div id="testPageShowMode">
           <p>当前模式：{{ mode }}</p>
           <button @click="changeMode" id="testPageChangeMode">
-            <img class="changeStatusIcon" title="切换输入模式" src="../assets/changeStatusIcon.png" alt="changeIcon">
+            <img class="changeStatusIcon themeImage" title="切换输入模式" @mouseover="dialogChangeInputMode"
+              name="changeStatusIcon.png" alt="changeIcon">
           </button>
           <div style="flex-grow: 1"></div>
           <button @dblclick="clear" id="testPageClearButton">
-            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" class="binIcon">
+            <img name="binIcon.png" title="双击清除当前输入" alt="binIcon" @mouseover="dialogThinkTwiceBeforeClear"
+              class="binIcon themeImage">
           </button>
         </div>
         <div v-if="mode === 'json'">
@@ -37,7 +39,7 @@
           </div>
         </div>
         <div id="testPageButton">
-          <button @click="submit" id="testPageSubmitButton">提交</button>
+          <button @click="submit" @mouseover="dialogCheckBeforeSubmitInput" id="testPageSubmitButton">提交</button>
         </div>
       </div>
       <div class="testPageSmallBox divUse">
@@ -46,13 +48,16 @@
       </div>
     </div>
   </div>
-  <button @click="backToModelIDPage" id="testPageReturnButton" class="roundButton returnButton">
-    <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+  <button @click="backToModelIDPage" @mouseover="dialogClickToGoToModelIDPage" id="testPageReturnButton"
+    class="roundButton returnButton">
+    <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
   </button>
 </template>
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTextPageLeftRightBoxDirection() {
@@ -114,7 +119,12 @@ export default {
     submit(event) {
       let submitObject = {};
       if (this.mode === 'json') {
-        submitObject = JSON.parse(this.jsonInput);
+        try {
+          submitObject = JSON.parse(this.jsonInput);
+        } catch (err) {
+          alert(err);
+          return;
+        }
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
@@ -133,9 +143,7 @@ export default {
       console.log(submitObject);
       // put submitObject
       const path = `/model/${this.modelID}/test`;
-      axios.post(getBackUrl(path), {
-        submitObject,
-      })
+      axios.post(getBackUrl(path), submitObject)
         .then((res) => {
           this.output = res.data.output;
         })
@@ -162,10 +170,24 @@ export default {
         document.getElementById(`var_${name}_image`).classList.add('testPageImageLoaded');
       }
     },
+    dialogClickToGoToModelIDPage(event) {
+      setDialog('੭˙ᗜ˙)੭ ♡点击返回上一页，那里可以查看模型详情', 1500);
+    },
+    dialogCheckBeforeSubmitInput(event) {
+      setDialog('(◍>o<◍)✩记得要填完所有选项才点击提交哟！', 1500);
+    },
+    dialogChangeInputMode(event) {
+      setDialog('不喜欢当前的输入模式的话,可以换一种模式输入哟~', 1500);
+    },
+    dialogThinkTwiceBeforeClear(event) {
+      setDialog('双击会清除当前的所有输入(((> <)))！要三思而后行哟~', 1500);
+    },
   },
   mounted() {
     changeTextPageLeftRightBoxDirection();
     window.onresize = changeTextPageLeftRightBoxDirection;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
   },
 };
 

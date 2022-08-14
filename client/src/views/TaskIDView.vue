@@ -20,14 +20,17 @@
         </textarea>
       </div>
     </div>
-    <button @click="goToBatchPage" id="goToBatchPageButton" class="roundButton returnButton">
-      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
+    <button @click="goToBatchPage" @mouseover="dialogClickToBatchPage" id="goToBatchPageButton"
+      class="roundButton returnButton">
+      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
     </button>
   </div>
 </template>
 
 <script>
 import axios from 'axios';
+import setDialog from '@/live2dSetDialog';
+import changeAllImgUrl from '@/getThemeImg';
 import getBackUrl from '../getIP';
 
 function changeTaskIDPageDivBoxSize() {
@@ -63,10 +66,15 @@ export default {
         },
       });
     },
+    dialogClickToBatchPage(event) {
+      setDialog('ヽ(✿ﾟ▽ﾟ)ノ点击返回批量任务列表页面', 1500);
+    },
   },
   mounted() {
     changeTaskIDPageDivBoxSize();
     window.onresize = changeTaskIDPageDivBoxSize;
+    changeAllImgUrl();
+    setTimeout(() => { setDialog('', 0); }, 100);
     // getTaskInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
     axios.get(getBackUrl(path), {

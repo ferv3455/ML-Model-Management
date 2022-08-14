@@ -1,9 +1,6 @@
+from signal import signal
 import sqlite3
-
-from service import Service, ServiceList
-
 # all active services
-from app import services
 
 '''
 Initialize database columns:
@@ -35,8 +32,10 @@ FUNCTION newTask()
 '''
 # models\response
 models_list = []
+services_list = []
 response_list = []
 tasks_list = []
+preprocess_list = []
 
 # model count
 model_id_count = 0
@@ -46,6 +45,9 @@ service_id_count = 0
 
 # task count
 task_id_count = 0
+
+# preprocess count
+preprocess_id_count = 0
 
 
 def getAllModels():
@@ -61,11 +63,11 @@ def getAllModels():
 
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
+    print(models_list)
     for temp_model in models_list:
-        if temp_model['modelID'] == modelID:
+        if temp_model['id'] == modelID:
             return temp_model
-    zero_model = {}
-    return zero_model
+    return None
 
 
 def addModel(record):  # add new model to models_list
@@ -77,9 +79,9 @@ def addModel(record):  # add new model to models_list
     param_names = ('name', 'des', 'type', 'algo', 'time')
     temp_dict = dict(zip(param_names, record))
 
-    temp_dict['modelID'] = model_id_count
+    global model_id_count
+    temp_dict['id'] = model_id_count
     model_id_count = model_id_count+1
-
     models_list.append(temp_dict)
     return model_id_count-1
 
@@ -91,8 +93,8 @@ def getServicesByModel(modelID):
     Return a list of dicts.'''
     records = []
 
-    for temp_service in services:
-        if temp_service['serviceID'] == modelID:
+    for temp_service in services_list:
+        if temp_service['modelID'] == modelID:
             # TODO:search in response and find the times
             records.append(temp_service)
     return records
@@ -105,23 +107,34 @@ def addService(modelID, name, time, status, count):
        Return service ID.'''
     temp_service = {}
 
+    global service_id_count
+
     temp_service['id'] = service_id_count
     temp_service['name'] = name
     temp_service['time'] = time
     temp_service['status'] = status
     temp_service['count'] = count
     temp_service['modelID'] = modelID
+    temp_service['averResTime'] = 0
+    temp_service['maxResTime'] = 0
+    temp_service['minResTime'] = 0
 
     service_id_count = service_id_count+1
 
-    services.append(temp_service)
+    services_list.append(temp_service)
     return service_id_count-1
 
 
 def setServiceStatus(serviceID, status):
     '''Change service status in table:services.'''
-    services.get(serviceID)['status'] = status
-    return
+    for temp_service in services_list:
+        if temp_service['id'] == serviceID:
+            if (status == 'delete'):
+                services_list.remove(temp_service)
+                return
+            else:
+                temp_service['status'] = status
+                return
 
 
 def addResponse(serviceID, begin, end):
@@ -166,3 +179,55 @@ def newTask():
 
     task_id_count = task_id_count+1
     return task_id_count-1
+
+
+def addPreProcess(modelID, prodes, path, name, type):
+    prepro = {}
+    prepro['modelID'] = modelID
+    prepro['prodes'] = prodes
+    prepro['path'] = path
+    prepro['name'] = name
+    prepro['type'] = type
+    global preprocess_id_count
+    global preprocess_list
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            preprocess_list[i]['prodes'] = prodes
+            preprocess_list[i]['path'] = path
+            preprocess_list[i]['name'] = name
+            preprocess_list[i]['type'] = type
+            signal = True
+            break
+    if not signal:
+        preprocess_id_count = preprocess_id_count + 1
+        preprocess_list.append(prepro)
+
+    return preprocess_id_count
+
+
+def deletePreProcess(modelID):
+    global preprocess_list
+    global preprocess_id_count
+    data_tuple = ()
+    signal = False
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            data_tuple = (
+                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
+            preprocess_list.pop(i)
+            preprocess_id_count = preprocess_id_count - 1
+            signal = True
+            break
+    if not signal:
+        data_tuple = (False, '', '', '', '')
+
+    return data_tuple
+
+
+def getPreProcessByID(modelID):
+    global preprocess_list
+    for i in range(len(preprocess_list)):
+        if preprocess_list[i]['modelID'] == modelID:
+            return preprocess_list[i]
+    return None

@@ -54,6 +54,13 @@ task_id_count = 0
 # preprocess count
 preprocess_id_count = 0
 
+# connect to mongodb
+'''
+    connect to mongodb and set up database "mmms"
+'''
+data_client = pymongo.Mongoclient("mongodb://localhost:27017/")
+data_base = data_client["mmms"]
+
 
 def getAllModels():
     '''Get all models from table:models. Return a list of dicts.'''

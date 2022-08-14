@@ -99,15 +99,16 @@ def testModel(modelID):
     try:
         input_data = request.get_json()
 
-        # try to get pre_process
-        pre_processer = data.getPreProcessByID(modelID)
-        if (pre_processer is not None):
-            pre_pro_module = import_module(pre_processer['path'])
-            input_data = pre_pro_module.pre_process(input_data)
-
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
+        
+         # try to get pre_process
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for key, value in input_data.items():
+                pre_pro_module = import_module('preprocesses.0')
+                input_data[key] = pre_pro_module.pre_process(value)
 
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
@@ -145,7 +146,7 @@ def deleteModel(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess', methods=['GET'])
+@app.route('/model/<int:modelID>/preprocess', methods=['GET'])
 def getPreProcess(modelID):
     prepro_params = data.getPreProcessByID(modelID)
     # test print, don't want to print des
@@ -174,7 +175,7 @@ def getPreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess', methods=['POST'])
+@app.route('/model/<int:modelID>/preprocess', methods=['POST'])
 def LoadPreProcess(modelID):
     try:
         params = request.form.to_dict()  # keys: prodes, file
@@ -204,7 +205,7 @@ def LoadPreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess/delete', methods=['POST'])
+@app.route('/model/<int:modelID>/preprocess/delete', methods=['POST'])
 def DeletePreProcess(modelID):
     try:
         print('Delete PreProcess:', modelID)

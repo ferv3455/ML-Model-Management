@@ -47,6 +47,12 @@ class Service:
 
         sub_tasks = list()
         for d in data:
+            for key, value in d.items():
+                try:
+                    d[key] = value.tolist()  # convert to list if it is ndarray
+                except:
+                    pass
+                
             sub_tasks.append(task.predict.apply_async(
                 args=(self.modelID, self.model.type, d), queue='service{}'.format(self.id)))
 

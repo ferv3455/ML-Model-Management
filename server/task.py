@@ -1,3 +1,5 @@
+from numpy import array
+
 from celery import Celery
 from model import Model
 
@@ -7,6 +9,14 @@ app = Celery('task', backend='redis://localhost:6379/1',
 
 @app.task
 def predict(modelID, type, data):
+    for key, value in data.items():
+        try:
+            # convert to list if it is ndarray
+            data[key] = array(value, dtype='uint8')
+            print(data[key].shape, data[key].dtype)
+        except:
+            pass
+
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data)
 

@@ -11,6 +11,8 @@ from service import Service, ServiceList
 import data
 from fileReader import readCSV, readZIP, decodeFile
 
+from importlib import import_module
+
 
 # configuration
 DEBUG = True
@@ -96,9 +98,17 @@ def getModelInfo(modelID):
 def testModel(modelID):
     try:
         input_data = request.get_json()
+
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
+        
+         # try to get pre_process
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for key, value in input_data.items():
+                pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+                input_data[key] = pre_pro_module.pre_process(value)
 
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
@@ -126,17 +136,17 @@ def deleteModel(modelID):
         for temp_service in services_to_delete:
             data.setServiceStatus(temp_service['id'], 'delete')
             services.delete(temp_service['id'])
-        
+
         data.deleteModel(modelID)
-        res = {'status' : 'success'}
+        res = {'status': 'success'}
     except:
         traceback.print_exc()
-        res = {'status' : 'fail'}
-    
+        res = {'status': 'fail'}
+
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess', methods=['GET'])
+@app.route('/model/<int:modelID>/preprocess', methods=['GET'])
 def getPreProcess(modelID):
     prepro_params = data.getPreProcessByID(modelID)
     # test print, don't want to print des
@@ -165,7 +175,7 @@ def getPreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess', methods=['POST'])
+@app.route('/model/<int:modelID>/preprocess', methods=['POST'])
 def LoadPreProcess(modelID):
     try:
         params = request.form.to_dict()  # keys: prodes, file
@@ -195,7 +205,7 @@ def LoadPreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/preprocess/delete', methods=['POST'])
+@app.route('/model/<int:modelID>/preprocess/delete', methods=['POST'])
 def DeletePreProcess(modelID):
     try:
         print('Delete PreProcess:', modelID)
@@ -299,6 +309,12 @@ def quickPredict(modelID, serviceID):
         for key, value in input_data.items():
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
+        
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for key, value in input_data.items():
+                pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+                input_data[key] = pre_pro_module.pre_process(value)
 
         result = service.predict(input_data)
         res = {'output': result}
@@ -328,6 +344,13 @@ def batchPredict(modelID, serviceID):
             data_gen = readZIP(batch_data, service.model.input[0]['name'])
         else:
             raise ValueError('File format not readable')
+        
+        pre_processer = data.getPreProcessByID(modelID)
+        if (pre_processer is not None):
+            for d in data_gen:
+                for key, value in d.items():
+                    pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+                    d[key] = pre_pro_module.pre_process(value)
 
         taskID = service.batch(data_gen)
         res = {'id': taskID}

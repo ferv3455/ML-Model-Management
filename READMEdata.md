@@ -14,3 +14,4 @@ docker exec -it mongo mongo admin
 >  db.createUser({ user:'admin',pwd:'2333333',roles:[ { role:'userAdminAnyDatabase', db: 'admin'},"readWriteAnyDatabase"]});
 尝试使用上面创建的用户信息进行连接。
 > db.auth('admin', '2333333')
+

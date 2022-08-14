@@ -1,3 +1,4 @@
+from traceback import print_exc
 from numpy import array
 
 from celery import Celery
@@ -12,10 +13,11 @@ def predict(modelID, type, data):
     for key, value in data.items():
         try:
             # convert to list if it is ndarray
-            data[key] = array(value, dtype='uint8')
-            print(data[key].shape, data[key].dtype)
+            if isinstance(value, list):
+                data[key] = array(value, dtype='uint8')
+                print(data[key].shape, data[key].dtype)
         except:
-            pass
+            print_exc()
 
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data)

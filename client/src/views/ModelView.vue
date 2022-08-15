@@ -25,7 +25,7 @@
       </tr>
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton" @mouseover="dialogClickToUploadModel">
-      <img id="mainPageUploadIcon" class="themeImage" name="uploadIcon.png" alt="Icon">
+      <img id="mainPageUploadIcon" class="uploadIcon" src="../assets/uploadIcon.png" alt="Icon">
       上传模型
     </button>
   </div>

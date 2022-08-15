@@ -1,0 +1,39 @@
+:root[data-theme=default] {
+    --textColor: #242f47;
+    --backgroundColor: #ffffff;
+    --buttonColor: #abc4ff;
+    --buttonHoverColor: #c8d7fd;
+    --buttonActiveColor: #709bff;
+    --roundButtonColor: #c1d3fe;
+    --hrefColor: #242f47;
+    --inputColor: #e2eafc;
+    --navColor: #242f47;
+    --navTextColor: #ffffff;
+    --buttonTransColor: #e2eafc;
+    --importantColor: rgb(246, 136, 141);
+    --mainPageNotImportantTextColor: #7e9feb;
+}
+
+:root[data-theme=default] .navIcon,
+:root[data-theme=default] .uploadIcon {
+    filter: invert(100%);
+}
+
+:root[data-theme=default] .changeStatusIcon {
+    filter: invert(69%) sepia(37%) saturate(390%) hue-rotate(188deg) brightness(102%) contrast(104%);
+}
+
+:root[data-theme=default] .binIcon {
+    filter: invert(55%) sepia(29%) saturate(729%) hue-rotate(308deg) brightness(109%) contrast(93%);
+}
+
+:root[data-theme=default] #emailIcon,
+:root[data-theme=default] #phoneIcon,
+:root[data-theme=default] #linkIcon,
+:root[data-theme=default] #teamIcon,
+:root[data-theme=default] #assistantIcon,
+:root[data-theme=default] .returnIcon,
+:root[data-theme=default] .generateIcon,
+:root[data-theme=default] .copyIcon {
+    filter: invert(14%) sepia(9%) saturate(3292%) hue-rotate(183deg) brightness(94%) contrast(87%);
+}

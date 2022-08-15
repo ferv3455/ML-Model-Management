@@ -28,7 +28,7 @@
     </div>
     <button @click="goToPredictPage" @mouseover="dialogClickToPredictPage" id="BatchPageGoTopredictPage"
       class="roundButton returnButton">
-      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>

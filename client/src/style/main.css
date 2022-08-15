@@ -61,6 +61,7 @@ body {
     width: 30px;
     margin: 0px;
     margin-top: 3px;
+    z-index: 3;
 }
 
 .returnButton {

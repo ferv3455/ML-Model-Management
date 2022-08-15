@@ -18,12 +18,12 @@
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">
       <button @click="uploadNewModel" @mouseover="dialogClickToUpload" id="uploadPageUploadButton">
-        <img id="uploadPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
+        <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" class="uploadIcon" alt="Icon">
         上传
       </button>
       <button @click="goToModelPage" @mouseover="dialogClickToModelPage" id="goToModelPageButton"
         class="roundButton returnButton">
-        <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
       </button>
     </div>
   </div>

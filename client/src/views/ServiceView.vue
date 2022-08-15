@@ -28,7 +28,7 @@
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
             <div @click="changeStatus(service.id)" @mouseover="dialogClickToChangeStatus" class="changeStatusButton">
-              <img class="changeStatusIcon themeImage" name="changeStatusIcon.png" title="切换服务状态" alt="changeIcon">
+              <img class="changeStatusIcon" src="../assets/changeStatusIcon.png" title="切换服务状态" alt="changeIcon">
             </div>
           </div>
         </td>
@@ -38,7 +38,7 @@
         <td>{{ service.minResTime }}</td>
         <td>
           <div @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
-            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
+            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
           </div>
         </td>
       </tr>
@@ -53,7 +53,7 @@
     </div>
     <button @click="goToModelIDPage" @mouseover="dialogClickToGoToModelIDPage" id="servicePageGoToModelIDPage"
       class="roundButton returnButton">
-      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>

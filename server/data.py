@@ -98,8 +98,8 @@ def getAllModels():
 
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
-    model_by_id = mongo_models_list.find({"id": modelID})
-    return None
+    model_by_id = mongo_models_list.find_one({"id": modelID})
+    return model_by_id
 
 
 def addModel(record):  # add new model to models_list

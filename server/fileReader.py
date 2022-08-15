@@ -15,9 +15,9 @@ def readCSV(data):
     header = line.decode('utf-8').split(',')
 
     # Read each line
-    for line in gen:
+    for i, line in enumerate(gen, 1):
         numbers = (float(n) for n in line.strip().split(b','))
-        yield dict(zip(header, numbers))
+        yield ('index', i, dict(zip(header, numbers)))
 
 
 def readZIP(data, param_name):
@@ -30,7 +30,7 @@ def readZIP(data, param_name):
         with zipObj.open(filename, 'r') as fp:
             img = Image.open(io.BytesIO(fp.read()))
             arr = np.asarray(img)
-            yield {param_name: arr}
+            yield ('filename', filename, {param_name: arr})
 
 
 def decodeFile(string: str):

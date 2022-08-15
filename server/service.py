@@ -41,30 +41,36 @@ class Service:
         assert self.status
         return self.model.predict(x, self.pre_processer)
 
-    def batch(self, batch_x):
+    def batch(self, x_gen):
         assert self.status
         self.count += 1
         taskID = self.count
 
+        task_names = list()
         sub_tasks = list()
-        for d in batch_x:
-            for key, value in d.items():
+        for d in x_gen:
+            tag, value, data = d
+            task_names.append((tag, value))
+            for key, value in data.items():
                 try:
-                    d[key] = value.tolist()  # convert to list if it is ndarray
+                    # convert to list if it is ndarray
+                    data[key] = value.tolist()
                 except:
                     pass
 
             sub_tasks.append(task.predict.apply_async(
-                args=(self.modelID, self.model.type, d, self.pre_processer),
+                args=(self.modelID, self.model.type, data, self.pre_processer),
                 queue='service{}'.format(self.id)))
 
-        self.tasks[taskID] = sub_tasks
+        self.tasks[taskID] = (task_names, sub_tasks)
         return taskID
 
     def getResult(self, taskID):
         assert self.status
-        assert all(t.ready() for t in self.tasks[taskID])
-        return [t.get() for t in self.tasks[taskID]]
+        task_names, sub_tasks = self.tasks[taskID]
+        assert all(task.ready() for task in sub_tasks)
+        return [{tag: value, 'result': task.get()} 
+                for (tag, value), task in zip(task_names, sub_tasks)]
 
     def getTaskStatus(self, taskID):
         if all(t.ready() for t in self.tasks[taskID]):

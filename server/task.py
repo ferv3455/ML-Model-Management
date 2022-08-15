@@ -12,7 +12,7 @@ app = Celery('task', backend='redis://localhost:6379/1',
 def predict(modelID, type, data, pre_processer=None):
     for key, value in data.items():
         try:
-            # convert to list if it is ndarray
+            # convert back to ndarray if it is a list
             if isinstance(value, list):
                 data[key] = array(value, dtype='uint8')
                 print(data[key].shape, data[key].dtype)

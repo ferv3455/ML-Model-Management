@@ -1,3 +1,4 @@
+from importlib import import_module
 import time
 import joblib
 from pypmml import Model as PMMLModel
@@ -177,7 +178,12 @@ class Model:
         elif self.type == "pkl":
             self.pklInit(file)
 
-    def predict(self, x_test):
+    def predict(self, x_test, pre_processer=None):
+        if pre_processer is not None:
+            pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+            for key, value in x_test.items():
+                x_test[key] = pre_pro_module.pre_process(value)
+
         result = []
         if self.type == 'pmml':
             x = pd.DataFrame([x_test])

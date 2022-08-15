@@ -23,10 +23,11 @@ def initWorker(serviceID):
 
 
 class Service:
-    def __init__(self, serviceID, model, modelID):
+    def __init__(self, serviceID, model, modelID, pre_processer):
         self.id = serviceID
         self.model = model
         self.modelID = modelID
+        self.pre_processer = pre_processer
         self.status = True          # True for ON, False for OFF
         self.tasks = dict()
 
@@ -36,38 +37,52 @@ class Service:
 
         self.count = 0
 
-    def predict(self, data):
+    def predict(self, x):
         assert self.status
-        return self.model.predict(data)
+        return self.model.predict(x, self.pre_processer)
 
-    def batch(self, data):
+    def batch(self, x_gen):
         assert self.status
         self.count += 1
         taskID = self.count
 
+        task_names = list()
         sub_tasks = list()
-        for d in data:
-            sub_tasks.append(task.predict.apply_async(
-                args=(self.modelID, self.model.type, d), queue='service{}'.format(self.id)))
+        for d in x_gen:
+            tag, value, data = d
+            task_names.append((tag, value))
+            for key, value in data.items():
+                try:
+                    # convert to list if it is ndarray
+                    data[key] = value.tolist()
+                except:
+                    pass
 
-        self.tasks[taskID] = sub_tasks
+            sub_tasks.append(task.predict.apply_async(
+                args=(self.modelID, self.model.type, data, self.pre_processer),
+                queue='service{}'.format(self.id)))
+
+        self.tasks[taskID] = (task_names, sub_tasks)
         return taskID
 
     def getResult(self, taskID):
         assert self.status
-        assert all(t.ready() for t in self.tasks[taskID])
-        return [t.get() for t in self.tasks[taskID]]
+        task_names, sub_tasks = self.tasks[taskID]
+        assert all(task.ready() for task in sub_tasks)
+        return [{tag: value, 'result': task.get()}
+                for (tag, value), task in zip(task_names, sub_tasks)]
 
     def getTaskStatus(self, taskID):
-        if all(t.ready() for t in self.tasks[taskID]):
+        _, sub_tasks = self.tasks[taskID]
+        if all(t.ready() for t in sub_tasks):
             return 'finished'
-        elif all(t.status == 'PENDING' for t in self.tasks[taskID]):
+        elif all(t.status == 'PENDING' for t in sub_tasks):
             return 'waiting'
         else:
             return 'running'
 
     def getTasks(self):
-        return ({'id': i, 'status': self.getTaskStatus(i)} for i, _ in self.tasks.items())
+        return ({'id': i, 'status': self.getTaskStatus(i)} for i in self.tasks.keys())
 
     def changeStatus(self, cmd):
         if cmd == 'start':

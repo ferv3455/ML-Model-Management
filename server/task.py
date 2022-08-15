@@ -1,3 +1,6 @@
+from traceback import print_exc
+from numpy import array
+
 from celery import Celery
 from model import Model
 
@@ -6,9 +9,18 @@ app = Celery('task', backend='redis://localhost:6379/1',
 
 
 @app.task
-def predict(modelID, type, data):
+def predict(modelID, type, data, pre_processer=None):
+    for key, value in data.items():
+        try:
+            # convert back to ndarray if it is a list
+            if isinstance(value, list):
+                data[key] = array(value, dtype='uint8')
+                print(data[key].shape, data[key].dtype)
+        except:
+            print_exc()
+
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
-    return model.predict(data)
+    return model.predict(data, pre_processer)
 
 
 '''

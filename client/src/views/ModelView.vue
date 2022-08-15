@@ -25,7 +25,7 @@
         <td>{{ formatDate(model.time) }}</td>
         <td>
           <button @dblclick="clear(model.id)" @mouseover="dialogClickToDeleteModel" class="modelPageClearButton">
-            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
+            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
           </button>
         </td>
       </tr>
@@ -185,5 +185,4 @@ export default {
   box-shadow: none;
   padding: 0;
 }
-
 </style>

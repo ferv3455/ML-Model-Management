@@ -17,13 +17,15 @@
       <textarea v-model="ProDescription" id="uploadPageEnterProDescription"></textarea>
       <p class="uploadPageImportPreProDetail" id="uploadPagePreProFile">预处理文件</p>
       <input id="uploadPageEnterPreProFile" type="file" @mouseover="clickToGetFile" :accept="'.' + 'py'">
-      <button @click="uploadNewPreprocess" @mouseover="clickToUpload" id="preproPageUploadButton">
-        <img id="preproPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
-        上传
-      </button>
+      <div id="preProPageUploadBox">
+        <button @click="uploadNewPreprocess" @mouseover="clickToUpload" id="preproPageUploadButton">
+          <img id="preproPageUploadIcon" src="../assets/uploadIcon.png" class="uploadIcon" alt="Icon">
+          上传
+        </button>
+      </div>
       <button @click="backToModelIDPage" @mouseover="clickToBackToModelID" id="goToModelIDPageButton"
         class="roundButton returnButton">
-        <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
       </button>
     </div>
   </div>
@@ -38,9 +40,9 @@ import getBackUrl from '../getIP';
 function changePreProViewSize() {
   const cont = document.getElementById('uploadPageImportPrePro');
   if (window.innerWidth <= 800) {
-    cont.style.width = `${window.innerWidth * 0.6}px`;
+    cont.style.width = `${window.innerWidth * 0.8}px`;
   } else {
-    cont.style.width = '600px';
+    cont.style.width = '640px';
   }
 }
 
@@ -179,7 +181,7 @@ export default {
   margin-right: 5px;
 }
 
-#NoLoaded {
+#uploadPageImportPrePro #NoLoaded {
   font-size: 80%;
   font-weight: lighter;
 }
@@ -193,5 +195,20 @@ export default {
 #deletePrePro {
   margin-left: 40px;
   height: 70%;
+}
+
+#uploadPageImportPrePro p {
+  font-weight: bolder;
+}
+
+#uploadPageImportPrePro textarea,
+#uploadPageImportPrePro input {
+  width: 100%;
+}
+
+#preProPageUploadBox {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 </style>

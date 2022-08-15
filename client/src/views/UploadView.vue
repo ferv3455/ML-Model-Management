@@ -38,9 +38,9 @@ import getBackUrl from '../getIP';
 function changeTableSize() {
   const cont = document.getElementById('uploadPageImportModel');
   if (window.innerWidth <= 800) {
-    cont.style.width = `${window.innerWidth * 0.8}px`;
+    cont.style.width = `${window.innerWidth * 0.9}px`;
   } else {
-    cont.style.width = '700px';
+    cont.style.width = '720px';
   }
 }
 
@@ -179,5 +179,9 @@ export default {
   width: 30px;
   margin-left: 35px;
   margin-right: 5px;
+}
+
+.uploadPageImportModelDetail {
+  font-weight: bolder;
 }
 </style>

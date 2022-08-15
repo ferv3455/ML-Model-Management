@@ -7,10 +7,10 @@ from urllib import parse
 '''
 Initialize database columns:
 
-TABLE models:    _id (PRIMARY KEY), name, des, type, algo, time
-TABLE services:  _id (PRIMARY KEY), modelID, name, time, status, count
-TABLE serv_response: _id (PRIMARY KEY), serviceID, start, end, duration
-TABLE tasks:     _id (PRIMARY KEY), serviceID, modelID, time, status
+TABLE models:    id (PRIMARY KEY), name, des, type, algo, time
+TABLE services:  id (PRIMARY KEY), modelID, name, time, status, count
+TABLE serv_response: id (PRIMARY KEY), serviceID, start, end, duration
+TABLE tasks:     id (PRIMARY KEY), serviceID, modelID, time, status
 
 (use INTEGER PRIMARY KEY for the first column so that it increments automatically)
 '''
@@ -77,6 +77,7 @@ def getAllModels():
     '''Get all models from table:models. Return a list of dicts.'''
 
     all_models_list = mongo_models_list.find()
+    print('all_model\n')
     print(all_models_list)
     # return all_models_list
     return {}
@@ -91,13 +92,13 @@ def getAllModels():
 # def getModelByID(modelID):
 #     '''Get a model from table:models. Return a dict.'''
 #     for temp_model in models_list:
-#         if temp_model['_id'] == modelID:
+#         if temp_model['id'] == modelID:
 #             return temp_model
 #     return None
 
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
-    model_by_id = mongo_models_list.find({"_id": modelID})
+    model_by_id = mongo_models_list.find({"id": modelID})
     return None
 
 
@@ -111,11 +112,11 @@ def addModel(record):  # add new model to models_list
     temp_dict = dict(zip(param_names, record))
 
     global model_id_count
-    temp_dict['_id'] = model_id_count
+    temp_dict['id'] = model_id_count
     model_id_count = model_id_count+1
     # models_list.append(temp_dict)
 
-    # model_mongo_id = mongo_models_list.insert_one(temp_dict) 返回值为_id
+    # model_mongo_id = mongo_models_list.insert_one(temp_dict) 返回值为id
     mongo_models_list.insert_one(temp_dict)
 
     return model_id_count-1
@@ -123,9 +124,9 @@ def addModel(record):  # add new model to models_list
 
 def deleteModel(modelID):
     # for temp_model in models_list:
-    #     if temp_model['_id'] == modelID:
+    #     if temp_model['id'] == modelID:
     #         models_list.remove(temp_model)
-    mongo_models_list.delete_one({"_id": modelID})
+    mongo_models_list.delete_one({"id": modelID})
     return
 
 
@@ -152,7 +153,7 @@ def addService(modelID, name, time, status, count):
 
     global service_id_count
 
-    temp_service['_id'] = service_id_count
+    temp_service['id'] = service_id_count
     temp_service['name'] = name
     temp_service['time'] = time
     temp_service['status'] = status
@@ -171,7 +172,7 @@ def addService(modelID, name, time, status, count):
 def setServiceStatus(serviceID, status):
     '''Change service status in table:services.'''
     for temp_service in services_list:
-        if temp_service['_id'] == serviceID:
+        if temp_service['id'] == serviceID:
             if (status == 'delete'):
                 services_list.remove(temp_service)
                 return

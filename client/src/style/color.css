@@ -69,3 +69,26 @@
     --importantColor: #2A0944;
     --mainPageNotImportantTextColor: #ffb248;
 }
+
+:root[data-theme=goldDigger] #emailIcon,
+:root[data-theme=goldDigger] #phoneIcon,
+:root[data-theme=goldDigger] #linkIcon,
+:root[data-theme=goldDigger] #teamIcon {
+    filter: invert(27%) sepia(8%) saturate(5148%) hue-rotate(299deg) brightness(90%) contrast(89%);
+}
+
+:root[data-theme=mountain] {
+    --textColor: #253d24;
+    --backgroundColor: #ecfff7;
+    --buttonColor: #83cbac;
+    --buttonHoverColor: #71b597;
+    --buttonActiveColor: #61acb5;
+    --roundButtonColor: #71b597;
+    --hrefColor: #253d24;
+    --inputColor: #b5efd6;
+    --navColor: #253d24;
+    --navTextColor: #ecfff7;
+    --buttonTransColor: #b5efd6;
+    --importantColor: #dcb133;
+    --mainPageNotImportantTextColor: #71b597;
+}

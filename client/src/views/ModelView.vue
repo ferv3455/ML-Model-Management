@@ -25,13 +25,13 @@
         <td>{{ formatDate(model.time) }}</td>
         <td>
           <button @dblclick="clear(model.id)" @mouseover="dialogClickToDeleteModel" class="modelPageClearButton">
-            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
+            <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
           </button>
         </td>
       </tr>
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton" @mouseover="dialogClickToUploadModel">
-      <img id="mainPageUploadIcon" class="themeImage" name="uploadIcon.png" alt="Icon">
+      <img id="mainPageUploadIcon" class="uploadIcon" src="../assets/uploadIcon.png" alt="Icon">
       上传模型
     </button>
   </div>
@@ -185,5 +185,4 @@ export default {
   box-shadow: none;
   padding: 0;
 }
-
 </style>

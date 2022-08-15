@@ -47,7 +47,8 @@
       "max-len": "off",
       "global-require": "off",
       "import/no-dynamic-require": "off",
-      "vuejs-accessibility/mouse-events-have-key-events": "off"
+      "vuejs-accessibility/mouse-events-have-key-events": "off",
+      "vuejs-accessibility/click-events-have-key-events": "off"
     }
   },
   "browserslist": [

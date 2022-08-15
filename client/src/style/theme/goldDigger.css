@@ -1,0 +1,36 @@
+:root[data-theme=goldDigger] {
+    --textColor: #893448;
+    --backgroundColor: rgba(242, 234, 191, 0.15);
+    --buttonColor: #ffb248;
+    --buttonHoverColor: #ed8146;
+    --buttonActiveColor: #d95850;
+    --roundButtonColor: #ffb248;
+    --hrefColor: #893448;
+    --inputColor: #faefc8;
+    --navColor: #581318;
+    --navTextColor: #fbf6ee;
+    --buttonTransColor: #faefc8;
+    --importantColor: #2A0944;
+    --mainPageNotImportantTextColor: #ffb248;
+}
+
+:root[data-theme=goldDigger] #emailIcon,
+:root[data-theme=goldDigger] #phoneIcon,
+:root[data-theme=goldDigger] #linkIcon,
+:root[data-theme=goldDigger] #teamIcon,
+:root[data-theme=goldDigger] #assistantIcon,
+:root[data-theme=goldDigger] .returnIcon,
+:root[data-theme=goldDigger] .binIcon,
+:root[data-theme=goldDigger] .generateIcon,
+:root[data-theme=goldDigger] .copyIcon {
+    filter: invert(27%) sepia(8%) saturate(5148%) hue-rotate(299deg) brightness(90%) contrast(89%);
+}
+
+:root[data-theme=goldDigger] .changeStatusIcon {
+    filter: invert(84%) sepia(11%) saturate(7413%) hue-rotate(325deg) brightness(109%) contrast(107%);
+}
+
+:root[data-theme=goldDigger] .navIcon,
+:root[data-theme=goldDigger] .uploadIcon {
+    filter: invert(100%) sepia(17%) saturate(408%) hue-rotate(356deg) brightness(100%) contrast(97%);
+}

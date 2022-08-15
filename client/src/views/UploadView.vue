@@ -18,12 +18,12 @@
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">
       <button @click="uploadNewModel" @mouseover="dialogClickToUpload" id="uploadPageUploadButton">
-        <img id="uploadPageUploadIcon" name="uploadIcon.png" class="themeImage" alt="Icon">
+        <img id="uploadPageUploadIcon" src="../assets/uploadIcon.png" class="uploadIcon" alt="Icon">
         上传
       </button>
       <button @click="goToModelPage" @mouseover="dialogClickToModelPage" id="goToModelPageButton"
         class="roundButton returnButton">
-        <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+        <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
       </button>
     </div>
   </div>
@@ -38,9 +38,9 @@ import getBackUrl from '../getIP';
 function changeTableSize() {
   const cont = document.getElementById('uploadPageImportModel');
   if (window.innerWidth <= 800) {
-    cont.style.width = `${window.innerWidth * 0.8}px`;
+    cont.style.width = `${window.innerWidth * 0.9}px`;
   } else {
-    cont.style.width = '700px';
+    cont.style.width = '720px';
   }
 }
 
@@ -179,5 +179,9 @@ export default {
   width: 30px;
   margin-left: 35px;
   margin-right: 5px;
+}
+
+.uploadPageImportModelDetail {
+  font-weight: bolder;
 }
 </style>

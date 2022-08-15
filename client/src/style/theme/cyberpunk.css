@@ -1,0 +1,39 @@
+:root[data-theme=cyberpunk] {
+    --textColor: #05d9e8;
+    --backgroundColor: #01012b;
+    --buttonColor: #ff2a6d;
+    --buttonHoverColor: #ff4782;
+    --buttonActiveColor: #ff6c9a;
+    --roundButtonColor: #ff2a6d;
+    --hrefColor: #05d9e8;
+    --inputColor: #0a0a53;
+    --navColor: #ff2a6d;
+    --navTextColor: #01012b;
+    --buttonTransColor: #16687f;
+    --importantColor: #0a6cf5;
+    --mainPageNotImportantTextColor: #ff2a6d;
+}
+
+:root[data-theme=cyberpunk] #emailIcon,
+:root[data-theme=cyberpunk] #phoneIcon,
+:root[data-theme=cyberpunk] #linkIcon,
+:root[data-theme=cyberpunk] #teamIcon,
+:root[data-theme=cyberpunk] .returnIcon {
+    filter: invert(79%) sepia(36%) saturate(6684%) hue-rotate(137deg) brightness(103%) contrast(96%);
+}
+
+:root[data-theme=cyberpunk] .binIcon,
+:root[data-theme=cyberpunk] .generateIcon,
+:root[data-theme=cyberpunk] .copyIcon,
+:root[data-theme=cyberpunk] .changeStatusIcon {
+    filter: invert(46%) sepia(76%) saturate(6258%) hue-rotate(324deg) brightness(100%) contrast(107%);
+}
+
+:root[data-theme=cyberpunk] .navIcon,
+:root[data-theme=cyberpunk] .uploadIcon {
+    filter: invert(10%) sepia(17%) saturate(5111%) hue-rotate(217deg) brightness(83%) contrast(120%);
+}
+
+:root[data-theme=cyberpunk] #assistantIcon {
+    filter: invert(100%);
+}

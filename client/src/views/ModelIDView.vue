@@ -13,11 +13,11 @@
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelAlgo">{{ modelAlgo }}</p>
         <p class="modelIDPageModelInfo">上传时间</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelTime">{{ modelTime }}</p>
-        <!--TODO 添加换行时的自适应 -->
+        <p class="modelIDPageModelInfo">预处理项</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPagePrePro">{{ PreProName }}</p>
         <p class="modelIDPageModelInfo">模型描述</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelDes">{{ modelDes }}</p>
-        <p class="modelIDPageModelInfo">预处理文件</p>
-        <p class="modelIDPageGetModelInfo" id="modelIDPagePrePro">{{ PreProName }}</p>
+
       </div>
       <div id="modelIDPageModelVar" class="divUse">
         <div class="modelIDPageModelVarTable">
@@ -64,7 +64,7 @@
     </div>
     <button @click="backToModelPage" @mouseover="clickToGoToModelPage" id="modelIDPageBackToModelPage"
       class="roundButton returnButton">
-      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>
@@ -254,13 +254,11 @@ export default {
   padding-bottom: 25px;
   display: grid;
   grid-template-columns: 20% 20% 35% 25%;
-  grid-template-rows: 50px 50px 50px auto;
+  grid-template-rows: 50px 50px 50px 50px auto;
 }
 
-#modelIDPageModelAlgo {
-  grid-column: span 3;
-}
-
+#modelIDPageModelAlgo,
+#modelIDPagePrePro,
 #modelIDPageModelTime {
   grid-column: span 3;
 }

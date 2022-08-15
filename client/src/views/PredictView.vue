@@ -13,10 +13,10 @@
           <h2 class="predictPageSmallBoxTitle">Curl代码</h2>
           <div id="predictPageCurlBoxGrow"></div>
           <button @click="generateCurl" @mouseover="dialogClickToGenerateCurl" id="predictPageGenerateCurl">
-            <img name="generateIcon.png" title="生成curl代码" alt="generateIcon" class="themeImage generateIcon">
+            <img src="../assets/generateIcon.png" title="生成curl代码" alt="generateIcon" class="generateIcon">
           </button>
           <button @click="copyCurl" @mouseover="dialogClickToCopyCurl" id="predictPageCopyCurl">
-            <img name="copyIcon.png" title="复制curl代码" alt="copyIcon" class="themeImage copyIcon">
+            <img src="../assets/copyIcon.png" title="复制curl代码" alt="copyIcon" class="copyIcon">
           </button>
         </div>
         <textarea v-model="curlInput" id="predictPageCurlInput" readonly></textarea>
@@ -32,7 +32,7 @@
     <button @click="goToBatchPage" @mouseover="dialogClickToBatchPage" id="predictPageGoToBatchPage">前往批量任务列表</button>
     <button @click="goToServicePage" @mouseover="dialogClickToServicePage" id="predictPageGoToServicePage"
       class="roundButton returnButton">
-      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>

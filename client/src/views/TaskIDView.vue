@@ -22,7 +22,7 @@
     </div>
     <button @click="goToBatchPage" @mouseover="dialogClickToBatchPage" id="goToBatchPageButton"
       class="roundButton returnButton">
-      <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+      <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
     </button>
   </div>
 </template>

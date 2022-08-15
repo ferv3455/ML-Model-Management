@@ -10,13 +10,13 @@
         <div id="testPageShowMode">
           <p>当前模式：{{ mode }}</p>
           <button @click="changeMode" id="testPageChangeMode">
-            <img class="changeStatusIcon themeImage" title="切换输入模式" @mouseover="dialogChangeInputMode"
-              name="changeStatusIcon.png" alt="changeIcon">
+            <img class="changeStatusIcon" title="切换输入模式" @mouseover="dialogChangeInputMode"
+              src="../assets/changeStatusIcon.png" alt="changeIcon">
           </button>
           <div style="flex-grow: 1"></div>
           <button @dblclick="clear" id="testPageClearButton">
-            <img name="binIcon.png" title="双击清除当前输入" alt="binIcon" @mouseover="dialogThinkTwiceBeforeClear"
-              class="binIcon themeImage">
+            <img src="../assets/binIcon.png" title="双击清除当前输入" alt="binIcon" @mouseover="dialogThinkTwiceBeforeClear"
+              class="binIcon">
           </button>
         </div>
         <div v-if="mode === 'json'">
@@ -50,7 +50,7 @@
   </div>
   <button @click="backToModelIDPage" @mouseover="dialogClickToGoToModelIDPage" id="testPageReturnButton"
     class="roundButton returnButton">
-    <img class="returnIcon themeImage" name="returnIcon.png" alt="return">
+    <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
   </button>
 </template>
 

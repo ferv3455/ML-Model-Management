@@ -31,3 +31,5 @@ models
 
 # preprocesses
 preprocesses
+
+dump.rdb

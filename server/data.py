@@ -65,6 +65,17 @@ data_client = pymongo.MongoClient(
     "mongodb://localhost:27017/")
 data_base = data_client['mmms']
 
+
+def data_base_init():
+    collection_names = data_base.list_collection_names()  # 获取数据库中所有的 collection 名称
+    for collection_name in collection_names:
+        # 每个数据库包含多个集合，根据集合名称获取集合对象（Collection）
+        db_collection = data_base[collection_name]
+        db_collection.delete_many({})
+
+
+data_base_init()
+
 # set up lists in data_base
 mongo_models_list = data_base['mongo_models_list']
 mongo_services_list = data_base['mongo_services_list']

@@ -69,19 +69,20 @@ class Service:
         assert self.status
         task_names, sub_tasks = self.tasks[taskID]
         assert all(task.ready() for task in sub_tasks)
-        return [{tag: value, 'result': task.get()} 
+        return [{tag: value, 'result': task.get()}
                 for (tag, value), task in zip(task_names, sub_tasks)]
 
     def getTaskStatus(self, taskID):
-        if all(t.ready() for t in self.tasks[taskID]):
+        _, sub_tasks = self.tasks[taskID]
+        if all(t.ready() for t in sub_tasks):
             return 'finished'
-        elif all(t.status == 'PENDING' for t in self.tasks[taskID]):
+        elif all(t.status == 'PENDING' for t in sub_tasks):
             return 'waiting'
         else:
             return 'running'
 
     def getTasks(self):
-        return ({'id': i, 'status': self.getTaskStatus(i)} for i, _ in self.tasks.items())
+        return ({'id': i, 'status': self.getTaskStatus(i)} for i in self.tasks.keys())
 
     def changeStatus(self, cmd):
         if cmd == 'start':

@@ -58,11 +58,15 @@ export default {
       // Model upload
       const path = '/model';
       const f = document.getElementById('uploadPageEnterModelFile').files[0];
-      axios.post(getBackUrl(path), {
-        name: this.modelName,
-        type: this.modelType,
-        des: this.modelDescription,
-        file: f,
+      const postRequest = new FormData();
+      postRequest.append('name', this.modelName);
+      postRequest.append('type', this.modelType);
+      postRequest.append('des', this.modelDescription);
+      postRequest.append('file', f);
+      axios.post(getBackUrl(path), postRequest, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       })
         .then((res) => {
           if (res.data.status === 'success') {

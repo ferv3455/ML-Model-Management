@@ -190,19 +190,7 @@ export default {
       })
         .then((res) => {
           if (res.data.status === 'success') {
-            // Get Service List
-            const path2 = `/model/${this.modelID}/service`;
-            axios.get(getBackUrl(path2), {
-              params: {},
-            })
-              .then((res2) => {
-                this.services = res2.data.services;
-              })
-              .catch((error) => {
-                console.log(error);
-              });
-            changeServicePageDivBoxSize();
-            window.onresize = changeServicePageDivBoxSize;
+            this.$router.go(0);
           } else {
             const mes = '新建服务失败';
             alert(mes);
@@ -242,7 +230,7 @@ export default {
       });
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
-    changeAllImgUrl();
+    setTimeout(() => { changeAllImgUrl(); }, 100);
     setTimeout(() => { setDialog('', 0); }, 100);
   },
 };

@@ -83,7 +83,7 @@ export default {
       .then((res) => {
         this.status = res.data.status;
         if (this.status === 'finished') {
-          this.result = res.data.result;
+          this.result = JSON.stringify(res.data.result, null, 2);
         }
       })
       .catch((error) => {

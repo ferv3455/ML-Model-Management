@@ -1,5 +1,7 @@
 :root[data-theme=default] {
     --textColor: #242f47;
+    --linkHoverColor: #4366b1;
+    --linkActiveColor: #161d2c;
     --backgroundColor: #ffffff;
     --buttonColor: #abc4ff;
     --buttonHoverColor: #c8d7fd;
@@ -16,6 +18,8 @@
 
 :root[data-theme=monotone] {
     --textColor: #000000;
+    --linkHoverColor: #757575;
+    --linkActiveColor: #171717;
     --backgroundColor: #ffffff;
     --buttonColor: #bdbdbd;
     --buttonHoverColor: #a1a1a1;
@@ -32,6 +36,8 @@
 
 :root[data-theme=cyberpunk] {
     --textColor: #05d9e8;
+    --linkHoverColor: #9cf8ff;
+    --linkActiveColor: #078e97;
     --backgroundColor: #01012b;
     --buttonColor: #ff2a6d;
     --buttonHoverColor: #ff4782;
@@ -48,6 +54,8 @@
 
 :root[data-theme=goldDigger] {
     --textColor: #893448;
+    --linkHoverColor: #ed5c7e;
+    --linkActiveColor: #571928;
     --backgroundColor: rgba(242, 234, 191, 0.15);
     --buttonColor: #ffb248;
     --buttonHoverColor: #ed8146;

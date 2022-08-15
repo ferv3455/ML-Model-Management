@@ -1,5 +1,6 @@
 from datetime import datetime
 import traceback
+import os
 
 from gevent import pywsgi
 from flask import Flask, jsonify, request
@@ -8,6 +9,9 @@ from flask_cors import CORS
 from model import Model
 from service import Service, ServiceList
 import data
+from fileReader import readCSV, readZIP, decodeFile
+
+from importlib import import_module
 
 
 # configuration
@@ -20,20 +24,19 @@ app.config.from_object(__name__)
 # enable CORS
 CORS(app, supports_credentials=True)
 
-# sanity check route
+# all active services
+global services
+services = ServiceList()
 
-
+# View functions begin
 # TODO: It should be full of BUUUUUUGS now
-# TODO: Exception Processing
-
-services = ServiceList()  # TODO
 
 
 @app.route('/model', methods=['GET'])
 def getAllModels():
     print('Getting all models')
     try:
-        param_names = ('id', 'des', 'type', 'algo', 'time', 'status')
+        param_names = ('id', 'name', 'des', 'type', 'algo', 'time')
         res = {'models': [{key: m[key] for key in param_names}
                           for m in data.getAllModels()]}
     except:
@@ -46,13 +49,15 @@ def getAllModels():
 @app.route('/model', methods=['POST'])
 def createModel():
     try:
-        params = request.get_json()  # keys: id, des, type, file
+        params = request.form.to_dict()  # keys: name, des, type, file
         print('Creating model:', params)
 
+        id = data.model_id_count
+        params['file'] = './models/{}.{}'.format(id, params['type'])
+        request.files['file'].save(params['file'])
         model = Model(**params)
-        model.save()            # TODO: save the model to ./models/<id>.<type>
 
-        param_names = ('id', 'des', 'type', 'algo', 'time')
+        param_names = ('name', 'des', 'type', 'algo', 'time')
         data.addModel(tuple(getattr(model, key) for key in param_names))
 
         res = {'status': 'success'}
@@ -67,34 +72,47 @@ def createModel():
     return jsonify(res)
 
 
-@app.route('/model/<modelID>', methods=['GET'])
+@app.route('/model/<int:modelID>', methods=['GET'])
 def getModelInfo(modelID):
     model_params = data.getModelByID(modelID)
+    print(model_params)
     res = {'exist': (model_params is not None)}
     print('Searching for model {}: {}'.format(modelID, res['exist']))
 
     if res['exist']:
         try:
-            # TODO: load from file (according to id and type)
-            model = Model(model_params['id'], model_params['des'],
-                          model_params['type'], fromfile=True)
-            param_names = ('des', 'type', 'algo', 'time', 'input', 'output')
+            model = Model(model_params['name'],
+                          model_params['des'], model_params['type'],
+                          './models/{}.{}'.format(modelID, model_params['type']))
+            param_names = ('name', 'des', 'type', 'algo',
+                           'time', 'input', 'output')
             res.update({key: getattr(model, key) for key in param_names})
+            print(res)
         except:
             traceback.print_exc()
 
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/test', methods=['POST'])
+@app.route('/model/<int:modelID>/test', methods=['POST'])
 def testModel(modelID):
     try:
         input_data = request.get_json()
+
+        for key, value in input_data.items():
+            if isinstance(value, str) and value.startswith('data:'):
+                input_data[key] = decodeFile(value)          # decode base64
+
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
-        model = Model(model_params['id'], model_params['des'],
-                      model_params['type'], fromfile=True)
-        result = model.predict(input_data)
+        print(model_params)
+        model = Model(model_params['name'],
+                      model_params['des'], model_params['type'],
+                      './models/{}.{}'.format(modelID, model_params['type']))
+
+        # try to get pre_process
+        pre_processer = data.getPreProcessByID(modelID)
+        result = model.predict(input_data, pre_processer)
         res = {'output': result}
     except:
         traceback.print_exc()
@@ -103,13 +121,121 @@ def testModel(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['GET'])
+@app.route('/model/<int:modelID>/delete', methods=['POST'])
+def deleteModel(modelID):
+    try:
+        services_to_delete = data.getServicesByModel(modelID)
+
+        print('Deleting model {}'.format(modelID))
+
+        for temp_service in services_to_delete:
+            data.setServiceStatus(temp_service['id'], 'delete')
+            services.delete(temp_service['id'])
+
+        data.deleteModel(modelID)
+        res = {'status': 'success'}
+    except:
+        traceback.print_exc()
+        res = {'status': 'fail'}
+
+    return jsonify(res)
+
+
+@app.route('/model/<int:modelID>/preprocess', methods=['GET'])
+def getPreProcess(modelID):
+    prepro_params = data.getPreProcessByID(modelID)
+    # test print, don't want to print des
+    print(prepro_params)
+
+    res = {'exist': (prepro_params is not None)}
+    print('Searching for process {}: {}'.format(modelID, res['exist']))
+
+    if res['exist']:
+        try:
+            print('PreProcess exist')
+            param_names = ('prodes', 'path', 'name', 'type')
+            res.update({key: prepro_params[key]
+                       for key in param_names})
+            res['state'] = 'success'
+            # test print, don't want to print des
+            print(res)
+            f = open(res['path'], 'r')
+            res['f'] = f.read()
+        except:
+            res['state'] = 'fail'
+            traceback.print_exc()
+    else:
+        res['state'] = 'empty'
+
+    return jsonify(res)
+
+
+@app.route('/model/<int:modelID>/preprocess', methods=['POST'])
+def LoadPreProcess(modelID):
+    try:
+        params = request.form.to_dict()  # keys: prodes, file
+        print('Creating PreProcess:', params)
+
+        id = modelID
+
+        # now only python
+        params['type'] = 'py'
+
+        params['file'] = './preprocesses/{}.{}'.format(id, params['type'])
+        params['name'] = params['filename']
+        request.files['file'].save(params['file'])
+
+        data.addPreProcess(
+            modelID, params['prodes'], params['file'], params['name'], params['type'])
+
+        res = {'status': 'success'}
+
+    except Exception as exc:
+        traceback.print_exc()
+        res = {
+            'status': 'fail',
+            'reason': exc
+        }
+
+    return jsonify(res)
+
+
+@app.route('/model/<int:modelID>/preprocess/delete', methods=['POST'])
+def DeletePreProcess(modelID):
+    try:
+        print('Delete PreProcess:', modelID)
+        data_dict = {}
+        data_dict['exist'], data_dict['prodes'], data_dict['path'], data_dict['name'], data_dict['type'] = data.deletePreProcess(
+            modelID)
+
+        if (data_dict['exist']):
+            res = {'status': 'success'}
+            os.remove(data_dict['path'])
+        else:
+            res = {
+                'status': 'fail',
+                'reason': 'Model has no preprocess file'
+            }
+
+    except Exception as exc:
+        traceback.print_exc()
+        res = {
+            'status': 'fail',
+            'reason': exc
+        }
+
+    return jsonify(res)
+
+
+@app.route('/model/<int:modelID>/service', methods=['GET'])
 def getAllServices(modelID):
     print('Getting all services of model {}'.format(modelID))
     try:
         records = data.getServicesByModel(modelID)
-        assert records is not None
-        res = {'services': records}
+        param_names = ('id', 'name', 'time', 'status', 'count',
+                       'averResTime', 'maxResTime', 'minResTime')
+        res = {'services': [{key: r[key]
+                             for key in param_names} for r in records]}
     except:
         traceback.print_exc()
         res = {'services': []}
@@ -117,18 +243,21 @@ def getAllServices(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service', methods=['POST'])
+@app.route('/model/<int:modelID>/service', methods=['POST'])
 def createService(modelID):
     try:
-        params = request.get_json()  # keys: id
+        params = request.get_json()  # keys: name
         print('Creating service:', params)
         serviceID = data.addService(
-            (modelID, params['id'], datetime.now(), 'on', 0))
+            modelID, params['name'], datetime.now(), 'running', 0)
 
         model_params = data.getModelByID(modelID)
-        model = Model(model_params['id'], model_params['des'],
-                      model_params['type'], fromfile=True)
-        services.add(serviceID, Service(serviceID, model))
+        model = Model(model_params['name'],
+                      model_params['des'], model_params['type'],
+                      './models/{}.{}'.format(modelID, model_params['type']))
+        pre_processer = data.getPreProcessByID(modelID)
+        services.add(serviceID, Service(
+            serviceID, model, modelID, pre_processer))
         res = {'status': 'success'}
 
     except Exception as exc:
@@ -140,8 +269,10 @@ def createService(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
+    begin = datetime.now()
+
     try:
         cmd = request.get_json()
         status = cmd['opr']
@@ -158,10 +289,12 @@ def changeServiceStatus(modelID, serviceID):
         traceback.print_exc()
         res = {'status': 'fail'}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/quick', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/quick', methods=['POST'])
 def quickPredict(modelID, serviceID):
     print('Quick Predict on model {}, service {}'.format(modelID, serviceID))
     begin = datetime.now()
@@ -169,6 +302,11 @@ def quickPredict(modelID, serviceID):
     try:
         service = services.get(serviceID)
         input_data = request.get_json()
+
+        for key, value in input_data.items():
+            if isinstance(value, str) and value.startswith('data:'):
+                input_data[key] = decodeFile(value)          # decode base64
+
         result = service.predict(input_data)
         res = {'output': result}
     except:
@@ -181,16 +319,26 @@ def quickPredict(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task', methods=['POST'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['POST'])
 def batchPredict(modelID, serviceID):
     print('Batch Predict on model {}, service {}'.format(modelID, serviceID))
     begin = datetime.now()
 
     try:
         service = services.get(serviceID)
-        input_data = request.get_json()
-        task_id = service.batch(input_data)
-        res = {'id': task_id}
+        batch_data = request.files['file']
+        _, ext = os.path.splitext(batch_data.filename)
+
+        if ext == '.csv':
+            data_gen = readCSV(batch_data)
+        elif ext == '.zip':
+            data_gen = readZIP(batch_data, service.model.input[0]['name'])
+        else:
+            raise ValueError('File format not readable')
+
+        taskID = service.batch(data_gen)
+        res = {'id': taskID}
+        batch_data.close()
     except:
         traceback.print_exc()
         res = None
@@ -200,38 +348,54 @@ def batchPredict(modelID, serviceID):
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task', methods=['GET'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
     print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
+    begin = datetime.now()
+
     try:
-        records = data.getTasksByService(serviceID)
-        param_name = ('id', 'status')
-        res = {'tasks': [{key: r[key] for key in param_name} for r in records]}
+        records = services.get(serviceID).getTasks()
+        res = {'tasks': list(records)}
+
     except:
         traceback.print_exc()
         res = {'tasks': []}
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
 
-@app.route('/model/<modelID>/service/<serviceID>/task/<taskID>', methods=['GET'])
+@app.route('/model/<int:modelID>/service/<int:serviceID>/task/<int:taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
     print('Getting task {}'.format(taskID))
+    begin = datetime.now()
+
     try:
-        task = data.getTaskByID(taskID)
-        res = {'status': task['status']}
+        service = services.get(serviceID)
+        res = {'status': service.getTaskStatus(taskID)}
 
         if res['status'] == 'finished':
-            service = services.get(serviceID)
             res['result'] = service.getResult(taskID)
     except:
         traceback.print_exc()
         res = None
 
+    end = datetime.now()
+    data.addResponse(serviceID, begin, end)
     return jsonify(res)
+
+# View functions end
 
 
 if __name__ == '__main__':
+    if not os.path.exists('./models'):
+        os.makedirs('./models')
+    if not os.path.exists('./preprocesses'):
+        os.makedirs('./preprocesses')
+
+    print('Server Running...')
+
     server = pywsgi.WSGIServer(('0.0.0.0', 5000), app)
     server.serve_forever()
     # app.run('0.0.0.0', port=5000, debug=True)

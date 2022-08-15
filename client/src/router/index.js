@@ -34,6 +34,11 @@ const routes = [
     component: () => import('../views/ServiceView.vue'),
   },
   {
+    path: '/service/:modelID/preprocess',
+    name: 'preprocess',
+    component: () => import('../views/PreProView.vue'),
+  },
+  {
     path: '/predict/:modelID/:serviceID',
     name: 'predict',
     component: () => import('../views/PredictView.vue'),

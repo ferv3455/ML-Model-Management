@@ -10,6 +10,7 @@
         <th>类型</th>
         <th>算法</th>
         <th>上传时间</th>
+        <th>删除模型</th>
       </tr>
       <tr v-for="model in models" :key="model" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
@@ -22,6 +23,11 @@
         <td>{{ model.type }}</td>
         <td>{{ model.algo }}</td>
         <td>{{ formatDate(model.time) }}</td>
+        <td>
+          <button @dblclick="clear(model.id)" @mouseover="dialogClickToDeleteModel" class="modelPageClearButton">
+            <img name="deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon themeImage">
+          </button>
+        </td>
       </tr>
     </table>
     <button @click="changePageToUpload" id="mainPageUploadButton" @mouseover="dialogClickToUploadModel">
@@ -77,17 +83,43 @@ export default {
       const date = new Date(value * 1000);
       return date.toLocaleString();
     },
+    clear(modelID) {
+      for (let i = 0; i < this.models.length; i += 1) {
+        if (this.models[i].id === modelID) {
+          const path = `/model/${modelID}/delete`;
+          axios.post(getBackUrl(path))
+            .then((res) => {
+              if (res.data.status === 'success') {
+                for (let j = i; j < this.models.length - 1; j += 1) {
+                  this.models[j] = this.models[j + 1];
+                }
+                this.models.pop();
+              } else {
+                const mes = '删除模型失败';
+                alert(mes);
+              }
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+          break;
+        }
+      }
+    },
     dialogCheckModelDetail(event) {
       setDialog('*⸜( •ᴗ• )⸝*点击这里可以查看此模型的详情', 1500);
     },
     dialogClickToUploadModel(event) {
       setDialog('点击这里可以上传新模型哟๐•ᴗ•๐', 1500);
     },
+    dialogClickToDeleteModel(event) {
+      setDialog('点击后就找不回了இдஇ！千万不要点错哟！！', 1500);
+    },
   },
   mounted() {
     changeMainPageDivBoxSize();
     window.onresize = changeMainPageDivBoxSize;
-    changeAllImgUrl();
+    setTimeout(() => { changeAllImgUrl(); }, 100);
     setTimeout(() => { setDialog('', 0); }, 100);
 
     axios.get(getBackUrl('/model'), {
@@ -143,4 +175,15 @@ export default {
   margin-left: 15px;
   margin-right: 5px;
 }
+
+.modelPageClearButton {
+  width: 25px;
+  margin-right: 10px;
+  height: 25px;
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
 </style>

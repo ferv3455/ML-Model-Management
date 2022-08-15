@@ -26,14 +26,14 @@
           <div id="testPageFormArea">
             <div class="testPageInputVariance" v-for="variance in variances" :key="variance">
               <p>{{ variance.name }}</p>
-              <div v-if="variance.type !== 'image'">
-                <input :id="'var_' + variance.name">
-              </div>
-              <div v-else>
+              <div v-if="variance.type.includes('tensor')">
                 <input :id="'var_' + variance.name" type="file" ref="file" accept=".png, .jpg, .jpeg, .bmp"
                   @change="onImageChange(variance.name)">
                 <img :id="'var_' + variance.name + '_image'" class="testPageUploadImage" alt="inputImage"
                   src="../assets/emptyPic.png">
+              </div>
+              <div v-else>
+                  <input :id="'var_' + variance.name">
               </div>
             </div>
           </div>
@@ -78,7 +78,7 @@ function getBase64Image(img) {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(img, 0, 0, img.width, img.height);
   const dataURL = canvas.toDataURL('image/png');
-  return dataURL.replace('data:image/png;base64,', '');
+  return dataURL;
 }
 
 export default {
@@ -109,7 +109,7 @@ export default {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
           inputBox.value = '';
-          if (this.variances[i].type === 'image') {
+          if (this.variances[i].type.includes('tensor')) {
             const imgFile = document.getElementById(`var_${this.variances[i].name}`);
             document.getElementById(`var_${this.variances[i].name}_image`).classList.remove('testPageImageLoaded');
           }
@@ -119,7 +119,12 @@ export default {
     submit(event) {
       let submitObject = {};
       if (this.mode === 'json') {
-        submitObject = JSON.parse(this.jsonInput);
+        try {
+          submitObject = JSON.parse(this.jsonInput);
+        } catch (err) {
+          alert(err);
+          return;
+        }
       } else {
         for (let i = 0; i < this.variances.length; i += 1) {
           const inputBox = document.getElementById(`var_${this.variances[i].name}`);
@@ -127,20 +132,18 @@ export default {
             alert(`变量 ${this.variances[i].name} 为空！`);
             return;
           }
-          if (this.variances[i].type !== 'image') {
-            submitObject[this.variances[i].name] = inputBox.value;
-          } else {
+          if (this.variances[i].type.includes('tensor')) {
             const inputImg = document.getElementById(`var_${this.variances[i].name}_image`);
             submitObject[this.variances[i].name] = getBase64Image(inputImg);
+          } else {
+            submitObject[this.variances[i].name] = inputBox.value;
           }
         }
       }
       console.log(submitObject);
       // put submitObject
       const path = `/model/${this.modelID}/test`;
-      axios.post(getBackUrl(path), {
-        submitObject,
-      })
+      axios.post(getBackUrl(path), submitObject)
         .then((res) => {
           this.output = res.data.output;
         })

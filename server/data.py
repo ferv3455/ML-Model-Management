@@ -22,7 +22,7 @@ FUNCTION getAllModels
 FUNCTION getModelByID(modelID): get model by modelID
 FUNCTION addModel(record)
 
-FUNCTION getServicesByModel(modelID): get all services have this modelID 
+FUNCTION getServicesByModel(modelID): get all services have this modelID
 FUNCTION addService(modelID, name, time, status, count)
 FUNCTION setServiceStatus(serviceID,status)
 
@@ -60,10 +60,10 @@ preprocess_id_count = 0
     connect to mongodb and set up database "mmms", you can use your own username & password in mongodb and authenticate here
 '''
 
+# data_client = pymongo.MongoClient("mongodb://localhost:27017/", username = "admin", password = "2333333")
 data_client = pymongo.MongoClient(
-    "mongodb://localhost:27017/", username="admin", password="2333333")
+    "mongodb://localhost:27017/")
 data_base = data_client['mmms']
-
 
 # set up lists in data_base
 mongo_models_list = data_base['mongo_models_list']
@@ -76,11 +76,11 @@ mongo_preprocess_list = data_base['mongo_preprocess_list']
 def getAllModels():
     '''Get all models from table:models. Return a list of dicts.'''
 
-    all_models_list = mongo_models_list.find()
-    print('all_model\n')
-    print(all_models_list)
+    all_models_list = list(mongo_models_list.find())
+    # print('all_model:')
+    # print(all_models_list)
     # return all_models_list
-    return {}
+    return all_models_list
     # EXAMPLE:
     # with sqlite3.connect('database.db') as con:
     #     cur = con.cursor()

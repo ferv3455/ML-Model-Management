@@ -103,14 +103,6 @@ def testModel(modelID):
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
 
-         # try to get pre_process
-        pre_processer = data.getPreProcessByID(modelID)
-        if (pre_processer is not None):
-            for key, value in input_data.items():
-                pre_pro_module = import_module(
-                    pre_processer['path'][2:-3].replace('/', '.'))
-                input_data[key] = pre_pro_module.pre_process(value)
-
         print('Testing on model {}: {}'.format(modelID, input_data))
         model_params = data.getModelByID(modelID)
         print(model_params)
@@ -118,7 +110,9 @@ def testModel(modelID):
                       model_params['des'], model_params['type'],
                       './models/{}.{}'.format(modelID, model_params['type']))
 
-        result = model.predict(input_data)
+        # try to get pre_process
+        pre_processer = data.getPreProcessByID(modelID)
+        result = model.predict(input_data, pre_processer)
         res = {'output': result}
     except:
         traceback.print_exc()
@@ -261,7 +255,9 @@ def createService(modelID):
         model = Model(model_params['name'],
                       model_params['des'], model_params['type'],
                       './models/{}.{}'.format(modelID, model_params['type']))
-        services.add(serviceID, Service(serviceID, model, modelID))
+        pre_processer = data.getPreProcessByID(modelID)
+        services.add(serviceID, Service(
+            serviceID, model, modelID, pre_processer))
         res = {'status': 'success'}
 
     except Exception as exc:
@@ -311,13 +307,6 @@ def quickPredict(modelID, serviceID):
             if isinstance(value, str) and value.startswith('data:'):
                 input_data[key] = decodeFile(value)          # decode base64
 
-        pre_processer = data.getPreProcessByID(modelID)
-        if (pre_processer is not None):
-            for key, value in input_data.items():
-                pre_pro_module = import_module(
-                    pre_processer['path'][2:-3].replace('/', '.'))
-                input_data[key] = pre_pro_module.pre_process(value)
-
         result = service.predict(input_data)
         res = {'output': result}
     except:
@@ -346,13 +335,6 @@ def batchPredict(modelID, serviceID):
             data_gen = readZIP(batch_data, service.model.input[0]['name'])
         else:
             raise ValueError('File format not readable')
-
-        pre_processer = data.getPreProcessByID(modelID)
-        if (pre_processer is not None):
-            pre_pro_module = import_module(
-                pre_processer['path'][2:-3].replace('/', '.'))
-            data_gen = ({key: pre_pro_module.pre_process(value)
-                         for key, value in d.items()} for d in data_gen)
 
         taskID = service.batch(data_gen)
         res = {'id': taskID}

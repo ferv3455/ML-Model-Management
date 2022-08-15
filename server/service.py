@@ -23,10 +23,11 @@ def initWorker(serviceID):
 
 
 class Service:
-    def __init__(self, serviceID, model, modelID):
+    def __init__(self, serviceID, model, modelID, pre_processer):
         self.id = serviceID
         self.model = model
         self.modelID = modelID
+        self.pre_processer = pre_processer
         self.status = True          # True for ON, False for OFF
         self.tasks = dict()
 
@@ -36,25 +37,26 @@ class Service:
 
         self.count = 0
 
-    def predict(self, data):
+    def predict(self, x):
         assert self.status
-        return self.model.predict(data)
+        return self.model.predict(x, self.pre_processer)
 
-    def batch(self, data):
+    def batch(self, batch_x):
         assert self.status
         self.count += 1
         taskID = self.count
 
         sub_tasks = list()
-        for d in data:
+        for d in batch_x:
             for key, value in d.items():
                 try:
                     d[key] = value.tolist()  # convert to list if it is ndarray
                 except:
                     pass
-                
+
             sub_tasks.append(task.predict.apply_async(
-                args=(self.modelID, self.model.type, d), queue='service{}'.format(self.id)))
+                args=(self.modelID, self.model.type, d, self.pre_processer),
+                queue='service{}'.format(self.id)))
 
         self.tasks[taskID] = sub_tasks
         return taskID

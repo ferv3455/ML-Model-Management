@@ -74,7 +74,7 @@ def data_base_init():
         db_collection.delete_many({})
 
 
-data_base_init()
+data_base_init()  # clear previous data
 
 # set up lists in data_base
 mongo_models_list = data_base['mongo_models_list']
@@ -146,13 +146,17 @@ def getServicesByModel(modelID):
     For each service, look up its responses in table:serv_response,
     and get the average, maximum and minimum time.
     Return a list of dicts.'''
-    records = []
 
-    for temp_service in services_list:
-        if temp_service['modelID'] == modelID:
-            # TODO:search in response and find the times
-            records.append(temp_service)
-    return records
+    # records = []
+
+    # for temp_service in services_list:
+    #     if temp_service['modelID'] == modelID:
+    #         # TODO:search in response and find the times
+    #         records.append(temp_service)
+    # return records
+
+    service_by_model = list(mongo_services_list.find({"modelID": modelID}))
+    return service_by_model
 
 # new a service
 
@@ -176,20 +180,27 @@ def addService(modelID, name, time, status, count):
 
     service_id_count = service_id_count+1
 
-    services_list.append(temp_service)
+    # services_list.append(temp_service)
+    mongo_services_list.insert_one(temp_service)
+
     return service_id_count-1
 
 
 def setServiceStatus(serviceID, status):
     '''Change service status in table:services.'''
-    for temp_service in services_list:
-        if temp_service['id'] == serviceID:
-            if (status == 'delete'):
-                services_list.remove(temp_service)
-                return
-            else:
-                temp_service['status'] = status
-                return
+
+    # for temp_service in services_list:
+    #     if temp_service['id'] == serviceID:
+    #         if (status == 'delete'):
+    #             services_list.remove(temp_service)
+    #             return
+    #         else:
+    #             temp_service['status'] = status
+    #             return
+
+    mongo_services_list.update_one(
+        {'id': serviceID}, {'$set': {'status': status}})
+    return
 
 
 def addResponse(serviceID, begin, end):

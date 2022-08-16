@@ -79,7 +79,7 @@ data_base_init()  # clear previous data
 # set up lists in data_base
 mongo_models_list = data_base['mongo_models_list']
 mongo_services_list = data_base['mongo_services_list']
-mongo_response_list = data_base['mongo_response_list']
+mongo_responses_list = data_base['mongo_response_list']
 mongo_tasks_list = data_base['mongo_tasks_list']
 mongo_preprocess_list = data_base['mongo_preprocess_list']
 
@@ -216,19 +216,25 @@ def addResponse(serviceID, begin, end):
     temp_response['end'] = end
     temp_response['duration'] = end-begin
 
-    response_list.append(temp_response)
+    # response_list.append(temp_response)
+    mongo_responses_list.insert_one(temp_response)
+
     return
 
 
 def getTasksByService(serviceID):
     '''Get tasks from table:tasks. Return a list of dicts.'''
-    records = []
 
-    for temp_task in tasks_list:
-        if temp_task['serviceID'] == serviceID:
-            records.append(temp_task)
+    # records = []
 
-    return records
+    # for temp_task in tasks_list:
+    #     if temp_task['serviceID'] == serviceID:
+    #         records.append(temp_task)
+
+    task_by_service = list(mongo_services_list.find({"serviceID": serviceID}))
+    return task_by_service
+
+    # return records
 
 
 def getTaskByID(taskID):

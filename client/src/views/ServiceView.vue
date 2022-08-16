@@ -66,8 +66,8 @@ import getBackUrl from '../getIP';
 
 function changeServicePageDivBoxSize() {
   const cont = document.getElementById('servicePageDivBox');
-  if (window.innerWidth <= 1000) {
-    cont.style.width = `${window.innerWidth * 0.90}px`;
+  if (window.innerWidth <= 1024) {
+    cont.style.width = `${window.innerWidth * 0.95}px`;
   } else {
     cont.style.width = `${window.innerWidth * 0.80}px`;
   }

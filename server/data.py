@@ -109,6 +109,7 @@ def getAllModels():
 
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
+
     model_by_id = mongo_models_list.find_one({"id": modelID})
     return model_by_id
 
@@ -239,21 +240,29 @@ def getTasksByService(serviceID):
 
 def getTaskByID(taskID):
     '''Get a task from table:tasks. Return a dict.'''
-    for temp_task in tasks_list:
-        if temp_task['taskID'] == taskID:
-            return temp_task
-    return {}
+
+    # for temp_task in tasks_list:
+    #     if temp_task['taskID'] == taskID:
+    #         return temp_task
+    # return {}
+
+    task_by_id = mongo_tasks_list.find_one({"id": taskID})
+    return task_by_id
 
 
 def newTask():
     '''new a task to table:tasks.
     Return taskID'''
+
     temp_task = {}
-    temp_task['taskID'] = task_id_count
+    temp_task['id'] = task_id_count
 
     # TODO: other imformation of task
 
     task_id_count = task_id_count+1
+
+    mongo_tasks_list.insert_one(temp_task)
+
     return task_id_count-1
 
 

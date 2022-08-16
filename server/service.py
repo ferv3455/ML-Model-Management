@@ -54,7 +54,10 @@ class Service:
             for key, value in data.items():
                 try:
                     # convert to list if it is ndarray
-                    data[key] = value.tolist()
+                    data[key] = {
+                        'dtype': str(value.dtype),
+                        'data': value.tolist()
+                    }
                 except:
                     pass
 

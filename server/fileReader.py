@@ -4,6 +4,7 @@ import zipfile
 import numpy as np
 
 from PIL import Image
+import skvideo.io
 
 
 def readCSV(data):
@@ -28,8 +29,21 @@ def readZIP(data, param_name):
     # Open each file
     for filename in filenames:
         with zipObj.open(filename, 'r') as fp:
-            img = Image.open(io.BytesIO(fp.read()))
-            arr = np.asarray(img)
+            # Process different formats
+            if filename.endswith('.npy'):
+                # NumPy data file
+                arr = np.load(fp)
+
+            # elif filename.endswith('.mp4'):
+            #     # Video file
+            #     stream = io.BytesIO(fp.read())
+            #     arr = skvideo.io.vread(stream)
+
+            else:
+                # Image file
+                img = Image.open(io.BytesIO(fp.read()))
+                arr = np.asarray(img)
+
             yield ('filename', filename, {param_name: arr})
 
 

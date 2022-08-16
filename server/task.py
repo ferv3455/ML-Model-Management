@@ -13,12 +13,13 @@ def predict(modelID, type, data, pre_processer=None):
     for key, value in data.items():
         try:
             # convert back to ndarray if it is a list
-            if isinstance(value, list):
-                data[key] = array(value, dtype='uint8')
-                print(data[key].shape, data[key].dtype)
+            if isinstance(value, dict):
+                print(value)
+                data[key] = array(value['data'], dtype=value['dtype'])
         except:
             print_exc()
 
+    print(data)
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data, pre_processer)
 

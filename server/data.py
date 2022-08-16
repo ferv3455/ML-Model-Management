@@ -1,5 +1,6 @@
 from signal import signal
 import sqlite3
+from urllib.request import proxy_bypass
 import pymongo
 from urllib import parse
 # all active services
@@ -267,52 +268,71 @@ def newTask():
 
 
 def addPreProcess(modelID, prodes, path, name, type):
-    prepro = {}
-    prepro['modelID'] = modelID
-    prepro['prodes'] = prodes
-    prepro['path'] = path
-    prepro['name'] = name
-    prepro['type'] = type
-    global preprocess_id_count
-    global preprocess_list
-    signal = False
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            preprocess_list[i]['prodes'] = prodes
-            preprocess_list[i]['path'] = path
-            preprocess_list[i]['name'] = name
-            preprocess_list[i]['type'] = type
-            signal = True
-            break
-    if not signal:
-        preprocess_id_count = preprocess_id_count + 1
-        preprocess_list.append(prepro)
+    temp_prepro = {}
 
-    return preprocess_id_count
+    temp_prepro['modelID'] = modelID
+    temp_prepro['prodes'] = prodes
+    temp_prepro['path'] = path
+    temp_prepro['name'] = name
+    temp_prepro['type'] = type
+
+    global preprocess_id_count
+    # global preprocess_list
+
+    # signal = False
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         preprocess_list[i]['prodes'] = prodes
+    #         preprocess_list[i]['path'] = path
+    #         preprocess_list[i]['name'] = name
+    #         preprocess_list[i]['type'] = type
+    #         signal = True
+    #         break
+    # if not signal:
+    #     preprocess_id_count = preprocess_id_count + 1
+    #     preprocess_list.append(temp_prepro)
+
+    judge_prepro = mongo_preprocess_list.find({'modelID': modelID})
+    if list(judge_prepro) == []:
+        mongo_preprocess_list.instet_one(temp_prepro)
+    else:
+        mongo_services_list.update_one(
+            {'modelID': modelID}, {'$set': {'prodes': prodes, 'path': path, 'name': name, 'type': type}})
+        preprocess_id_count = preprocess_id_count+1
+    return preprocess_id_count-1
 
 
 def deletePreProcess(modelID):
-    global preprocess_list
+    # global preprocess_list
     global preprocess_id_count
-    data_tuple = ()
-    signal = False
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            data_tuple = (
-                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
-            preprocess_list.pop(i)
-            preprocess_id_count = preprocess_id_count - 1
-            signal = True
-            break
-    if not signal:
-        data_tuple = (False, '', '', '', '')
 
-    return data_tuple
+    # data_tuple = ()
+    # signal = False
+
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         data_tuple = (
+    #             True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
+    #         preprocess_list.pop(i)
+    #         preprocess_id_count = preprocess_id_count - 1
+    #         signal = True
+    #         break
+    # if not signal:
+    #     data_tuple = (False, '', '', '', '')
+
+    judge_prepro = mongo_preprocess_list.find({'modelID': modelID})
+    if list(judge_prepro) == []:
+        return (False, '', '', '')
+    else:
+        return (True, judge_prepro['prodes'], judge_prepro['path'], judge_prepro['name'], judge_prepro['type'])
 
 
 def getPreProcessByID(modelID):
-    global preprocess_list
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            return preprocess_list[i]
-    return None
+    # global preprocess_list
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         return preprocess_list[i]
+    # return None
+
+    pro_by_id = mongo_preprocess_list.find({'modelID': modelID})
+    return pro_by_id

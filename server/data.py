@@ -320,11 +320,11 @@ def deletePreProcess(modelID):
     # if not signal:
     #     data_tuple = (False, '', '', '', '')
 
-    judge_prepro = mongo_preprocess_list.find({'modelID': modelID})
-    if list(judge_prepro) == []:
-        return (False, '', '', '')
+    judge_prepro = mongo_preprocess_list.find_one({'modelID': modelID})
+    if judge_prepro == {}:
+        return {}
     else:
-        return (True, judge_prepro['prodes'], judge_prepro['path'], judge_prepro['name'], judge_prepro['type'])
+        return {'prodes': judge_prepro['prodes'], 'path': judge_prepro['path'], 'name': judge_prepro['name'], 'type': judge_prepro['type']}
 
 
 def getPreProcessByID(modelID):
@@ -334,5 +334,5 @@ def getPreProcessByID(modelID):
     #         return preprocess_list[i]
     # return None
 
-    pro_by_id = mongo_preprocess_list.find({'modelID': modelID})
+    pro_by_id = mongo_preprocess_list.find_one({'modelID': modelID})
     return pro_by_id

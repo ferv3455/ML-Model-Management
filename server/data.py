@@ -1,5 +1,8 @@
 from signal import signal
 import sqlite3
+from urllib.request import proxy_bypass
+import pymongo
+from urllib import parse
 # all active services
 
 '''
@@ -20,7 +23,7 @@ FUNCTION getAllModels
 FUNCTION getModelByID(modelID): get model by modelID
 FUNCTION addModel(record)
 
-FUNCTION getServicesByModel(modelID): get all services have this modelID 
+FUNCTION getServicesByModel(modelID): get all services have this modelID
 FUNCTION addService(modelID, name, time, status, count)
 FUNCTION setServiceStatus(serviceID,status)
 
@@ -29,6 +32,10 @@ FUNCTION getTasksByService(serviceID)
 FUNCTION getTaskByID(taskID)
 FUNCTION newTask()
 
+'''
+
+'''
+try to use noSQL:mongodb
 '''
 # models\response
 models_list = []
@@ -49,10 +56,42 @@ task_id_count = 0
 # preprocess count
 preprocess_id_count = 0
 
+# connect to mongodb
+'''
+    connect to mongodb and set up database "mmms", you can use your own username & password in mongodb and authenticate here
+'''
+
+# data_client = pymongo.MongoClient("mongodb://localhost:27017/", username="admin", password="2333333")
+data_client = pymongo.MongoClient("mongodb://localhost:27017/")
+data_base = data_client['mmms']
+
+
+def data_base_init():
+    collection_names = data_base.list_collection_names()  # 获取数据库中所有的 collection 名称
+    for collection_name in collection_names:
+        # 每个数据库包含多个集合，根据集合名称获取集合对象（Collection）
+        db_collection = data_base[collection_name]
+        db_collection.delete_many({})
+
+
+data_base_init()  # clear previous data
+
+# set up lists in data_base
+mongo_models_list = data_base['mongo_models_list']
+mongo_services_list = data_base['mongo_services_list']
+mongo_responses_list = data_base['mongo_response_list']
+mongo_tasks_list = data_base['mongo_tasks_list']
+mongo_preprocess_list = data_base['mongo_preprocess_list']
+
 
 def getAllModels():
     '''Get all models from table:models. Return a list of dicts.'''
-    return models_list
+
+    all_models_list = list(mongo_models_list.find())
+    # print('all_model:')
+    # print(all_models_list)
+    # return all_models_list
+    return all_models_list
     # EXAMPLE:
     # with sqlite3.connect('database.db') as con:
     #     cur = con.cursor()
@@ -61,13 +100,18 @@ def getAllModels():
     #     return records
 
 
+# def getModelByID(modelID):
+#     '''Get a model from table:models. Return a dict.'''
+#     for temp_model in models_list:
+#         if temp_model['id'] == modelID:
+#             return temp_model
+#     return None
+
 def getModelByID(modelID):
     '''Get a model from table:models. Return a dict.'''
-    print(models_list)
-    for temp_model in models_list:
-        if temp_model['id'] == modelID:
-            return temp_model
-    return None
+
+    model_by_id = mongo_models_list.find_one({"id": modelID})
+    return model_by_id
 
 
 def addModel(record):  # add new model to models_list
@@ -82,13 +126,19 @@ def addModel(record):  # add new model to models_list
     global model_id_count
     temp_dict['id'] = model_id_count
     model_id_count = model_id_count+1
-    models_list.append(temp_dict)
+    # models_list.append(temp_dict)
+
+    # model_mongo_id = mongo_models_list.insert_one(temp_dict) 返回值为id
+    mongo_models_list.insert_one(temp_dict)
+
     return model_id_count-1
 
+
 def deleteModel(modelID):
-    for temp_model in models_list:
-        if temp_model['id'] == modelID:
-            models_list.remove(temp_model)
+    # for temp_model in models_list:
+    #     if temp_model['id'] == modelID:
+    #         models_list.remove(temp_model)
+    mongo_models_list.delete_one({"id": modelID})
     return
 
 
@@ -97,13 +147,17 @@ def getServicesByModel(modelID):
     For each service, look up its responses in table:serv_response,
     and get the average, maximum and minimum time.
     Return a list of dicts.'''
-    records = []
 
-    for temp_service in services_list:
-        if temp_service['modelID'] == modelID:
-            # TODO:search in response and find the times
-            records.append(temp_service)
-    return records
+    # records = []
+
+    # for temp_service in services_list:
+    #     if temp_service['modelID'] == modelID:
+    #         # TODO:search in response and find the times
+    #         records.append(temp_service)
+    # return records
+
+    service_by_model = list(mongo_services_list.find({"modelID": modelID}))
+    return service_by_model
 
 # new a service
 
@@ -127,20 +181,31 @@ def addService(modelID, name, time, status, count):
 
     service_id_count = service_id_count+1
 
-    services_list.append(temp_service)
+    # services_list.append(temp_service)
+    mongo_services_list.insert_one(temp_service)
+
     return service_id_count-1
 
 
 def setServiceStatus(serviceID, status):
     '''Change service status in table:services.'''
-    for temp_service in services_list:
-        if temp_service['id'] == serviceID:
-            if (status == 'delete'):
-                services_list.remove(temp_service)
-                return
-            else:
-                temp_service['status'] = status
-                return
+
+    # for temp_service in services_list:
+    #     if temp_service['id'] == serviceID:
+    #         if (status == 'delete'):
+    #             services_list.remove(temp_service)
+    #             return
+    #         else:
+    #             temp_service['status'] = status
+    #             return
+
+    if status == 'delete':
+        mongo_services_list.delete_many(
+            {'id': serviceID})
+    else:
+        mongo_services_list.update_many(
+            {'id': serviceID}, {'$set': {'status': status}})
+    return
 
 
 def addResponse(serviceID, begin, end):
@@ -152,88 +217,121 @@ def addResponse(serviceID, begin, end):
     temp_response['end'] = end
     temp_response['duration'] = end-begin
 
-    response_list.append(temp_response)
+    # response_list.append(temp_response)
+    mongo_responses_list.insert_one(temp_response)
+
     return
 
 
 def getTasksByService(serviceID):
     '''Get tasks from table:tasks. Return a list of dicts.'''
-    records = []
 
-    for temp_task in tasks_list:
-        if temp_task['serviceID'] == serviceID:
-            records.append(temp_task)
+    # records = []
 
-    return records
+    # for temp_task in tasks_list:
+    #     if temp_task['serviceID'] == serviceID:
+    #         records.append(temp_task)
+
+    task_by_service = list(mongo_services_list.find({"serviceID": serviceID}))
+    return task_by_service
+
+    # return records
 
 
 def getTaskByID(taskID):
     '''Get a task from table:tasks. Return a dict.'''
-    for temp_task in tasks_list:
-        if temp_task['taskID'] == taskID:
-            return temp_task
-    return {}
+
+    # for temp_task in tasks_list:
+    #     if temp_task['taskID'] == taskID:
+    #         return temp_task
+    # return {}
+
+    task_by_id = mongo_tasks_list.find_one({"id": taskID})
+    return task_by_id
 
 
 def newTask():
     '''new a task to table:tasks.
     Return taskID'''
+
     temp_task = {}
-    temp_task['taskID'] = task_id_count
+    temp_task['id'] = task_id_count
 
     # TODO: other imformation of task
 
     task_id_count = task_id_count+1
+
+    mongo_tasks_list.insert_one(temp_task)
+
     return task_id_count-1
 
 
 def addPreProcess(modelID, prodes, path, name, type):
-    prepro = {}
-    prepro['modelID'] = modelID
-    prepro['prodes'] = prodes
-    prepro['path'] = path
-    prepro['name'] = name
-    prepro['type'] = type
-    global preprocess_id_count
-    global preprocess_list
-    signal = False
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            preprocess_list[i]['prodes'] = prodes
-            preprocess_list[i]['path'] = path
-            preprocess_list[i]['name'] = name
-            preprocess_list[i]['type'] = type
-            signal = True
-            break
-    if not signal:
-        preprocess_id_count = preprocess_id_count + 1
-        preprocess_list.append(prepro)
+    temp_prepro = {}
 
-    return preprocess_id_count
+    temp_prepro['modelID'] = modelID
+    temp_prepro['prodes'] = prodes
+    temp_prepro['path'] = path
+    temp_prepro['name'] = name
+    temp_prepro['type'] = type
+
+    global preprocess_id_count
+    # global preprocess_list
+
+    # signal = False
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         preprocess_list[i]['prodes'] = prodes
+    #         preprocess_list[i]['path'] = path
+    #         preprocess_list[i]['name'] = name
+    #         preprocess_list[i]['type'] = type
+    #         signal = True
+    #         break
+    # if not signal:
+    #     preprocess_id_count = preprocess_id_count + 1
+    #     preprocess_list.append(temp_prepro)
+
+    judge_prepro = mongo_preprocess_list.find({'modelID': modelID})
+    if list(judge_prepro) == []:
+        mongo_preprocess_list.instet_one(temp_prepro)
+    else:
+        mongo_services_list.update_one(
+            {'modelID': modelID}, {'$set': {'prodes': prodes, 'path': path, 'name': name, 'type': type}})
+        preprocess_id_count = preprocess_id_count+1
+    return preprocess_id_count-1
 
 
 def deletePreProcess(modelID):
-    global preprocess_list
+    # global preprocess_list
     global preprocess_id_count
-    data_tuple = ()
-    signal = False
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            data_tuple = (
-                True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
-            preprocess_list.pop(i)
-            preprocess_id_count = preprocess_id_count - 1
-            signal = True
-            break
-    if not signal:
-        data_tuple = (False, '', '', '', '')
 
-    return data_tuple
+    # data_tuple = ()
+    # signal = False
+
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         data_tuple = (
+    #             True, preprocess_list[i]['prodes'], preprocess_list[i]['path'], preprocess_list[i]['name'], preprocess_list[i]['type'])
+    #         preprocess_list.pop(i)
+    #         preprocess_id_count = preprocess_id_count - 1
+    #         signal = True
+    #         break
+    # if not signal:
+    #     data_tuple = (False, '', '', '', '')
+
+    judge_prepro = mongo_preprocess_list.find_one({'modelID': modelID})
+    if judge_prepro == {}:
+        return {}
+    else:
+        return {'prodes': judge_prepro['prodes'], 'path': judge_prepro['path'], 'name': judge_prepro['name'], 'type': judge_prepro['type']}
 
 
 def getPreProcessByID(modelID):
-    global preprocess_list
-    for i in range(len(preprocess_list)):
-        if preprocess_list[i]['modelID'] == modelID:
-            return preprocess_list[i]
-    return None
+    # global preprocess_list
+    # for i in range(len(preprocess_list)):
+    #     if preprocess_list[i]['modelID'] == modelID:
+    #         return preprocess_list[i]
+    # return None
+
+    pro_by_id = mongo_preprocess_list.find_one({'modelID': modelID})
+    return pro_by_id

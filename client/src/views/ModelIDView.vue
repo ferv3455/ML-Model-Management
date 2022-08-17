@@ -91,7 +91,7 @@ export default {
   data() {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
-      modelID: this.$route.params.modelID,
+      modelID: parseInt(this.$route.params.modelID, 10),
       modelName: 'testName',
       modelDes: 'xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
       modelType: 'pmml',
@@ -157,8 +157,6 @@ export default {
         name: 'test',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
-          modelInputs: JSON.stringify(this.modelInputs),
         },
       });
     },
@@ -167,7 +165,6 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
         },
       });
     },
@@ -188,7 +185,6 @@ export default {
         name: 'preprocess',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
         },
       });
     },

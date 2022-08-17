@@ -50,8 +50,8 @@ export default {
   data() {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
       ProDescription: '',
       LoadedProDescription: '并未加载预处理脚本文件',
       LoadedProPath: '',
@@ -142,10 +142,25 @@ export default {
     clickToGetFile() {
       setDialog('请上传.py类型的文件哟~(=´ω`=)', 1500);
     },
+    getModelName() {
+      const path = `/model/${this.modelID}`;
+      axios.get(getBackUrl(path))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     changePreProViewSize();
     changeAllImgUrl();
+    this.getModelName();
     window.onresize = changePreProViewSize;
     setTimeout(() => { setDialog('', 0); }, 100);
     this.getPrePro();

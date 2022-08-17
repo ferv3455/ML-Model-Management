@@ -18,12 +18,11 @@
       <tr v-for="service in services" :key="service" onmouseover="this.style.backgroundColor='var(--buttonTransColor)';"
         onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td @mouseover="dialogClickToPredictPage">
-          <router-link
-            :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id, modelName: modelName, serviceName: service.name } }">
+          <router-link :to="{ name: 'predict', params: { modelID: modelID, serviceID: service.id } }">
             {{ service.name }}
           </router-link>
         </td>
-        <td>{{ service.time }}</td>
+        <td>{{ formatDate(service.time) }}</td>
         <td>
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
@@ -33,9 +32,9 @@
           </div>
         </td>
         <td>{{ service.count }}</td>
-        <td>{{ service.averResTime }}</td>
-        <td>{{ service.maxResTime }}</td>
-        <td>{{ service.minResTime }}</td>
+        <td>{{ service.averResTime }}ms</td>
+        <td>{{ service.maxResTime }}ms</td>
+        <td>{{ service.minResTime }}ms</td>
         <td>
           <div @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
             <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
@@ -76,8 +75,8 @@ function changeServicePageDivBoxSize() {
 export default {
   data() {
     return {
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
       services: [
         {
           id: 1,
@@ -215,6 +214,24 @@ export default {
     dialogClickToAddNewService(event) {
       setDialog('⁽⁽٩(๑˃̶͈̀ ᗨ ˂̶͈́)۶⁾⁾可以添加新的服务哟！', 1500);
     },
+    getModelName() {
+      const path = `/model/${this.modelID}`;
+      axios.get(getBackUrl(path))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    formatDate(value) {
+      const date = new Date(value * 1000);
+      return date.toLocaleString();
+    },
   },
   mounted() {
     // Get Service List
@@ -228,6 +245,7 @@ export default {
       .catch((error) => {
         console.log(error);
       });
+    this.getModelName();
     changeServicePageDivBoxSize();
     window.onresize = changeServicePageDivBoxSize;
     setTimeout(() => { changeAllImgUrl(); }, 100);

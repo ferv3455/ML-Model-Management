@@ -13,3 +13,4 @@ protobuf==3.20.1
 pypmml==0.9.16
 torch==1.12.1
 redis==4.3.4
+sklearn

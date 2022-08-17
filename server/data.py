@@ -61,9 +61,9 @@ preprocess_id_count = 0
     connect to mongodb and set up database "mmms", you can use your own username & password in mongodb and authenticate here
 '''
 
-# data_client = pymongo.MongoClient("mongodb://localhost:27017/", username = "admin", password = "2333333")
 data_client = pymongo.MongoClient(
-    "mongodb://localhost:27017/")
+    "mongodb://localhost:27017/", username="admin", password="2333333")
+# data_client = pymongo.MongoClient("mongodb://localhost:27017/")
 data_base = data_client['mmms']
 
 

@@ -23,7 +23,7 @@
     </table>
     <div id="batchPageAddTaskArea" class="divUse">
       <h2>创建新任务</h2>
-      <input id="batchPageEnterModelFile" type="file">
+      <input id="batchPageEnterModelFile" type="file" accept=".csv,.zip">
       <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">添加</button>
     </div>
     <button @click="goToPredictPage" @mouseover="dialogClickToPredictPage" id="BatchPageGoTopredictPage"

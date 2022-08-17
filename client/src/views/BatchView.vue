@@ -104,7 +104,7 @@ export default {
       });
     },
     dialogClickToTaskPage(event) {
-      setDialog('点击前往模型详情页面♡◝(\'ω\'◝)', 1500);
+      setDialog('点击前往任务详情页面♡◝(\'ω\'◝)', 1500);
     },
     dialogClickToUpload(event) {
       setDialog('添加新任务了~(｡・ω・｡)', 1500);

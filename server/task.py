@@ -4,8 +4,8 @@ from numpy import array
 from celery import Celery
 from model import Model
 
-app = Celery('task', backend='redis://localhost:6379/1',
-             broker='redis://localhost:6379/2')
+app = Celery('task', backend='redis://localhost:16379/1',
+             broker='redis://localhost:16379/2')
 
 
 @app.task

@@ -57,10 +57,10 @@ function changePredictPageBoxDirection() {
 export default {
   data() {
     return {
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
-      serviceID: this.$route.params.serviceID,
-      serviceName: this.$route.params.serviceName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
+      serviceID: parseInt(this.$route.params.serviceID, 10),
+      serviceName: '',
       output: 'this is output!', // 测试用，提交后等待后端返回输出
       jsonInput: '',
       curlInput: '',
@@ -112,9 +112,7 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
           serviceID: this.serviceID,
-          serviceName: this.serviceName,
         },
       });
     },
@@ -123,7 +121,6 @@ export default {
         name: 'service',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
         },
       });
     },
@@ -147,10 +144,40 @@ export default {
     dialogClickToBatchPage(event) {
       setDialog('想要布置新任务，可以前往批量任务列表页哟(*´∀`)', 1500);
     },
+    getModelAndServiceName() {
+      axios.get(getBackUrl(`/model/${this.modelID}`))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(this.serviceID);
+      axios.get(getBackUrl(`/model/${this.modelID}/service`))
+        .then((res) => {
+          const tmpServices = res.data.services;
+          console.log(tmpServices);
+          for (let i = 0; i < tmpServices.length; i += 1) {
+            if (tmpServices[i].id === this.serviceID) {
+              this.serviceName = tmpServices[i].name;
+              return;
+            }
+          }
+          alert('服务不存在');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     changePredictPageBoxDirection();
     window.onresize = changePredictPageBoxDirection;
+    this.getModelAndServiceName();
     changeAllImgUrl();
     setTimeout(() => { setDialog('', 0); }, 100);
   },

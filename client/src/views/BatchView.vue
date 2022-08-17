@@ -14,7 +14,7 @@
         onmouseout="this.style.backgroundColor='var(--backgroundColor)'">
         <td>
           <router-link @mouseover="dialogClickToTaskPage"
-            :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, modelName: modelName, serviceName: serviceName, taskID: task.id } }">
+            :to="{ name: 'task', params: { modelID: modelID, serviceID: serviceID, taskID: task.id } }">
             {{ task.id }}
           </router-link>
         </td>
@@ -51,10 +51,10 @@ function changeBatchPageDivBoxSize() {
 export default {
   data() {
     return {
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
-      serviceID: this.$route.params.serviceID,
-      serviceName: this.$route.params.serviceName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
+      serviceID: parseInt(this.$route.params.serviceID, 10),
+      serviceName: '',
       // 需从后端请求当前存在的tasks
       tasks: [{
         id: 1,
@@ -97,9 +97,7 @@ export default {
         name: 'predict',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
           serviceID: this.serviceID,
-          serviceName: this.serviceName,
         },
       });
     },
@@ -112,11 +110,41 @@ export default {
     dialogClickToPredictPage(event) {
       setDialog('点击返回部署接口页面٩(๑❛ᴗ❛๑)۶', 1500);
     },
+    getModelAndServiceName() {
+      axios.get(getBackUrl(`/model/${this.modelID}`))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(this.serviceID);
+      axios.get(getBackUrl(`/model/${this.modelID}/service`))
+        .then((res) => {
+          const tmpServices = res.data.services;
+          console.log(tmpServices);
+          for (let i = 0; i < tmpServices.length; i += 1) {
+            if (tmpServices[i].id === this.serviceID) {
+              this.serviceName = tmpServices[i].name;
+              return;
+            }
+          }
+          alert('服务不存在');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     changeBatchPageDivBoxSize();
     window.onresize = changeBatchPageDivBoxSize;
     changeAllImgUrl();
+    this.getModelAndServiceName();
     setTimeout(() => { setDialog('', 0); }, 100);
     // getBatchInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task`;

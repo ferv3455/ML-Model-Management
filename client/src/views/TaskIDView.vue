@@ -45,11 +45,11 @@ function changeTaskIDPageDivBoxSize() {
 export default {
   data() {
     return {
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
-      taskID: this.$route.params.taskID,
-      serviceID: this.$route.params.serviceID,
-      serviceName: this.$route.params.serviceName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
+      taskID: parseInt(this.$route.params.taskID, 10),
+      serviceID: parseInt(this.$route.params.serviceID, 10),
+      serviceName: '',
       status: 'finished', // 从后端获取
       result: 'this is a result!', // 从后端获取
     };
@@ -60,19 +60,47 @@ export default {
         name: 'batch',
         params: {
           modelID: this.modelID,
-          modelName: this.modelName,
           serviceID: this.serviceID,
-          serviceName: this.serviceName,
         },
       });
     },
     dialogClickToBatchPage(event) {
       setDialog('ヽ(✿ﾟ▽ﾟ)ノ点击返回批量任务列表页面', 1500);
     },
+    getModelAndServiceName() {
+      axios.get(getBackUrl(`/model/${this.modelID}`))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      console.log(this.serviceID);
+      axios.get(getBackUrl(`/model/${this.modelID}/service`))
+        .then((res) => {
+          const tmpServices = res.data.services;
+          console.log(tmpServices);
+          for (let i = 0; i < tmpServices.length; i += 1) {
+            if (tmpServices[i].id === this.serviceID) {
+              this.serviceName = tmpServices[i].name;
+              return;
+            }
+          }
+          alert('服务不存在');
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     changeTaskIDPageDivBoxSize();
     window.onresize = changeTaskIDPageDivBoxSize;
+    this.getModelAndServiceName();
     changeAllImgUrl();
     setTimeout(() => { setDialog('', 0); }, 100);
     // getTaskInfo

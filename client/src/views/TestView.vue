@@ -33,7 +33,7 @@
                   src="../assets/emptyPic.png">
               </div>
               <div v-else>
-                  <input :id="'var_' + variance.name">
+                <input :id="'var_' + variance.name">
               </div>
             </div>
           </div>
@@ -84,12 +84,12 @@ function getBase64Image(img) {
 export default {
   data() {
     return {
-      modelID: this.$route.params.modelID,
-      modelName: this.$route.params.modelName,
+      modelID: parseInt(this.$route.params.modelID, 10),
+      modelName: '',
       mode: 'form',
       output: 'this is output!',
       jsonInput: '',
-      variances: JSON.parse(this.$route.params.modelInputs),
+      variances: '',
     };
   },
   methods: {
@@ -182,10 +182,26 @@ export default {
     dialogThinkTwiceBeforeClear(event) {
       setDialog('双击会清除当前的所有输入(((> <)))！要三思而后行哟~', 1500);
     },
+    getModelNameAndVar() {
+      const path = `/model/${this.modelID}`;
+      axios.get(getBackUrl(path))
+        .then((res) => {
+          if (res.data.exist === true) {
+            this.modelName = res.data.name;
+            this.variances = res.data.input;
+          } else {
+            alert('模型不存在');
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
   mounted() {
     changeTextPageLeftRightBoxDirection();
     window.onresize = changeTextPageLeftRightBoxDirection;
+    this.getModelNameAndVar();
     changeAllImgUrl();
     setTimeout(() => { setDialog('', 0); }, 100);
   },

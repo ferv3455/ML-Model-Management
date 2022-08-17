@@ -1,4 +1,5 @@
 from multiprocessing import Process
+import pickle
 
 import task
 
@@ -53,11 +54,10 @@ class Service:
             task_names.append((tag, value))
             for key, value in data.items():
                 try:
-                    # convert to list if it is ndarray
-                    data[key] = {
-                        'dtype': str(value.dtype),
-                        'data': value.tolist()
-                    }
+                    # serialize if it is ndarray
+                    print(value.shape)
+                    data[key] = 'encoded-ndarray:' + pickle.dumps(value).decode('latin-1')
+
                 except:
                     pass
 

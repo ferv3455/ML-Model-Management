@@ -35,7 +35,7 @@
    docker pull mongo:latest
    
    Docker 在端口27017运行MongoDB
-   docker run -itd --name mongo -p 27017:27017 mongo --auth
+   docker run -itd --name mongo -p 27017:27017 mongo
    ```
 
    

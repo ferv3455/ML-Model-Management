@@ -24,9 +24,9 @@
         <td>{{ model.algo }}</td>
         <td>{{ formatDate(model.time) }}</td>
         <td>
-          <button @dblclick="clear(model.id)" @mouseover="dialogClickToDeleteModel" class="modelPageClearButton">
+          <div @dblclick="clear(model.id)" @mouseover="dialogClickToDeleteModel" class="modelPageClearButton">
             <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
-          </button>
+          </div>
         </td>
       </tr>
     </table>
@@ -45,7 +45,7 @@ import getBackUrl from '../getIP';
 
 function changeMainPageDivBoxSize() {
   const cont = document.getElementById('mainPageDivBox');
-  if (window.innerWidth <= 800) {
+  if (window.innerWidth <= 1024) {
     cont.style.width = `${window.innerWidth * 0.95}px`;
   } else {
     cont.style.width = `${window.innerWidth * 0.80}px`;
@@ -178,7 +178,8 @@ export default {
 
 .modelPageClearButton {
   width: 25px;
-  margin-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
   height: 25px;
   background-color: transparent;
   color: transparent;

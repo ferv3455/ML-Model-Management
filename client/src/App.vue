@@ -1,7 +1,7 @@
 <template>
   <div id="appBox">
     <nav>
-      <img id="logoImg" src="./assets/s02big.png" alt="logo">
+      <img id="logoImg" class="navIcon" src="./assets/TeAM.png" alt="logo">
       <p id="navTeamName" class="projectTitle">TeAM</p>
       <router-link class="toOtherPageNav" to="/">
         <img id="homeIcon" class="navIcon" src="./assets/homeIcon.png" alt="homeIcon">
@@ -143,7 +143,7 @@ export default {
 }
 
 #logoImg {
-  height: 75%;
+  height: 70%;
   margin-left: 10px;
 }
 
@@ -165,7 +165,7 @@ nav {
 
 #navTeamName {
   font-size: 30px;
-  margin-left: 15px;
+  margin-left: 10px;
   font-weight: bolder;
   flex-grow: 1;
 }

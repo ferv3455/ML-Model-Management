@@ -12,7 +12,7 @@
         <p class="modelIDPageModelInfo">模型算法</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPageModelAlgo">{{ modelAlgo }}</p>
         <p class="modelIDPageModelInfo">上传时间</p>
-        <p class="modelIDPageGetModelInfo" id="modelIDPageModelTime">{{ modelTime }}</p>
+        <p class="modelIDPageGetModelInfo" id="modelIDPageModelTime"> {{ formatDate(modelTime) }} </p>
         <p class="modelIDPageModelInfo">预处理项</p>
         <p class="modelIDPageGetModelInfo" id="modelIDPagePrePro">{{ PreProName }}</p>
         <p class="modelIDPageModelInfo">模型描述</p>
@@ -191,6 +191,10 @@ export default {
           modelName: this.modelName,
         },
       });
+    },
+    formatDate(value) {
+      const date = new Date(value * 1000);
+      return date.toLocaleString();
     },
   },
   mounted() {

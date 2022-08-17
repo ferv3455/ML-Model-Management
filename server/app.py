@@ -249,7 +249,7 @@ def createService(modelID):
         params = request.get_json()  # keys: name
         print('Creating service:', params)
         serviceID = data.addService(
-            modelID, params['name'], datetime.now(), 'running', 0)
+            modelID, params['name'], datetime.now().timestamp(), 'running', 0)
 
         model_params = data.getModelByID(modelID)
         model = Model(model_params['name'],

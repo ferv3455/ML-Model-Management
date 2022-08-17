@@ -22,7 +22,7 @@
             {{ service.name }}
           </router-link>
         </td>
-        <td>{{ service.time }}</td>
+        <td>{{ formatDate(service.time) }}</td>
         <td>
           <div class="servicePageStatusBox">
             <p>{{ service.status }}</p>
@@ -32,9 +32,9 @@
           </div>
         </td>
         <td>{{ service.count }}</td>
-        <td>{{ service.averResTime }}</td>
-        <td>{{ service.maxResTime }}</td>
-        <td>{{ service.minResTime }}</td>
+        <td>{{ service.averResTime }}ms</td>
+        <td>{{ service.maxResTime }}ms</td>
+        <td>{{ service.minResTime }}ms</td>
         <td>
           <div @dblclick="clear(service.id)" @mouseover="dialogClickToDeleteService" class="servicePageClearButton">
             <img src="../assets/deleteIcon.png" title="双击删除" alt="binIcon" class="binIcon">
@@ -227,6 +227,10 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    formatDate(value) {
+      const date = new Date(value * 1000);
+      return date.toLocaleString();
     },
   },
   mounted() {

@@ -271,7 +271,7 @@ def createService(modelID):
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
-    begin = datetime.now()
+    begin = datetime.now().timestamp()
 
     try:
         cmd = request.get_json()
@@ -289,7 +289,7 @@ def changeServiceStatus(modelID, serviceID):
         traceback.print_exc()
         res = {'status': 'fail'}
 
-    end = datetime.now()
+    end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
@@ -297,7 +297,7 @@ def changeServiceStatus(modelID, serviceID):
 @app.route('/model/<int:modelID>/service/<int:serviceID>/quick', methods=['POST'])
 def quickPredict(modelID, serviceID):
     print('Quick Predict on model {}, service {}'.format(modelID, serviceID))
-    begin = datetime.now()
+    begin = datetime.now().timestamp()
 
     try:
         service = services.get(serviceID)
@@ -313,7 +313,7 @@ def quickPredict(modelID, serviceID):
         traceback.print_exc()
         res = None
 
-    end = datetime.now()
+    end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
 
     return jsonify(res)
@@ -322,7 +322,7 @@ def quickPredict(modelID, serviceID):
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['POST'])
 def batchPredict(modelID, serviceID):
     print('Batch Predict on model {}, service {}'.format(modelID, serviceID))
-    begin = datetime.now()
+    begin = datetime.now().timestamp()
 
     try:
         service = services.get(serviceID)
@@ -343,7 +343,7 @@ def batchPredict(modelID, serviceID):
         traceback.print_exc()
         res = None
 
-    end = datetime.now()
+    end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
@@ -351,7 +351,7 @@ def batchPredict(modelID, serviceID):
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
     print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
-    begin = datetime.now()
+    begin = datetime.now().timestamp()
 
     try:
         records = services.get(serviceID).getTasks()
@@ -361,7 +361,7 @@ def getAllTasks(modelID, serviceID):
         traceback.print_exc()
         res = {'tasks': []}
 
-    end = datetime.now()
+    end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
     return jsonify(res)
 
@@ -369,7 +369,7 @@ def getAllTasks(modelID, serviceID):
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task/<int:taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
     print('Getting task {}'.format(taskID))
-    begin = datetime.now()
+    begin = datetime.now().timestamp()
 
     try:
         service = services.get(serviceID)
@@ -381,7 +381,7 @@ def getTaskInfo(modelID, serviceID, taskID):
         traceback.print_exc()
         res = None
 
-    end = datetime.now()
+    end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
     return jsonify(res)
 

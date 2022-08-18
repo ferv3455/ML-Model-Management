@@ -11,8 +11,6 @@ from service import Service, ServiceList
 import data
 from fileReader import readCSV, readZIP, decodeFile
 
-from importlib import import_module
-
 
 # configuration
 DEBUG = True

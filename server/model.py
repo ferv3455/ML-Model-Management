@@ -157,11 +157,34 @@ class Model:
         })
         pass
 
-    def blankInit(self):
-        self.model = None
-        self.algo = 'unknown'
+    def pthInit(self, file):
+        # Has some problems
+        self.model = torch.load(file)
+        self.algo = 'Neural Networks'
         self.input = []
         self.output = []
+
+        # initial output to find number of classes
+        state_dict = self.model['state_dict']
+        net_len = len(state_dict)
+        state_keys = list(state_dict.keys())
+        num_classes = list(state_dict[state_keys[net_len - 1]].size())[0]
+
+        self.output.append({
+            'name': 'output',
+            'type': 'weight list',
+            'measure': 'any',
+            'value': str(num_classes)
+        })
+
+        # initial input, but can't find standard input size from model file pth
+        self.input.append({
+            'name': 'input',
+            'type': '2D Tensor',
+            'measure': 'any',
+            'value': 'sized'
+        })
+        pass
 
     def __init__(self, name, des, type, file):
         self.name = name
@@ -177,10 +200,13 @@ class Model:
             self.onnxInit(file)
         elif self.type == "pkl":
             self.pklInit(file)
+        elif self.type == "pth":
+            self.pthInit(file)
 
     def predict(self, x_test, pre_processer=None):
         if pre_processer is not None:
-            pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+            pre_pro_module = import_module(
+                pre_processer['path'][2:-3].replace('/', '.'))
             for key, value in x_test.items():
                 x_test[key] = pre_pro_module.pre_process(value)
 

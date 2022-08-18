@@ -61,7 +61,7 @@ preprocess_id_count = 0
     connect to mongodb and set up database "mmms", you can use your own username & password in mongodb and authenticate here
 '''
 
-# data_client = pymongo.MongoClient("mongodb://localhost:27017/", username="admin", password="2333333")
+# data_client = pymongo.MongoClient("mongodb://localhost:27017/", username = "admin", password = "2333333")
 data_client = pymongo.MongoClient("mongodb://localhost:27017/")
 data_base = data_client['mmms']
 
@@ -157,6 +157,31 @@ def getServicesByModel(modelID):
     # return records
 
     service_by_model = list(mongo_services_list.find({"modelID": modelID}))
+
+    maximum = 0
+    minimum = 0x3f3f3f3f  # inf
+    average = 0.0
+    count = 0
+
+    for temp_service in service_by_model:
+        # init
+        maximum = 0
+        minimum = 0x3f3f3f3f  # inf
+        average = 0.0
+
+        temp_response = list(mongo_responses_list.find(
+            {"serviceID": temp_service["id"]}))
+        count = len(temp_response)
+
+        for temp_response_one in temp_response:
+            maximum = max(maximum, temp_response_one['duration'])
+            minimum = min(minimum, temp_response_one['duration'])
+            average = average + temp_response_one['duration']
+
+        temp_service['count'] = count
+        temp_service['averResTime'] = average/count
+        temp_service['maxResTime'] = maximum
+        temp_service['minResTime'] = minimum
     return service_by_model
 
 # new a service

@@ -157,12 +157,6 @@ class Model:
         })
         pass
 
-    def blankInit(self):
-        self.model = None
-        self.algo = 'unknown'
-        self.input = []
-        self.output = []
-
     def __init__(self, name, des, type, file):
         self.name = name
         self.des = des
@@ -180,7 +174,8 @@ class Model:
 
     def predict(self, x_test, pre_processer=None):
         if pre_processer is not None:
-            pre_pro_module = import_module(pre_processer['path'][2:-3].replace('/', '.'))
+            pre_pro_module = import_module(
+                pre_processer['path'][2:-3].replace('/', '.'))
             for key, value in x_test.items():
                 x_test[key] = pre_pro_module.pre_process(value)
 
@@ -199,12 +194,3 @@ class Model:
             pass
         print(result)
         return result
-
-
-'''
-models dictionary, created with two test models
-MODELS = {
-    'testModel1': Model('testModel1', 'This is a test model.', 'pmml', None),
-    'testModel2': Model('testModel2', 'This is another test model.', 'onnx', None)
-}
-'''

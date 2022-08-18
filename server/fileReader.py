@@ -57,12 +57,22 @@ def decodeFile(string: str):
         fmt, encoding = header.split(';')
         assert encoding == 'base64'
         print(fmt)
-        # TODO: different formats can be processed
     except:
         print('No header in string')
 
     # Decoding
-    result = base64.b64decode(string)
-    img = Image.open(io.BytesIO(result))
-    arr = np.asarray(img)
-    return arr
+    try:
+        result = base64.b64decode(string)
+        if fmt.startswith('data:image/'):
+            # Image
+            img = Image.open(io.BytesIO(result))
+            arr = np.asarray(img)
+            return arr
+
+        elif fmt == 'data:application/octet-stream':
+            # Other: NumPy supported only
+            arr = np.load(io.BytesIO(result))
+            return arr
+
+    except Exception as exc:
+        print('Data not readable:', exc)

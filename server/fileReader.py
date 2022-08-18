@@ -73,6 +73,12 @@ def decodeFile(string: str):
             # Other: NumPy supported only
             arr = np.load(io.BytesIO(result))
             return arr
+        
+        else:
+            # Default: Image
+            img = Image.open(io.BytesIO(result))
+            arr = np.asarray(img)
+            return arr
 
     except Exception as exc:
         print('Data not readable:', exc)

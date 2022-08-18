@@ -6,9 +6,9 @@ https://www.runoob.com/mongodb/mongodb-tutorial.html
 https://www.runoob.com/python3/python-mongodb.html
 
 控制台运行mongodb:
-docker run -itd --name mongo -p 27017:27017 mongo --auth
+docker run -itd --name mongo -p 27017:27017 mongo 
 
-    添加用户和设置密码:
+    添加用户和设置密码(若需要):
     docker exec -it mongo mongo admin
     创建一个名为 admin，密码为 2333333 的用户。
     >  db.createUser({ user:'admin',pwd:'2333333',roles:[ { role:'userAdminAnyDatabase', db: 'admin'},"readWriteAnyDatabase"]});

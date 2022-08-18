@@ -20,7 +20,7 @@ def predict(modelID, type, data, pre_processer=None):
         except:
             print_exc()
 
-    print(data)
+    # print(data)
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data, pre_processer)
 

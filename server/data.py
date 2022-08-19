@@ -365,4 +365,5 @@ def getPreProcessByID(modelID):
     # return None
 
     pro_by_id = mongo_preprocess_list.find_one({'modelID': modelID})
+    pro_by_id.pop('_id')
     return pro_by_id

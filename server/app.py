@@ -276,7 +276,11 @@ def changeServiceStatus(modelID, serviceID):
         status = cmd['opr']
         print('Change service {}/{} status to {}'.format(modelID, serviceID, status))
 
-        data.setServiceStatus(serviceID, status)
+        if status == 'start':
+            data.setServiceStatus(serviceID, 'running')
+        elif status == 'pause':
+            data.setServiceStatus(serviceID, 'stopped')
+
         if status == 'start' or status == 'pause':
             services.get(serviceID).changeStatus(status)
         else:

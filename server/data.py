@@ -159,14 +159,14 @@ def getServicesByModel(modelID):
     service_by_model = list(mongo_services_list.find({"modelID": modelID}))
 
     maximum = 0
-    minimum = 0x3f3f3f3f  # inf
+    minimum = 10000
     average = 0.0
     count = 0
 
     for temp_service in service_by_model:
         # init
         maximum = 0
-        minimum = 0x3f3f3f3f  # inf
+        minimum = 10000
         average = 0.0
 
         temp_response = list(mongo_responses_list.find(
@@ -179,9 +179,15 @@ def getServicesByModel(modelID):
             average = average + temp_response_one['duration']
 
         temp_service['count'] = count
-        temp_service['averResTime'] = average/count
-        temp_service['maxResTime'] = maximum
-        temp_service['minResTime'] = minimum
+
+        if (count == 0):
+            temp_service['averResTime'] = '- '
+            temp_service['maxResTime'] = '- '
+            temp_service['minResTime'] = '- '
+        else:
+            temp_service['averResTime'] = '%.3f' % (1000 * average/count)
+            temp_service['maxResTime'] = '%.3f' % (1000 * maximum)
+            temp_service['minResTime'] = '%.3f' % (1000 * minimum)
     return service_by_model
 
 # new a service
@@ -318,7 +324,7 @@ def addPreProcess(modelID, prodes, path, name, type):
 
     judge_prepro = mongo_preprocess_list.find({'modelID': modelID})
     if list(judge_prepro) == []:
-        mongo_preprocess_list.instet_one(temp_prepro)
+        mongo_preprocess_list.insert_one(temp_prepro)
     else:
         mongo_services_list.update_one(
             {'modelID': modelID}, {'$set': {'prodes': prodes, 'path': path, 'name': name, 'type': type}})

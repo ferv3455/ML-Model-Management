@@ -53,8 +53,6 @@ service_id_count = 0
 # task count
 task_id_count = 0
 
-# preprocess count
-preprocess_id_count = 0
 
 # connect to mongodb
 '''
@@ -305,8 +303,8 @@ def addPreProcess(modelID, prodes, path, name, type):
     temp_prepro['path'] = path
     temp_prepro['name'] = name
     temp_prepro['type'] = type
+    print(temp_prepro)
 
-    global preprocess_id_count
     # global preprocess_list
 
     # signal = False
@@ -328,13 +326,11 @@ def addPreProcess(modelID, prodes, path, name, type):
     else:
         mongo_services_list.update_one(
             {'modelID': modelID}, {'$set': {'prodes': prodes, 'path': path, 'name': name, 'type': type}})
-        preprocess_id_count = preprocess_id_count+1
-    return preprocess_id_count-1
+    return
 
 
 def deletePreProcess(modelID):
     # global preprocess_list
-    global preprocess_id_count
 
     # data_tuple = ()
     # signal = False
@@ -351,10 +347,12 @@ def deletePreProcess(modelID):
     #     data_tuple = (False, '', '', '', '')
 
     judge_prepro = mongo_preprocess_list.find_one({'modelID': modelID})
+    mongo_preprocess_list.delete_one({'modelID': modelID})
+    print(judge_prepro)
     if judge_prepro == {}:
-        return {}
+        return None
     else:
-        return {'prodes': judge_prepro['prodes'], 'path': judge_prepro['path'], 'name': judge_prepro['name'], 'type': judge_prepro['type']}
+        return (True, judge_prepro['prodes'], judge_prepro['path'], judge_prepro['name'], judge_prepro['type'])
 
 
 def getPreProcessByID(modelID):
@@ -365,5 +363,6 @@ def getPreProcessByID(modelID):
     # return None
 
     pro_by_id = mongo_preprocess_list.find_one({'modelID': modelID})
-    pro_by_id.pop('_id')
+    if pro_by_id != None:
+        pro_by_id.pop('_id')
     return pro_by_id

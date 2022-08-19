@@ -42,15 +42,20 @@
           </div>
         </td>
       </tr>
+      <tr>
+        <td colspan="8">
+          <div id="addServiceAreaDivBox">
+            <p>新服务名 </p>
+            <input id="servicePageEnterServiceName" v-model="newServiceName">
+            <button @click="upload" @mouseover="dialogClickToAddNewService" id="servicePageUploadButton">
+              <img src="../assets/addIcon.png" title="点击添加新服务" alt="addIcon" class="addIcon">
+            </button>
+          </div>
+
+        </td>
+      </tr>
     </table>
-    <div id="servicePageAddServiceArea" class="divUse">
-      <h2>添加新服务</h2>
-      <div id="addServiceAreaDivBox">
-        <p>新服务名 :</p>
-        <input id="servicePageEnterServiceName" v-model="newServiceName">
-      </div>
-      <button @click="upload" @mouseover="dialogClickToAddNewService" id="servicePageUploadButton">添加</button>
-    </div>
+
     <button @click="goToModelIDPage" @mouseover="dialogClickToGoToModelIDPage" id="servicePageGoToModelIDPage"
       class="roundButton returnButton">
       <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
@@ -267,30 +272,23 @@ export default {
   padding: 7px;
 }
 
-#servicePageAddServiceArea {
-  width: 100%;
-  flex-grow: 1;
-  margin: 10px;
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#servicePageAddServiceArea h2 {
-  margin: 0;
-  font-size: 25px;
-  margin-bottom: 5px;
-}
-
 #addServiceAreaDivBox {
   display: flex;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin-left: auto;
+  margin-right: auto;
+  flex-direction: row;
   align-items: center;
-  width: 100%;
+  width: 500px;
 }
 
 #addServiceAreaDivBox p {
-  width: 140px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-weight: bolder;
+  text-align: left;
+  width: 110px;
 }
 
 .servicePageStatusBox {
@@ -320,6 +318,17 @@ export default {
 .servicePageClearButton {
   width: 25px;
   margin-left: auto;
+  margin-right: auto;
+  height: 25px;
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  padding: 0;
+}
+
+#servicePageUploadButton {
+  width: 30px;
+  margin-left: 15px;
   margin-right: auto;
   height: 25px;
   background-color: transparent;

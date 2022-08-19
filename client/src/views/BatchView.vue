@@ -20,12 +20,21 @@
         </td>
         <td>{{ task.status }}</td>
       </tr>
+      <tr>
+        <td colspan="2">
+          <div id="batchPageAddTaskArea">
+            <div style="flex-grow: 1;"></div>
+            <p>添加新任务</p>
+            <input id="batchPageEnterModelFile" type="file">
+            <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">
+              <img src="../assets/addIcon.png" title="点击添加新任务" alt="addIcon" class="addIcon">
+            </button>
+            <div style="flex-grow: 1;"></div>
+          </div>
+        </td>
+      </tr>
     </table>
-    <div id="batchPageAddTaskArea" class="divUse">
-      <h2>创建新任务</h2>
-      <input id="batchPageEnterModelFile" type="file">
-      <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">添加</button>
-    </div>
+
     <button @click="goToPredictPage" @mouseover="dialogClickToPredictPage" id="BatchPageGoTopredictPage"
       class="roundButton returnButton">
       <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
@@ -167,23 +176,34 @@ export default {
 }
 
 #batchPageAddTaskArea {
-  width: 100%;
-  flex-grow: 1;
-  margin: 10px;
-  padding: 20px;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
-#batchPageAddTaskArea h2 {
-  margin: 0;
-  font-size: 25px;
-  margin-bottom: 15px;
+#batchPageAddTaskArea p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-weight: bolder;
+  text-align: left;
+  width: 110px;
 }
 
 #batchPageEnterModelFile {
-  width: 100%;
-  margin-bottom: 20px;
+  width: 50%;
+  margin-bottom: 0px;
+}
+
+#batchPageUploadButton {
+  width: 30px;
+  margin-left: 15px;
+  height: 25px;
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  padding: 0;
 }
 </style>

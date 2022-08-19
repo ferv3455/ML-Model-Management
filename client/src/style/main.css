@@ -118,6 +118,10 @@ body {
     margin: 0px;
 }
 
+.addIcon {
+    width: 30px;
+}
+
 .changeStatusIcon:hover {
     transform: rotate(180deg);
     transition: transform .8s;

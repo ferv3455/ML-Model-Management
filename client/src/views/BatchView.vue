@@ -86,6 +86,7 @@ export default {
           // 将后端返回的任务ID提示给用户
           const idMes = `任务ID：${res.data.id}`;
           alert(idMes);
+          this.$router.go(0);
         })
         .catch((error) => {
           // eslint-disable-next-line

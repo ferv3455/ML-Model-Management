@@ -185,6 +185,10 @@ export default {
     },
     upload(event) {
       // upload new service
+      if (this.newServiceName === '') {
+        alert('服务名为空！');
+        return;
+      }
       const path = `/model/${this.modelID}/service`;
       axios.post(getBackUrl(path), {
         name: this.newServiceName,

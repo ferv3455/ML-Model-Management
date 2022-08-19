@@ -13,7 +13,6 @@
         <option value="pmml">PMML</option>
         <option value="onnx">ONNX</option>
         <option value="pkl">PKL</option>
-        <option value="pth">PTH</option>
       </select>
       <p class="uploadPageImportModelDetail" id="uploadPageModelFile">模型文件</p>
       <input id="uploadPageEnterModelFile" @mouseover="dialogUploadFileType" type="file" :accept="'.' + this.modelType">
@@ -58,6 +57,14 @@ export default {
       // Model upload
       const path = '/model';
       const f = document.getElementById('uploadPageEnterModelFile').files[0];
+      if (this.modelName === '') {
+        alert('模型名称为空！');
+        return;
+      }
+      if (document.getElementById('uploadPageEnterModelFile').value === '') {
+        alert('模型文件为空！');
+        return;
+      }
       const postRequest = new FormData();
       postRequest.append('name', this.modelName);
       postRequest.append('type', this.modelType);

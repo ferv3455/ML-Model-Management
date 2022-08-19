@@ -76,6 +76,12 @@ export default {
       const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
       const f = document.getElementById('batchPageEnterModelFile').files[0];
       const postRequest = new FormData();
+
+      if (document.getElementById('batchPageEnterModelFile').value === '') {
+        alert('任务文件为空！');
+        return;
+      }
+
       postRequest.append('file', f);
       axios.post(getBackUrl(path), postRequest, {
         headers: {

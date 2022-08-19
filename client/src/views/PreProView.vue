@@ -120,6 +120,12 @@ export default {
       const path = `/model/${this.modelID}/preprocess`;
       const f = document.getElementById('uploadPageEnterPreProFile').files[0];
       const postRequest = new FormData();
+
+      if (document.getElementById('uploadPageEnterPreProFile').value === '') {
+        alert('预处理文件为空！');
+        return;
+      }
+
       postRequest.append('prodes', this.ProDescription);
       postRequest.append('file', f);
       postRequest.append('filename', f.name);

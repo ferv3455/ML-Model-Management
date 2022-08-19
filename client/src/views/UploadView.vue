@@ -74,13 +74,14 @@ export default {
               name: 'model',
             });
           } else {
-            const mes = `创建新模型失败：${res.data.reason}`;
+            const mes = '创建新模型失败';
             alert(mes);
           }
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+          alert('服务器错误');
         });
     },
     goToModelPage(event) {

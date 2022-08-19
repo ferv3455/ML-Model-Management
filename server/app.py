@@ -37,9 +37,10 @@ def getAllModels():
         param_names = ('id', 'name', 'des', 'type', 'algo', 'time')
         res = {'models': [{key: m[key] for key in param_names}
                           for m in data.getAllModels()]}
-    except:
+        res['status'] = 'success'
+    except Exception as exc:
         traceback.print_exc()
-        res = {'models': []}
+        res = {'models': [], 'status': "fail", 'reason': exc}
 
     return jsonify(res)
 
@@ -111,10 +112,10 @@ def testModel(modelID):
         # try to get pre_process
         pre_processer = data.getPreProcessByID(modelID)
         result = model.predict(input_data, pre_processer)
-        res = {'output': result}
-    except:
+        res = {'output': result, 'status': 'success'}
+    except Exception as exc:
         traceback.print_exc()
-        res = None
+        res = {'status': 'fail', 'reason': exc}
 
     return jsonify(res)
 
@@ -132,9 +133,9 @@ def deleteModel(modelID):
 
         data.deleteModel(modelID)
         res = {'status': 'success'}
-    except:
+    except Exception as exc:
         traceback.print_exc()
-        res = {'status': 'fail'}
+        res = {'status': 'fail', 'reason': exc}
 
     return jsonify(res)
 
@@ -154,16 +155,17 @@ def getPreProcess(modelID):
             param_names = ('prodes', 'path', 'name', 'type')
             res.update({key: prepro_params[key]
                        for key in param_names})
-            res['state'] = 'success'
+            res['status'] = 'success'
             # test print, don't want to print des
             print(res)
             f = open(res['path'], 'r')
             res['f'] = f.read()
-        except:
-            res['state'] = 'fail'
+        except Exception as exc:
+            res['status'] = 'fail'
+            res['reason'] = exc
             traceback.print_exc()
     else:
-        res['state'] = 'empty'
+        res['status'] = 'empty'
 
     return jsonify(res)
 
@@ -208,6 +210,7 @@ def DeletePreProcess(modelID):
 
         if (data_dict['exist']):
             res = {'status': 'success'}
+            print(data_dict)
             os.remove(data_dict['path'])
         else:
             res = {
@@ -234,9 +237,10 @@ def getAllServices(modelID):
                        'averResTime', 'maxResTime', 'minResTime')
         res = {'services': [{key: r[key]
                              for key in param_names} for r in records]}
-    except:
+        res['status'] = 'success'
+    except Exception as exc:
         traceback.print_exc()
-        res = {'services': []}
+        res = {'services': [], 'status': 'fail', 'reason': exc}
 
     return jsonify(res)
 
@@ -287,9 +291,9 @@ def changeServiceStatus(modelID, serviceID):
             services.delete(serviceID)
 
         res = {'status': 'success'}
-    except:
+    except Exception as exc:
         traceback.print_exc()
-        res = {'status': 'fail'}
+        res = {'status': 'fail', 'reason': exc}
 
     end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
@@ -311,9 +315,10 @@ def quickPredict(modelID, serviceID):
 
         result = service.predict(input_data)
         res = {'output': result}
-    except:
+        res['status'] = 'success'
+    except Exception as exc:
         traceback.print_exc()
-        res = None
+        res = {'status': 'fail', 'reason': exc}
 
     end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
@@ -341,9 +346,10 @@ def batchPredict(modelID, serviceID):
         taskID = service.batch(data_gen)
         res = {'id': taskID}
         batch_data.close()
-    except:
+        res['status'] = 'success'
+    except Exception as exc:
         traceback.print_exc()
-        res = None
+        res = {'status': 'fail', 'reason': exc}
 
     end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
@@ -358,10 +364,10 @@ def getAllTasks(modelID, serviceID):
     try:
         records = services.get(serviceID).getTasks()
         res = {'tasks': list(records)}
-
-    except:
+        res['status'] = 'success'
+    except Exception as exc:
         traceback.print_exc()
-        res = {'tasks': []}
+        res = {'tasks': [], 'status': 'fail', 'reason': exc}
 
     end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)
@@ -379,9 +385,9 @@ def getTaskInfo(modelID, serviceID, taskID):
 
         if res['status'] == 'finished':
             res['result'] = service.getResult(taskID)
-    except:
+    except Exception as exc:
         traceback.print_exc()
-        res = None
+        res = {'status': 'fail', 'reason': exc}
 
     end = datetime.now().timestamp()
     data.addResponse(serviceID, begin, end)

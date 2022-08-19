@@ -152,11 +152,16 @@ export default {
       params: {},
     })
       .then((res) => {
+        if (res.data.status === 'fail') {
+          alert('获取任务列表失败');
+          return;
+        }
         this.tasks = res.data.tasks;
       })
       .catch((error) => {
         // eslint-disable-next-line
         console.error(error);
+        alert('服务器错误');
       });
   },
 };

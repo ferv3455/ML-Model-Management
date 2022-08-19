@@ -149,6 +149,7 @@ export default {
             })
             .catch((error) => {
               console.log(error);
+              alert('服务器错误');
             });
           break;
         }
@@ -176,6 +177,7 @@ export default {
             })
             .catch((error) => {
               console.log(error);
+              alert('服务器错误');
             });
           break;
         }
@@ -197,6 +199,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
     },
     dialogClickToGoToModelIDPage(event) {
@@ -226,6 +229,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
     },
     formatDate(value) {

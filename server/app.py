@@ -171,7 +171,7 @@ def getPreProcess(modelID):
 
 
 @app.route('/model/<int:modelID>/preprocess', methods=['POST'])
-def LoadPreProcess(modelID):
+def loadPreProcess(modelID):
     try:
         params = request.form.to_dict()  # keys: prodes, file
         print('Creating PreProcess:', params)
@@ -201,7 +201,7 @@ def LoadPreProcess(modelID):
 
 
 @app.route('/model/<int:modelID>/preprocess/delete', methods=['POST'])
-def DeletePreProcess(modelID):
+def deletePreProcess(modelID):
     try:
         print('Delete PreProcess:', modelID)
         data_dict = {}

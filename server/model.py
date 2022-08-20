@@ -162,8 +162,6 @@ class Model:
         self.des = des
         self.type = type
         self.time = time.time()
-        self.count = 0
-        self.status = "stop"
 
         if self.type == "pmml":
             self.pmmlInit(file)

@@ -109,13 +109,62 @@ body {
     width: 25px;
 }
 
+.copyIcon:hover {
+    animation: shake 800ms ease-in-out;
+}
+
 .generateIcon {
     width: 26px;
+}
+
+.generateIcon:hover {
+    animation: upDown 250ms ease-in-out;
+    animation-iteration-count: 3;
+}
+
+@keyframes upDown {
+
+    10% {
+        transform: translate3d(0, -2px, 0);
+    }
+
+    50% {
+        transform: translate3d(0, 4px, 0);
+    }
+
+    90% {
+        transform: translate3d(0, 0, 0);
+    }
 }
 
 .changeStatusIcon {
     width: 30px;
     margin: 0px;
+}
+
+.addIcon {
+    width: 30px;
+}
+
+.addIcon:hover {
+    transform-origin: bottom;
+    animation: leftRight 250ms ease-in-out;
+    animation-iteration-count: 3;
+}
+
+@keyframes leftRight {
+
+    10% {
+        transform: rotate(-15deg);
+    }
+
+    50% {
+        transform: rotate(15deg);
+    }
+
+    90% {
+        transform: rotate(0);
+    }
 }
 
 .changeStatusIcon:hover {
@@ -147,4 +196,9 @@ textarea {
     border-radius: 10px;
     border-width: 3px;
     box-sizing: border-box;
+}
+
+#logoImg:hover {
+    transform: rotate(180deg);
+    transition: transform .8s;
 }

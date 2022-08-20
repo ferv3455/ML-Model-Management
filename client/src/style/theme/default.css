@@ -33,6 +33,7 @@
 :root[data-theme=default] #teamIcon,
 :root[data-theme=default] #assistantIcon,
 :root[data-theme=default] .returnIcon,
+:root[data-theme=default] .addIcon,
 :root[data-theme=default] .generateIcon,
 :root[data-theme=default] .copyIcon {
     filter: invert(14%) sepia(9%) saturate(3292%) hue-rotate(183deg) brightness(94%) contrast(87%);

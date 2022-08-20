@@ -16,6 +16,16 @@
 
 ​	软件01班 顾洋丞 2019010461
 
+### 项目概况
+
+**清华Git地址：**
+
+​	https://git.tsinghua.edu.cn/xy-guo20/ml-model-manage-system
+
+**Git提交情况：**
+
+<img src="pic/gitlab_commit.jpg" style="zoom:50%;" />
+
 ### 人员分工
 
 ​	郭心源：搭建前后端基本框架、加入**PKL**格式的模型支持、协调小组工作、测试与汇总。
@@ -78,17 +88,13 @@
 
 ##### 主页
 
-<img src="pic/mainPage.jpg" style="zoom:25%;" />
-
-​	主页的前端地址是“/”。	
+<img src="pic/mainPage.jpg" style="zoom:25%;" />	
 
 ​	主页的内容主要是一些欢迎信息，以及一个“开始”按钮。点击该按钮可以进入系统，跳转到**模型列表页面**。
 
 ##### 模型列表页面
 
 <img src="pic/modelPage.jpg" style="zoom:25%;" />
-
-​	模型列表页面的前端地址是“/model”。
 
 ​	该页面的内容包含一张**模型总表**与**上传模型按钮**。模型总表显示了系统中目前已导入的模型的信息，包括模型名称、描述、类型、算法、上传时间。表中的每一行的末尾还有删除模型按钮，为了防止用户误触，鼠标悬浮时该按钮会抖动，并且需要双击后才可删除模型。
 
@@ -102,7 +108,7 @@
 
 <img src="pic/uploadPage.jpg" style="zoom:25%;" />
 
-​	模型上传页面的前端地址是“/upload”。
+
 
 ​	该页面的内容是一张表单，表单项包括了**模型名称**、**模型描述**、**模型类型**、**模型文件**，下方有一个提交按钮。
 
@@ -116,8 +122,6 @@
 
 <img src="pic/modelIDPage.jpg" style="zoom:25%;" />
 
-​	模型详细信息页面的前端地址是“/model/[model id]”，其中model id是模型ID，若对应的模型不存在，则会提示错误。
-
 ​	在该页面加载时，前端会向后端地址“/model/[model id]”发送GET请求，后端从数据库中查找信息并返回给前端。系统会显示模型名称、模型类型、模型算法、上传时间、预处理项、模型描述。其中**预处理项**在初始时显示为无，需要用户后续上传。
 
 ​	第二个框则显示了该模型的所有输入变量和输出变量，以及对应的变量信息。由于不同格式的模型文件中变量的储存信息不同，因此有些字段可能无法从文件中获取。
@@ -127,8 +131,6 @@
 ##### 模型测试页面
 
 <img src="pic/testPage_form.jpg" style="zoom:25%;" />
-
-​	模型测试页面的前端地址是“/test/[model id]”，其中model id是模型ID，若对应的模型不存在，则会提示错误。
 
 ​	该界面加载时，前端会向后段地址“/model/[model id]”发送GET请求，获取当前的模型ID对应的模型名称和输入变量信息。
 
@@ -154,8 +156,6 @@
 
 ​	由于数据类型的多变性，直接来自文件输入框的图片（或其他输入类型）可能不满足模型的输入格式。因此，必要时用户可以编写**自定义的预处理脚本**，并上传到预处理文件载入界面，载入的文件与模型的输入是绑定的。
 
-​	该界面的前端地址是“/preprocess/[model id]”，其中model id是模型ID，若对应的模型不存在，则会提示错误。
-
 ​	该页面加载时，会向后端地址“/model/[model id]/preprocess”发送GET请求，获取当前模型的预处理信息，用户可以点击已载入的预处理文件来下载。也可以选择删除已有的预处理文件，这会向后端地址“/model/[model id]/preprocess/delete”发送POST请求，删除当前的预处理文件。用户也可以在下方选择上传新的预处理文件预描述。点击上传后，系统会判断预处理文件是否为空，如不为空则会将预处理文件以Form Data的形式POST到后端地址“/model/[model id]/preprocess”，后端程序接收到文件后，会将相关记录添加到数据库中，同时保存该与处理文件到后端文件夹preprocesses文件夹下，文件名会被改为当前的模型ID，并记录文件路径。
 
 ​	在模型进行预测时（无论是模型测试，还是服务的快速返回接口和批量返回接口），系统会检查当前模型是否存在预处理文件，若存在则会将输入数据经过文件中的pre_process函数处理，然后再输入进模型。
@@ -163,8 +163,6 @@
 ##### 服务列表页面
 
 <img src="pic/servicePage.jpg" style="zoom:25%;" />
-
-​	服务列表页面的前端地址是“/service/[model id]”，其中model id是模型ID，若对应的模型不存在，则会提示错误。
 
 ​	服务列表界面会显示当前模型所对应的所有服务，包括服务名称、创建时间、服务状态、服务次数、平均响应时长、最大响应时长、最小响应时长。
 
@@ -174,15 +172,13 @@
 
 ​	每一行的服务状态信息有一个状态切换的按钮，点击可以切换服务状态，这会向后端地址“/model/[model id]/service/[service id]”发送POST请求，并注明是暂停服务还是开始服务。暂停后的服务将不会接受预测任务。
 
-​	页面的下方可以用来添加新服务，输入新服务的名称，然后点击添加按钮，前端会检查服务名是否非空，而后向后端地址“/model/[model id]/service”发送POST请求，后端会为每个新创建的服务分配**服务ID**（从0开始的正整数），并利用Celery开始对应的服务，同时记录服务相关的信息到数据库中。
+​	下方可以用来添加新服务，输入新服务的名称，然后点击添加按钮，前端会检查服务名是否非空，而后向后端地址“/model/[model id]/service”发送POST请求，后端会为每个新创建的服务分配**服务ID**（从0开始的正整数），并利用Celery开始对应的服务，同时记录服务相关的信息到数据库中。
 
 ​	点击每一行的服务名称则会跳转到**部署接口页面**。
 
 ##### 部署接口页面
 
 <img src="pic/predictPage.jpg" style="zoom:25%;" />
-
-​	部署接口页面的前端地址是“/predict/[model id]/[service id]”，其中model id是模型ID，service id是服务ID，若对应的模型或服务不存在，则会提示错误。
 
 ​	该页面提供一个在前端测试服务的**快速返回接口**的功能。在json输入框内输入合法的json输入串后，点击下方的提交按钮，就会向后端地址“/model/[model id]/service/[service id]/quick”**（快速返回接口）**以当前的json输入发送POST请求。后端接收到对应的POST请求后，会调用当前服务保存的模型进行预测。与模型测试页面不同的是，快速返回接口不会临时实例化一个模型进行测试，而是利用已经创建的服务内部的模型进行测试。运行完毕后，模型会像前端返回模型的输出，前端在右侧的输出框内显示结果。
 
@@ -194,8 +190,6 @@
 
 <img src="pic/batchPage.jpg" style="zoom:25%;" />
 
-​	批量任务列表页面的前端地址是“/batch/[model id]/[service id]”，其中model id是模型ID，service id是服务ID，若对应的模型或服务不存在，则会提示错误。
-
 ​	该页面提供一个访问后端**等待返回接口**的功能。该页面提供**任务管理查看**的功能。页面加载时，会向后端地址“/model/[model id]/service/[service id]/task”发送GET请求，获取当前服务的所有任务以及对应的状态。任务的状态分为三种：waiting（等待调度）、running（运行中）、finished（已完成）。
 
 ​	用户可以选择上传文件来添加批量预测的任务，支持的文件格式包括csv和zip，其中csv用来支持文本输入，zip用来支持其他格式的输入（图片等）。点击上传按钮后，会向后端地址“/model/[model id]/service/[service id]/task”以Form Data的形式发送POST请求。后端接收到文件后，会先根据文件的格式解码，处理成模型接受的数据，然后在服务的任务列表中添加一个异步任务。后端同时会分配一个**任务ID**（从0开始的正整数），返回给前端，前端可以立刻通过任务ID来查看任务的状态，而无需等待任务结束后才收到响应。
@@ -205,8 +199,6 @@
 ##### 任务详情页面
 
 <img src="pic/taskIDPage.jpg" style="zoom:25%;" />
-
-​	任务详情页面的前端地址是“/task/[model id]/[service id]”，其中其中model id是模型ID，service id是服务ID，task id是任务ID，若对应的模型、服务或任务不存在，则会提示错误。
 
 ​	该页面的功能主要是查看某一个任务的执行情况。页面加载时，会向后端地址“/model/[model id]/service/[service id]/task/[task id]”发送GET请求，后端会调用服务的接口来寻找指定的任务并返回给前端。如果任务状态为finished，则会以json格式显示任务结果，否则不会显示。
 
@@ -282,3 +274,67 @@
 | setServiceStatus   | 在服务list中设定指定服务ID的状态（或删除） |
 | addResponse        | 添加一次服务响应到响应list                 |
 
+#### 模型数据结构设计
+
+​	后端的模型数据结构采用Model类设计。Model类的作用是解析用户上传的模型文件、实例化为模型测试所需的模型、内置于服务的数据结构中被服务所调用。
+
+​	下表为成员变量及方法：
+
+| Model类成员 | 类型           | 描述                             |
+| ----------- | -------------- | -------------------------------- |
+| model       | 变量（object） | 模型的核心对象，用于预测         |
+| name        | 变量（string） | 模型的名称                       |
+| des         | 变量（string） | 模型的描述                       |
+| type        | 变量（string） | 模型的类型                       |
+| algo        | 变量（string） | 模型的算法                       |
+| time        | 变量（float）  | 创建时间                         |
+| input       | 变量（list）   | 输入变量列表                     |
+| output      | 变量（list）   | 输出变量列表                     |
+| pmmlInit    | 方法           | PMML类型初始化                   |
+| onnxInit    | 方法           | ONNX类型初始化                   |
+| pklInit     | 方法           | PKL类型初始化                    |
+| predict     | 方法           | 使用模型对象进行预测（带预处理） |
+
+#### 服务与任务数据结构设计
+
+​	除数据库保存的服务信息外，后端在内存里维护了一个服务列表，用于实现服务相关的操作。服务列表的元素为Service类的对象，可以根据服务ID获取、添加、删除指定的Service类对象。
+
+​	后端采用Celery + Redis的解决方案，可以使用docker来运行Redis，并暴露端口16379。
+
+​	Service类成员变量及方法如下：
+
+| Service类成员 | 类型            | 描述                     |
+| ------------- | --------------- | ------------------------ |
+| model         | 变量（object）  | 服务内置的模型对象       |
+| modelID       | 变量（int）     | 模型对象的ID             |
+| pre_processer | 变量（dict）    | 模型输入预处理的相关信息 |
+| id            | 变量（int）     | 服务ID                   |
+| status        | 变量（bool）    | 服务状态                 |
+| tasks         | 变量（dict）    | 储存所有的任务信息       |
+| proc          | 变量（Process） | 服务对应的进程           |
+| count         | 变量（int）     | 任务数量                 |
+| predict       | 方法            | 使用模型进行快速预测     |
+| batch         | 方法            | 创建新的批量任务         |
+| getResult     | 方法            | 获取任务结果             |
+| getTaskStatus | 方法            | 获取任务状态             |
+| getTasks      | 方法            | 获取任务列表             |
+| changeStatus  | 方法            | 改变服务状态             |
+| close         | 方法            | 关闭服务                 |
+
+### 参考链接
+
+1. [Vue3 官方文档](https://cn.vuejs.org/guide/introduction.html)
+2. [Vue Router 官方文档](https://router.vuejs.org/zh/)
+3. [Flask教程 - W3Cschool](https://www.w3cschool.cn/flask/)
+4. [Docker 官方文档](https://docs.docker.com/)
+5. [scikit-learn 官方文档](https://scikit-learn.org/stable/)
+6. [live2d-widget 官方文档](https://l2dwidget.js.org/docs/index.html)
+7. [CSS filter滤镜任意色值转换工具](https://www.zhangxinxu.com/sp/filter.html)
+8. [Noun Project 素材网站](https://thenounproject.com/)
+9. [【CSDN】vue中图片转换为base64上传、预览、删除](https://blog.csdn.net/przlovecsdn/article/details/80337738)
+10. [【CSDN】vue中formData方式上传文件](https://blog.csdn.net/qq_38543537/article/details/124942294)
+11. [【CSDN】vue-cookies使用方法](https://blog.csdn.net/z591102/article/details/117961384)
+12. [【简书】vue中axios的使用](https://www.jianshu.com/p/97f6b37638c8)
+13. [【简书】自动部署PMML模型生成REST API](https://www.jianshu.com/p/552fa06415a5)
+14. [【简书】使用ONNX部署深度学习和传统机器学习模型](https://www.jianshu.com/p/c1e0efe6482f)
+15. [【知乎】Flask和Vue.js构建全栈单页面web应用](https://zhuanlan.zhihu.com/p/76588212)

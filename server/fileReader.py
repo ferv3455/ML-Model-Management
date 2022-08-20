@@ -1,9 +1,11 @@
 import base64
 import io
+import tempfile
 import zipfile
 import numpy as np
 
 from PIL import Image
+# import skvideo.io       # sudo apt-get install ffmpeg
 
 
 def readCSV(data):
@@ -28,8 +30,22 @@ def readZIP(data, param_name):
     # Open each file
     for filename in filenames:
         with zipObj.open(filename, 'r') as fp:
-            img = Image.open(io.BytesIO(fp.read()))
-            arr = np.asarray(img)
+            # Process different formats
+            if filename.endswith('.npy'):
+                # NumPy data file
+                arr = np.load(fp)
+
+            # elif filename.endswith('.mp4'):
+            #     # Video file: write to a temporary file first
+            #     with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as tmp:
+            #         tmp.write(fp.read())
+            #         arr = skvideo.io.vread(tmp.name)
+
+            else:
+                # Image file
+                img = Image.open(io.BytesIO(fp.read()))
+                arr = np.asarray(img)
+
             yield ('filename', filename, {param_name: arr})
 
 
@@ -41,12 +57,28 @@ def decodeFile(string: str):
         fmt, encoding = header.split(';')
         assert encoding == 'base64'
         print(fmt)
-        # TODO: different formats can be processed
     except:
         print('No header in string')
 
     # Decoding
-    result = base64.b64decode(string)
-    img = Image.open(io.BytesIO(result))
-    arr = np.asarray(img)
-    return arr
+    try:
+        result = base64.b64decode(string)
+        if fmt.startswith('data:image/'):
+            # Image
+            img = Image.open(io.BytesIO(result))
+            arr = np.asarray(img)
+            return arr
+
+        elif fmt == 'data:application/octet-stream':
+            # Other: NumPy supported only
+            arr = np.load(io.BytesIO(result))
+            return arr
+        
+        else:
+            # Default: Image
+            img = Image.open(io.BytesIO(result))
+            arr = np.asarray(img)
+            return arr
+
+    except Exception as exc:
+        print('Data not readable:', exc)

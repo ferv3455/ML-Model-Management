@@ -1,3 +1,4 @@
+import pickle
 from traceback import print_exc
 from numpy import array
 
@@ -12,13 +13,14 @@ app = Celery('task', backend='redis://localhost:16379/1',
 def predict(modelID, type, data, pre_processer=None):
     for key, value in data.items():
         try:
-            # convert back to ndarray if it is a list
-            if isinstance(value, list):
-                data[key] = array(value, dtype='uint8')
-                print(data[key].shape, data[key].dtype)
+            # convert back to ndarray if it is a encoded
+            if isinstance(value, str) and value.startswith('encoded-ndarray:'):
+                data[key] = pickle.loads(value[16:].encode('latin-1'))
+                print(data[key].shape)
         except:
             print_exc()
 
+    # print(data)
     model = Model('name', 'des', type, './models/{}.{}'.format(modelID, type))
     return model.predict(data, pre_processer)
 

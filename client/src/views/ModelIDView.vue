@@ -219,6 +219,7 @@ export default {
       })
       .catch((error) => {
         console.log(error);
+        alert('服务器错误');
       });
     // get preprocess name
     const path2 = `/model/${this.modelID}/preprocess`;
@@ -226,9 +227,9 @@ export default {
       params: {},
     })
       .then((res) => {
-        if (res.data.state === 'success') {
+        if (res.data.status === 'success') {
           this.PreProName = res.data.name;
-        } else if (res.data.state === 'empty') {
+        } else if (res.data.status === 'empty') {
           this.PreProName = '无';
         } else {
           alert('加载预处理脚本信息失败');
@@ -237,6 +238,7 @@ export default {
       .catch((error) => {
         // eslint-disable-next-line
         console.error(error);
+        alert('服务器错误');
       });
   },
 };

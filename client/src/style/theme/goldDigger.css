@@ -20,6 +20,7 @@
 :root[data-theme=goldDigger] #teamIcon,
 :root[data-theme=goldDigger] #assistantIcon,
 :root[data-theme=goldDigger] .returnIcon,
+:root[data-theme=goldDigger] .addIcon,
 :root[data-theme=goldDigger] .binIcon,
 :root[data-theme=goldDigger] .generateIcon,
 :root[data-theme=goldDigger] .copyIcon {

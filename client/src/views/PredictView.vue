@@ -80,11 +80,16 @@ export default {
       const path = `/model/${this.modelID}/service/${this.serviceID}/quick`;
       axios.post(getBackUrl(path), submitObject)
         .then((res) => {
+          if (res.data.status === 'fail') {
+            alert('服务测试失败');
+            return;
+          }
           this.output = res.data.output;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+          alert('服务器错误');
         });
     },
     generateCurl(event) {
@@ -155,6 +160,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
       console.log(this.serviceID);
       axios.get(getBackUrl(`/model/${this.modelID}/service`))
@@ -171,6 +177,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
     },
   },

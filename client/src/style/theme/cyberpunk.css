@@ -18,7 +18,8 @@
 :root[data-theme=cyberpunk] #phoneIcon,
 :root[data-theme=cyberpunk] #linkIcon,
 :root[data-theme=cyberpunk] #teamIcon,
-:root[data-theme=cyberpunk] .returnIcon {
+:root[data-theme=cyberpunk] .returnIcon,
+:root[data-theme=cyberpunk] .addIcon {
     filter: invert(79%) sepia(36%) saturate(6684%) hue-rotate(137deg) brightness(103%) contrast(96%);
 }
 

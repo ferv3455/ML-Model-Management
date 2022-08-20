@@ -20,12 +20,21 @@
         </td>
         <td>{{ task.status }}</td>
       </tr>
+      <tr>
+        <td colspan="2">
+          <div id="batchPageAddTaskArea">
+            <div style="flex-grow: 1;"></div>
+            <p>添加新任务</p>
+            <input id="batchPageEnterModelFile" type="file">
+            <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">
+              <img src="../assets/addIcon.png" title="点击添加新任务" alt="addIcon" class="addIcon">
+            </button>
+            <div style="flex-grow: 1;"></div>
+          </div>
+        </td>
+      </tr>
     </table>
-    <div id="batchPageAddTaskArea" class="divUse">
-      <h2>创建新任务</h2>
-      <input id="batchPageEnterModelFile" type="file" accept=".csv,.zip">
-      <button @click="upload" @mouseover="dialogClickToUpload" id="batchPageUploadButton">添加</button>
-    </div>
+
     <button @click="goToPredictPage" @mouseover="dialogClickToPredictPage" id="BatchPageGoTopredictPage"
       class="roundButton returnButton">
       <img class="returnIcon" src="../assets/returnIcon.png" alt="return">
@@ -76,6 +85,12 @@ export default {
       const path = `/model/${this.modelID}/service/${this.serviceID}/task`;
       const f = document.getElementById('batchPageEnterModelFile').files[0];
       const postRequest = new FormData();
+
+      if (document.getElementById('batchPageEnterModelFile').value === '') {
+        alert('任务文件为空！');
+        return;
+      }
+
       postRequest.append('file', f);
       axios.post(getBackUrl(path), postRequest, {
         headers: {
@@ -86,6 +101,7 @@ export default {
           // 将后端返回的任务ID提示给用户
           const idMes = `任务ID：${res.data.id}`;
           alert(idMes);
+          this.$router.go(0);
         })
         .catch((error) => {
           // eslint-disable-next-line
@@ -152,11 +168,16 @@ export default {
       params: {},
     })
       .then((res) => {
+        if (res.data.status === 'fail') {
+          alert('获取任务列表失败');
+          return;
+        }
         this.tasks = res.data.tasks;
       })
       .catch((error) => {
         // eslint-disable-next-line
         console.error(error);
+        alert('服务器错误');
       });
   },
 };
@@ -195,23 +216,34 @@ export default {
 }
 
 #batchPageAddTaskArea {
-  width: 100%;
-  flex-grow: 1;
-  margin: 10px;
-  padding: 20px;
+  width: auto;
+  margin-left: auto;
+  margin-right: auto;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
 }
 
-#batchPageAddTaskArea h2 {
-  margin: 0;
-  font-size: 25px;
-  margin-bottom: 15px;
+#batchPageAddTaskArea p {
+  margin-top: 0px;
+  margin-bottom: 5px;
+  font-weight: bolder;
+  text-align: left;
+  width: 110px;
 }
 
 #batchPageEnterModelFile {
-  width: 100%;
-  margin-bottom: 20px;
+  width: 50%;
+  margin-bottom: 0px;
+}
+
+#batchPageUploadButton {
+  width: 30px;
+  margin-left: 15px;
+  height: 25px;
+  background-color: transparent;
+  color: transparent;
+  box-shadow: none;
+  padding: 0;
 }
 </style>

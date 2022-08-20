@@ -66,7 +66,7 @@ export default {
         params: {},
       })
         .then((res) => {
-          if (res.data.state === 'success') {
+          if (res.data.status === 'success') {
             this.LoadedProDescription = res.data.prodes;
             this.LoadedProName = res.data.name;
             this.Loaded = true;
@@ -75,7 +75,7 @@ export default {
             const protype = res.data.type;
             const f = new File(binaryData, this.LoadedProName);
             this.LoadedProPath = window.URL.createObjectURL(f);
-          } else if (res.data.state === 'empty') {
+          } else if (res.data.status === 'empty') {
             this.LoadedProDescription = '并未加载预处理脚本文件';
             this.Loaded = false;
           } else {
@@ -85,6 +85,7 @@ export default {
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+          alert('服务器错误');
         });
     },
     backToModelIDPage(event) {
@@ -102,18 +103,29 @@ export default {
         fileName: this.LoadedProName,
       })
         .then((res) => {
+          if (res.data.status === 'fail') {
+            alert('删除预处理失败');
+            return;
+          }
           this.getPrePro();
           this.Loaded = false;
         })
         .catch((error) => {
           // eslint-disable-next-line
           console.error(error);
+          alert('服务器错误');
         });
     },
     uploadNewPreprocess(event) {
       const path = `/model/${this.modelID}/preprocess`;
       const f = document.getElementById('uploadPageEnterPreProFile').files[0];
       const postRequest = new FormData();
+
+      if (document.getElementById('uploadPageEnterPreProFile').value === '') {
+        alert('预处理文件为空！');
+        return;
+      }
+
       postRequest.append('prodes', this.ProDescription);
       postRequest.append('file', f);
       postRequest.append('filename', f.name);
@@ -154,6 +166,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
     },
   },

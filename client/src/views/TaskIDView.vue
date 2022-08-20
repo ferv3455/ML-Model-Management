@@ -78,6 +78,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
       console.log(this.serviceID);
       axios.get(getBackUrl(`/model/${this.modelID}/service`))
@@ -94,6 +95,7 @@ export default {
         })
         .catch((error) => {
           console.log(error);
+          alert('服务器错误');
         });
     },
   },
@@ -112,11 +114,14 @@ export default {
         this.status = res.data.status;
         if (this.status === 'finished') {
           this.result = JSON.stringify(res.data.result, null, 2);
+        } else if (res.data.status === 'fail') {
+          alert('获取任务详情失败');
         }
       })
       .catch((error) => {
         // eslint-disable-next-line
         console.error(error);
+        alert('服务器错误');
       });
   },
 };

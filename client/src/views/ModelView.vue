@@ -95,12 +95,12 @@ export default {
                 }
                 this.models.pop();
               } else {
-                const mes = '删除模型失败';
-                alert(mes);
+                alert('删除模型失败');
               }
             })
             .catch((error) => {
               console.log(error);
+              alert('服务器错误');
             });
           break;
         }
@@ -125,9 +125,14 @@ export default {
     axios.get(getBackUrl('/model'), {
       params: {},
     }).then((res) => {
+      if (res.data.status === 'fail') {
+        alert('获取模型列表失败');
+        return;
+      }
       this.models = res.data.models;
     }).catch((error) => {
       console.log(error);
+      alert('服务器错误');
     });
   },
 };

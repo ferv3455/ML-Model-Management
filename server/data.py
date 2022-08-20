@@ -3,55 +3,16 @@ import sqlite3
 from urllib.request import proxy_bypass
 import pymongo
 from urllib import parse
-# all active services
-
-'''
-Initialize database columns:
-
-TABLE models:    id (PRIMARY KEY), name, des, type, algo, time
-TABLE services:  id (PRIMARY KEY), modelID, name, time, status, count
-TABLE serv_response: id (PRIMARY KEY), serviceID, start, end, duration
-TABLE tasks:     id (PRIMARY KEY), serviceID, modelID, time, status
-
-(use INTEGER PRIMARY KEY for the first column so that it increments automatically)
-'''
-
-'''
-function list:
-
-FUNCTION getAllModels
-FUNCTION getModelByID(modelID): get model by modelID
-FUNCTION addModel(record)
-
-FUNCTION getServicesByModel(modelID): get all services have this modelID
-FUNCTION addService(modelID, name, time, status, count)
-FUNCTION setServiceStatus(serviceID,status)
-
-FUNCITON addResponse(serviceID, begin, end)
-FUNCTION getTasksByService(serviceID)
-FUNCTION getTaskByID(taskID)
-FUNCTION newTask()
-
-'''
 
 '''
 try to use noSQL:mongodb
 '''
-# models\response
-models_list = []
-services_list = []
-response_list = []
-tasks_list = []
-preprocess_list = []
 
 # model count
 model_id_count = 0
 
 # service count
 service_id_count = 0
-
-# task count
-task_id_count = 0
 
 
 # connect to mongodb
@@ -78,7 +39,6 @@ data_base_init()  # clear previous data
 mongo_models_list = data_base['mongo_models_list']
 mongo_services_list = data_base['mongo_services_list']
 mongo_responses_list = data_base['mongo_response_list']
-mongo_tasks_list = data_base['mongo_tasks_list']
 mongo_preprocess_list = data_base['mongo_preprocess_list']
 
 
@@ -202,11 +162,7 @@ def addService(modelID, name, time, status, count):
     temp_service['name'] = name
     temp_service['time'] = time
     temp_service['status'] = status
-    temp_service['count'] = count
     temp_service['modelID'] = modelID
-    temp_service['averResTime'] = 0
-    temp_service['maxResTime'] = 0
-    temp_service['minResTime'] = 0
 
     service_id_count = service_id_count+1
 
@@ -250,49 +206,6 @@ def addResponse(serviceID, begin, end):
     mongo_responses_list.insert_one(temp_response)
 
     return
-
-
-def getTasksByService(serviceID):
-    '''Get tasks from table:tasks. Return a list of dicts.'''
-
-    # records = []
-
-    # for temp_task in tasks_list:
-    #     if temp_task['serviceID'] == serviceID:
-    #         records.append(temp_task)
-
-    task_by_service = list(mongo_services_list.find({"serviceID": serviceID}))
-    return task_by_service
-
-    # return records
-
-
-def getTaskByID(taskID):
-    '''Get a task from table:tasks. Return a dict.'''
-
-    # for temp_task in tasks_list:
-    #     if temp_task['taskID'] == taskID:
-    #         return temp_task
-    # return {}
-
-    task_by_id = mongo_tasks_list.find_one({"id": taskID})
-    return task_by_id
-
-
-def newTask():
-    '''new a task to table:tasks.
-    Return taskID'''
-
-    temp_task = {}
-    temp_task['id'] = task_id_count
-
-    # TODO: other imformation of task
-
-    task_id_count = task_id_count+1
-
-    mongo_tasks_list.insert_one(temp_task)
-
-    return task_id_count-1
 
 
 def addPreProcess(modelID, prodes, path, name, type):

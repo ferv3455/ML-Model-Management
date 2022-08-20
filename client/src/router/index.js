@@ -34,7 +34,7 @@ const routes = [
     component: () => import('../views/ServiceView.vue'),
   },
   {
-    path: '/service/:modelID/preprocess',
+    path: '/preprocess/:modelID',
     name: 'preprocess',
     component: () => import('../views/PreProView.vue'),
   },

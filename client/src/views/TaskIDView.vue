@@ -70,15 +70,17 @@ export default {
     getModelAndServiceName() {
       axios.get(getBackUrl(`/model/${this.modelID}`))
         .then((res) => {
-          if (res.data.exist === true) {
-            this.modelName = res.data.name;
-          } else {
-            alert('模型不存在');
-          }
+          this.modelName = res.data.name;
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
       console.log(this.serviceID);
       axios.get(getBackUrl(`/model/${this.modelID}/service`))
@@ -91,11 +93,17 @@ export default {
               return;
             }
           }
-          alert('服务不存在');
+          alert('信息不存在');
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
   },
@@ -107,21 +115,20 @@ export default {
     setTimeout(() => { setDialog('', 0); }, 100);
     // getTaskInfo
     const path = `/model/${this.modelID}/service/${this.serviceID}/task/${this.taskID}`;
-    axios.get(getBackUrl(path), {
-      params: {},
-    })
+    axios.get(getBackUrl(path))
       .then((res) => {
         this.status = res.data.status;
-        if (this.status === 'finished') {
-          this.result = JSON.stringify(res.data.result, null, 2);
-        } else if (res.data.status === 'fail') {
-          alert('获取任务详情失败');
-        }
+        this.result = JSON.stringify(res.data.result, null, 2);
       })
       .catch((error) => {
-        // eslint-disable-next-line
-        console.error(error);
-        alert('服务器错误');
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
       });
   },
 };

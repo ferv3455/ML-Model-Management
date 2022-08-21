@@ -104,8 +104,14 @@ export default {
           this.$router.go(0);
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     goToPredictPage(event) {
@@ -129,14 +135,17 @@ export default {
     getModelAndServiceName() {
       axios.get(getBackUrl(`/model/${this.modelID}`))
         .then((res) => {
-          if (res.data.exist === true) {
-            this.modelName = res.data.name;
-          } else {
-            alert('模型不存在');
-          }
+          this.modelName = res.data.name;
         })
         .catch((error) => {
           console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
       console.log(this.serviceID);
       axios.get(getBackUrl(`/model/${this.modelID}/service`))
@@ -149,10 +158,17 @@ export default {
               return;
             }
           }
-          alert('服务不存在');
+          alert('信息不存在');
         })
         .catch((error) => {
           console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
   },
@@ -168,16 +184,17 @@ export default {
       params: {},
     })
       .then((res) => {
-        if (res.data.status === 'fail') {
-          alert('获取任务列表失败');
-          return;
-        }
         this.tasks = res.data.tasks;
       })
       .catch((error) => {
-        // eslint-disable-next-line
-        console.error(error);
-        alert('服务器错误');
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
       });
   },
 };

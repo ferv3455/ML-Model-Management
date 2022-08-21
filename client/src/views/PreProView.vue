@@ -62,9 +62,7 @@ export default {
   methods: {
     getPrePro() {
       const path = `/model/${this.modelID}/preprocess`;
-      axios.get(getBackUrl(path), {
-        params: {},
-      })
+      axios.get(getBackUrl(path))
         .then((res) => {
           if (res.data.status === 'success') {
             this.LoadedProDescription = res.data.prodes;
@@ -78,14 +76,17 @@ export default {
           } else if (res.data.status === 'empty') {
             this.LoadedProDescription = '并未加载预处理脚本文件';
             this.Loaded = false;
-          } else {
-            alert('加载预处理脚本信息失败');
           }
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          alert('服务器错误');
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     backToModelIDPage(event) {
@@ -100,17 +101,18 @@ export default {
       const path = `/model/${this.modelID}/preprocess`;
       axios.delete(getBackUrl(path))
         .then((res) => {
-          if (res.data.status === 'fail') {
-            alert('删除预处理失败');
-            return;
-          }
           this.getPrePro();
           this.Loaded = false;
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          alert('服务器错误');
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     uploadNewPreprocess(event) {
@@ -135,8 +137,14 @@ export default {
           this.getPrePro();
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     clickToBackToModelID() {
@@ -155,15 +163,17 @@ export default {
       const path = `/model/${this.modelID}`;
       axios.get(getBackUrl(path))
         .then((res) => {
-          if (res.data.exist === true) {
-            this.modelName = res.data.name;
-          } else {
-            alert('模型不存在');
-          }
+          this.modelName = res.data.name;
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
   },

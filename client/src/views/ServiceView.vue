@@ -141,20 +141,21 @@ export default {
             opr: option,
           })
             .then((res) => {
-              if (res.data.status === 'success') {
-                if (this.services[i].status === 'running') {
-                  this.services[i].status = 'stopped';
-                } else {
-                  this.services[i].status = 'running';
-                }
+              if (this.services[i].status === 'running') {
+                this.services[i].status = 'stopped';
               } else {
-                const mes = '更改服务状态失败';
-                alert(mes);
+                this.services[i].status = 'running';
               }
             })
             .catch((error) => {
               console.log(error);
-              alert('服务器错误');
+              if (error.response && error.response.status === 404) {
+                alert('信息不存在');
+              } else if (error.response && error.response.status === 406) {
+                alert('系统处理错误');
+              } else {
+                alert('服务器错误');
+              }
             });
           break;
         }
@@ -166,19 +167,20 @@ export default {
           const path = `/model/${this.modelID}/service/${serviceID}`;
           axios.delete(getBackUrl(path))
             .then((res) => {
-              if (res.data.status === 'success') {
-                for (let j = i; j < this.services.length - 1; j += 1) {
-                  this.services[j] = this.services[j + 1];
-                }
-                this.services.pop();
-              } else {
-                const mes = '删除服务失败';
-                alert(mes);
+              for (let j = i; j < this.services.length - 1; j += 1) {
+                this.services[j] = this.services[j + 1];
               }
+              this.services.pop();
             })
             .catch((error) => {
               console.log(error);
-              alert('服务器错误');
+              if (error.response && error.response.status === 404) {
+                alert('信息不存在');
+              } else if (error.response && error.response.status === 406) {
+                alert('系统处理错误');
+              } else {
+                alert('服务器错误');
+              }
             });
           break;
         }
@@ -195,16 +197,17 @@ export default {
         name: this.newServiceName,
       })
         .then((res) => {
-          if (res.data.status === 'success') {
-            this.$router.go(0);
-          } else {
-            const mes = '新建服务失败';
-            alert(mes);
-          }
+          this.$router.go(0);
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     dialogClickToGoToModelIDPage(event) {
@@ -226,15 +229,17 @@ export default {
       const path = `/model/${this.modelID}`;
       axios.get(getBackUrl(path))
         .then((res) => {
-          if (res.data.exist === true) {
-            this.modelName = res.data.name;
-          } else {
-            alert('模型不存在');
-          }
+          this.modelName = res.data.name;
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     formatDate(value) {
@@ -245,14 +250,19 @@ export default {
   mounted() {
     // Get Service List
     const path = `/model/${this.modelID}/service`;
-    axios.get(getBackUrl(path), {
-      params: {},
-    })
+    axios.get(getBackUrl(path))
       .then((res) => {
         this.services = res.data.services;
       })
       .catch((error) => {
         console.log(error);
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
       });
     this.getModelName();
     changeServicePageDivBoxSize();

@@ -76,26 +76,24 @@ export default {
         },
       })
         .then((res) => {
-          if (res.data.status === 'success') {
-            this.$router.push({
-              name: 'model',
-            });
-          } else {
-            const mes = '创建新模型失败';
-            alert(mes);
-          }
+          this.$router.push({
+            name: 'model',
+          });
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          alert('服务器错误');
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     goToModelPage(event) {
       this.$router.push({
         name: 'model',
-        params: {
-        },
       });
     },
     dialogClickToModelPage(event) {

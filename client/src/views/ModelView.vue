@@ -89,18 +89,20 @@ export default {
           const path = `/model/${modelID}`;
           axios.delete(getBackUrl(path))
             .then((res) => {
-              if (res.data.status === 'success') {
-                for (let j = i; j < this.models.length - 1; j += 1) {
-                  this.models[j] = this.models[j + 1];
-                }
-                this.models.pop();
-              } else {
-                alert('删除模型失败');
+              for (let j = i; j < this.models.length - 1; j += 1) {
+                this.models[j] = this.models[j + 1];
               }
+              this.models.pop();
             })
             .catch((error) => {
               console.log(error);
-              alert('服务器错误');
+              if (error.response && error.response.status === 404) {
+                alert('信息不存在');
+              } else if (error.response && error.response.status === 406) {
+                alert('系统处理错误');
+              } else {
+                alert('服务器错误');
+              }
             });
           break;
         }
@@ -122,18 +124,20 @@ export default {
     setTimeout(() => { changeAllImgUrl(); }, 100);
     setTimeout(() => { setDialog('', 0); }, 100);
 
-    axios.get(getBackUrl('/model'), {
-      params: {},
-    }).then((res) => {
-      if (res.data.status === 'fail') {
-        alert('获取模型列表失败');
-        return;
-      }
-      this.models = res.data.models;
-    }).catch((error) => {
-      console.log(error);
-      alert('服务器错误');
-    });
+    axios.get(getBackUrl('/model'))
+      .then((res) => {
+        this.models = res.data.models;
+      })
+      .catch((error) => {
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
+      });
   },
 };
 

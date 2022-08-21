@@ -201,44 +201,45 @@ export default {
 
     // get modelID info
     const path = `/model/${this.modelID}`;
-    axios.get(getBackUrl(path), {
-      params: {},
-    })
+    axios.get(getBackUrl(path))
       .then((res) => {
-        if (res.data.exist === true) {
-          this.modelName = res.data.name;
-          this.modelDes = res.data.des;
-          this.modelType = res.data.type;
-          this.modelAlgo = res.data.algo;
-          this.modelTime = res.data.time;
-          this.modelInputs = res.data.input;
-          this.modelOutputs = res.data.output;
-        } else {
-          alert('模型不存在');
-        }
+        this.modelName = res.data.name;
+        this.modelDes = res.data.des;
+        this.modelType = res.data.type;
+        this.modelAlgo = res.data.algo;
+        this.modelTime = res.data.time;
+        this.modelInputs = res.data.input;
+        this.modelOutputs = res.data.output;
       })
       .catch((error) => {
         console.log(error);
-        alert('服务器错误');
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
       });
     // get preprocess name
     const path2 = `/model/${this.modelID}/preprocess`;
-    axios.get(getBackUrl(path2), {
-      params: {},
-    })
+    axios.get(getBackUrl(path2))
       .then((res) => {
         if (res.data.status === 'success') {
           this.PreProName = res.data.name;
         } else if (res.data.status === 'empty') {
           this.PreProName = '无';
-        } else {
-          alert('加载预处理脚本信息失败');
         }
       })
       .catch((error) => {
-        // eslint-disable-next-line
-        console.error(error);
-        alert('服务器错误');
+        console.log(error);
+        if (error.response && error.response.status === 404) {
+          alert('信息不存在');
+        } else if (error.response && error.response.status === 406) {
+          alert('系统处理错误');
+        } else {
+          alert('服务器错误');
+        }
       });
   },
 };

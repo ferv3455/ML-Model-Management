@@ -145,16 +145,17 @@ export default {
       const path = `/model/${this.modelID}/test`;
       axios.post(getBackUrl(path), submitObject)
         .then((res) => {
-          if (res.data.status === 'fail') {
-            alert('模型测试失败');
-            return;
-          }
           this.output = res.data.output;
         })
         .catch((error) => {
-          // eslint-disable-next-line
-          console.error(error);
-          alert('服务器错误');
+          console.log(error);
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
     backToModelIDPage(event) {
@@ -191,16 +192,18 @@ export default {
       const path = `/model/${this.modelID}`;
       axios.get(getBackUrl(path))
         .then((res) => {
-          if (res.data.exist === true) {
-            this.modelName = res.data.name;
-            this.variances = res.data.input;
-          } else {
-            alert('模型不存在');
-          }
+          this.modelName = res.data.name;
+          this.variances = res.data.input;
         })
         .catch((error) => {
           console.log(error);
-          alert('服务器错误');
+          if (error.response && error.response.status === 404) {
+            alert('信息不存在');
+          } else if (error.response && error.response.status === 406) {
+            alert('系统处理错误');
+          } else {
+            alert('服务器错误');
+          }
         });
     },
   },

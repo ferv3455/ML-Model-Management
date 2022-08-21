@@ -61,6 +61,8 @@ def createModel():
 
         res = {'status': 'success'}
 
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {
@@ -68,7 +70,7 @@ def createModel():
             'reason': exc
         }
 
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>', methods=['GET'])
@@ -87,10 +89,12 @@ def getModelInfo(modelID):
                            'time', 'input', 'output')
             res.update({key: getattr(model, key) for key in param_names})
             print(res)
+            return jsonify(res)
         except:
             traceback.print_exc()
+            return jsonify(res), 406
 
-    return jsonify(res)
+    return jsonify(res), 404
 
 
 @app.route('/model/<int:modelID>/test', methods=['POST'])
@@ -113,11 +117,11 @@ def testModel(modelID):
         pre_processer = data.getPreProcessByID(modelID)
         result = model.predict(input_data, pre_processer)
         res = {'output': result, 'status': 'success'}
+        return jsonify(res)
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>', methods=['DELETE'])
@@ -133,11 +137,12 @@ def deleteModel(modelID):
 
         data.deleteModel(modelID)
         res = {'status': 'success'}
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/preprocess', methods=['GET'])
@@ -160,14 +165,19 @@ def getPreProcess(modelID):
             print(res)
             f = open(res['path'], 'r')
             res['f'] = f.read()
+
+            return jsonify(res)
+
         except Exception as exc:
             res['status'] = 'fail'
             res['reason'] = exc
             traceback.print_exc()
+
+            return jsonify(res), 406
+
     else:
         res['status'] = 'empty'
-
-    return jsonify(res)
+        return jsonify(res)
 
 
 @app.route('/model/<int:modelID>/preprocess', methods=['POST'])
@@ -189,6 +199,7 @@ def loadPreProcess(modelID):
             modelID, params['prodes'], params['file'], params['name'], params['type'])
 
         res = {'status': 'success'}
+        return jsonify(res)
 
     except Exception as exc:
         traceback.print_exc()
@@ -196,8 +207,7 @@ def loadPreProcess(modelID):
             'status': 'fail',
             'reason': exc
         }
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/preprocess', methods=['DELETE'])
@@ -212,11 +222,13 @@ def deletePreProcess(modelID):
             res = {'status': 'success'}
             print(data_dict)
             os.remove(data_dict['path'])
+            return jsonify(res)
         else:
             res = {
                 'status': 'fail',
                 'reason': 'Model has no preprocess file'
             }
+            return jsonify(res), 404
 
     except Exception as exc:
         traceback.print_exc()
@@ -224,8 +236,7 @@ def deletePreProcess(modelID):
             'status': 'fail',
             'reason': exc
         }
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service', methods=['GET'])
@@ -238,11 +249,12 @@ def getAllServices(modelID):
         res = {'services': [{key: r[key]
                              for key in param_names} for r in records]}
         res['status'] = 'success'
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'services': [], 'status': 'fail', 'reason': exc}
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service', methods=['POST'])
@@ -261,6 +273,7 @@ def createService(modelID):
         services.add(serviceID, Service(
             serviceID, model, modelID, pre_processer))
         res = {'status': 'success'}
+        return jsonify(res)
 
     except Exception as exc:
         traceback.print_exc()
@@ -268,14 +281,13 @@ def createService(modelID):
             'status': 'fail',
             'reason': exc
         }
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['POST'])
 def changeServiceStatus(modelID, serviceID):
-    begin = datetime.now().timestamp()
-
     try:
+        begin = datetime.now().timestamp()
         cmd = request.get_json()
         status = cmd['opr']
         print('Change service {}/{} status to {}'.format(modelID, serviceID, status))
@@ -288,39 +300,39 @@ def changeServiceStatus(modelID, serviceID):
         services.get(serviceID).changeStatus(status)
 
         res = {'status': 'success'}
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['DELETE'])
 def deleteService(modelID, serviceID):
-    begin = datetime.now().timestamp()
-
     try:
+        begin = datetime.now().timestamp()
         print('Delete service {}/{}'.format(modelID, serviceID))
         services.delete(serviceID)
         data.deleteService(serviceID)
         res = {'status': 'success'}
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>/quick', methods=['POST'])
 def quickPredict(modelID, serviceID):
-    print('Quick Predict on model {}, service {}'.format(modelID, serviceID))
-    begin = datetime.now().timestamp()
-
     try:
+        print('Quick Predict on model {}, service {}'.format(modelID, serviceID))
+        begin = datetime.now().timestamp()
         service = services.get(serviceID)
         input_data = request.get_json()
 
@@ -331,22 +343,22 @@ def quickPredict(modelID, serviceID):
         result = service.predict(input_data)
         res = {'output': result}
         res['status'] = 'success'
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['POST'])
 def batchPredict(modelID, serviceID):
-    print('Batch Predict on model {}, service {}'.format(modelID, serviceID))
-    begin = datetime.now().timestamp()
 
     try:
+        print('Batch Predict on model {}, service {}'.format(modelID, serviceID))
+        begin = datetime.now().timestamp()
         service = services.get(serviceID)
         batch_data = request.files['file']
         _, ext = os.path.splitext(batch_data.filename)
@@ -362,51 +374,54 @@ def batchPredict(modelID, serviceID):
         res = {'id': taskID}
         batch_data.close()
         res['status'] = 'success'
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
-
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task', methods=['GET'])
 def getAllTasks(modelID, serviceID):
-    print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
-    begin = datetime.now().timestamp()
 
     try:
+        print('Getting all tasks of model {} service {}'.format(modelID, serviceID))
+        begin = datetime.now().timestamp()
         records = services.get(serviceID).getTasks()
         res = {'tasks': list(records)}
         res['status'] = 'success'
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'tasks': [], 'status': 'fail', 'reason': exc}
-
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-    return jsonify(res)
+        return jsonify(res), 406
 
 
 @app.route('/model/<int:modelID>/service/<int:serviceID>/task/<int:taskID>', methods=['GET'])
 def getTaskInfo(modelID, serviceID, taskID):
-    print('Getting task {}'.format(taskID))
-    begin = datetime.now().timestamp()
-
     try:
+        print('Getting task {}'.format(taskID))
+        begin = datetime.now().timestamp()
         service = services.get(serviceID)
         res = {'status': service.getTaskStatus(taskID)}
 
         if res['status'] == 'finished':
             res['result'] = service.getResult(taskID)
+        end = datetime.now().timestamp()
+        data.addResponse(serviceID, begin, end)
+        return jsonify(res)
+
     except Exception as exc:
         traceback.print_exc()
         res = {'status': 'fail', 'reason': exc}
+        return jsonify(res), 406
 
-    end = datetime.now().timestamp()
-    data.addResponse(serviceID, begin, end)
-    return jsonify(res)
 
 # View functions end
 

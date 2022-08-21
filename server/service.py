@@ -56,7 +56,8 @@ class Service:
                 try:
                     # serialize if it is ndarray
                     print(value.shape)
-                    data[key] = 'encoded-ndarray:' + pickle.dumps(value).decode('latin-1')
+                    data[key] = 'encoded-ndarray:' + \
+                        pickle.dumps(value).decode('latin-1')
 
                 except:
                     pass
@@ -69,7 +70,7 @@ class Service:
         return taskID
 
     def getResult(self, taskID):
-        assert self.status
+        #    assert self.status
         task_names, sub_tasks = self.tasks[taskID]
         assert all(task.ready() for task in sub_tasks)
         return [{tag: value, 'result': task.get()}

@@ -303,7 +303,7 @@
 
 ​	除数据库保存的服务信息外，后端在内存里维护了一个服务列表，用于实现服务相关的操作。服务列表的元素为Service类的对象，可以根据服务ID获取、添加、删除指定的Service类对象。
 
-​	后端采用Celery + Redis的解决方案，可以使用docker来运行Redis，并暴露端口16379。
+​	模型的计算服务主要依赖Celery异步任务队列模块来实现任务的并发，其中的任务队列（broker和backend）依赖Redis数据库，部署时可以使用docker来运行Redis服务端，并暴露端口16379。在添加新服务时，会创建一个运行Celery Worker的子进程，并将它绑定到与该服务对应的任务队列。Service对象可以借助该队列来实现进程间的通信，分配具体的任务，进行异步计算，并最后获取计算结果。这里采用了不同的任务队列和不同的Celery Worker进程来确保不同服务之间的独立性。
 
 ​	Service类成员变量及方法如下：
 
@@ -329,20 +329,18 @@
 
 1. [Vue3 官方文档](https://cn.vuejs.org/guide/introduction.html)
 2. [Vue Router 官方文档](https://router.vuejs.org/zh/)
-3. [Flask 中文文档](https://dormousehole.readthedocs.io/en/latest/)
-4. [Docker 官方文档](https://docs.docker.com/)
-4. [Celery 官方文档](https://docs.celeryq.dev/en/stable/)
-4. [Redis 官方文档](https://redis.io/docs/)
-4. [PyMongo 官方文档](https://pymongo.readthedocs.io/en/stable/)
-5. [scikit-learn 官方文档](https://scikit-learn.org/stable/)
-6. [live2d-widget 官方文档](https://l2dwidget.js.org/docs/index.html)
-7. [CSS filter滤镜任意色值转换工具](https://www.zhangxinxu.com/sp/filter.html)
-7. [【菜鸟工具】图片转base64编码](https://c.runoob.com/front-end/59/)
-8. [Noun Project 素材网站](https://thenounproject.com/)
-9. [【CSDN】vue中图片转换为base64上传、预览、删除](https://blog.csdn.net/przlovecsdn/article/details/80337738)
-10. [【CSDN】vue中formData方式上传文件](https://blog.csdn.net/qq_38543537/article/details/124942294)
-11. [【CSDN】vue-cookies使用方法](https://blog.csdn.net/z591102/article/details/117961384)
-12. [【简书】vue中axios的使用](https://www.jianshu.com/p/97f6b37638c8)
-13. [【简书】自动部署PMML模型生成REST API](https://www.jianshu.com/p/552fa06415a5)
-14. [【简书】使用ONNX部署深度学习和传统机器学习模型](https://www.jianshu.com/p/c1e0efe6482f)
-15. [【知乎】Flask和Vue.js构建全栈单页面web应用](https://zhuanlan.zhihu.com/p/76588212)
+3. [Flask教程 - W3Cschool](https://www.w3cschool.cn/flask/)
+4. [Flask 官方文档](https://flask.palletsprojects.com/en/2.2.x/)
+5. [Celery 官方文档](https://docs.celeryq.dev/en/master/index.html)
+6. [Docker 官方文档](https://docs.docker.com/)
+7. [scikit-learn 官方文档](https://scikit-learn.org/stable/)
+8. [live2d-widget 官方文档](https://l2dwidget.js.org/docs/index.html)
+9. [CSS filter滤镜任意色值转换工具](https://www.zhangxinxu.com/sp/filter.html)
+10. [Noun Project 素材网站](https://thenounproject.com/)
+11. [【CSDN】vue中图片转换为base64上传、预览、删除](https://blog.csdn.net/przlovecsdn/article/details/80337738)
+12. [【CSDN】vue中formData方式上传文件](https://blog.csdn.net/qq_38543537/article/details/124942294)
+13. [【CSDN】vue-cookies使用方法](https://blog.csdn.net/z591102/article/details/117961384)
+14. [【简书】vue中axios的使用](https://www.jianshu.com/p/97f6b37638c8)
+15. [【简书】自动部署PMML模型生成REST API](https://www.jianshu.com/p/552fa06415a5)
+16. [【简书】使用ONNX部署深度学习和传统机器学习模型](https://www.jianshu.com/p/c1e0efe6482f)
+17. [【知乎】Flask和Vue.js构建全栈单页面web应用](https://zhuanlan.zhihu.com/p/76588212)

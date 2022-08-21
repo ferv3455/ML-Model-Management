@@ -1,4 +1,4 @@
-## 机器学习模型服务 大作业报告
+## 机器学习模型服务 大作业文档
 
 **组长：**
 
@@ -25,6 +25,8 @@
 **Git提交情况：**
 
 <img src="pic/gitlab_commit.jpg" style="zoom:50%;" />
+
+**总提交次数：313次**
 
 ### 人员分工
 
@@ -192,7 +194,7 @@
 
 ​	该页面提供一个访问后端**等待返回接口**的功能。该页面提供**任务管理查看**的功能。页面加载时，会向后端地址“/model/[model id]/service/[service id]/task”发送GET请求，获取当前服务的所有任务以及对应的状态。任务的状态分为三种：waiting（等待调度）、running（运行中）、finished（已完成）。
 
-​	用户可以选择上传文件来添加批量预测的任务，支持的文件格式包括csv和zip，其中csv用来支持文本输入，zip用来支持其他格式的输入（图片等）。点击上传按钮后，会向后端地址“/model/[model id]/service/[service id]/task”以Form Data的形式发送POST请求。后端接收到文件后，会先根据文件的格式解码，处理成模型接受的数据，然后在服务的任务列表中添加一个异步任务。后端同时会分配一个**任务ID**（从0开始的正整数），返回给前端，前端可以立刻通过任务ID来查看任务的状态，而无需等待任务结束后才收到响应。
+​	用户可以选择上传文件来添加批量预测的任务，支持的文件格式包括csv和zip，其中csv用来支持文本输入，zip用来支持其他格式的输入，zip压缩包里支持图片文件或者npy文件（numpy二进制文件）。点击上传按钮后，会向后端地址“/model/[model id]/service/[service id]/task”以Form Data的形式发送POST请求。后端接收到文件后，会先根据文件的格式解码，处理成模型接受的数据，然后在服务的任务列表中添加一个异步任务。后端同时会分配一个**任务ID**（从0开始的正整数），返回给前端，前端可以立刻通过任务ID来查看任务的状态，而无需等待任务结束后才收到响应。
 
 ​	点击任务列表中的任务ID即可前往对应的**任务详情页面**。
 
@@ -278,6 +280,8 @@
 
 ​	后端的模型数据结构采用Model类设计。Model类的作用是解析用户上传的模型文件、实例化为模型测试所需的模型、内置于服务的数据结构中被服务所调用。
 
+​	模型初始化时，会根据模型的类型进行相应格式的初始化，并从模型文件中解析出输入变量、输出变量、算法等。
+
 ​	下表为成员变量及方法：
 
 | Model类成员 | 类型           | 描述                             |
@@ -325,11 +329,15 @@
 
 1. [Vue3 官方文档](https://cn.vuejs.org/guide/introduction.html)
 2. [Vue Router 官方文档](https://router.vuejs.org/zh/)
-3. [Flask教程 - W3Cschool](https://www.w3cschool.cn/flask/)
+3. [Flask 中文文档](https://dormousehole.readthedocs.io/en/latest/)
 4. [Docker 官方文档](https://docs.docker.com/)
+4. [Celery 官方文档](https://docs.celeryq.dev/en/stable/)
+4. [Redis 官方文档](https://redis.io/docs/)
+4. [PyMongo 官方文档](https://pymongo.readthedocs.io/en/stable/)
 5. [scikit-learn 官方文档](https://scikit-learn.org/stable/)
 6. [live2d-widget 官方文档](https://l2dwidget.js.org/docs/index.html)
 7. [CSS filter滤镜任意色值转换工具](https://www.zhangxinxu.com/sp/filter.html)
+7. [【菜鸟工具】图片转base64编码](https://c.runoob.com/front-end/59/)
 8. [Noun Project 素材网站](https://thenounproject.com/)
 9. [【CSDN】vue中图片转换为base64上传、预览、删除](https://blog.csdn.net/przlovecsdn/article/details/80337738)
 10. [【CSDN】vue中formData方式上传文件](https://blog.csdn.net/qq_38543537/article/details/124942294)

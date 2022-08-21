@@ -163,12 +163,8 @@ export default {
     clear(serviceID) {
       for (let i = 0; i < this.services.length; i += 1) {
         if (this.services[i].id === serviceID) {
-          const option = 'delete';
-          // delete service request
           const path = `/model/${this.modelID}/service/${serviceID}`;
-          axios.post(getBackUrl(path), {
-            opr: option,
-          })
+          axios.delete(getBackUrl(path))
             .then((res) => {
               if (res.data.status === 'success') {
                 for (let j = i; j < this.services.length - 1; j += 1) {

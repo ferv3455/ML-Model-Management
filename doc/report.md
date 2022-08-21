@@ -228,23 +228,24 @@
 
 ​	后端各个接口地址与请求方式汇总见下表（MID是模型ID，SID是服务ID，TID是任务ID）：
 
-| 函数名              | 后端地址                              | 请求方法 | 接口说明                         |
-| ------------------- | ------------------------------------- | -------- | -------------------------------- |
-| getAllModels        | /model                                | GET      | 获取模型列表                     |
-| createModel         | /model                                | POST     | 创建模型                         |
-| getModelInfo        | /model/[MID]                          | GET      | 获取模型信息                     |
-| testModel           | /model/[MID]/test                     | POST     | 测试模型                         |
-| deleteModel         | /model/[MID]/delete                   | POST     | 删除模型                         |
-| getPreProcess       | /model/[MID]/preprocess               | GET      | 获取模型预处理                   |
-| LoadPreProcess      | /model/[MID]/preprocess               | POST     | 加载模型预处理                   |
-| deletePreProcess    | /model/[MID]/preprocess/delete        | POST     | 删除模型预处理                   |
-| getAllServices      | /model/[MID]/service                  | GET      | 获取服务列表                     |
-| createService       | /model/[MID]/service                  | POST     | 创建服务                         |
-| changeServiceStatus | /model/[MID]/service/[SID]            | POST     | 更改服务状态（开启、暂停、删除） |
-| quickPredict        | /model/[MID]/service/[SID]/quick      | POST     | 快速返回接口                     |
-| batchPredict        | /model/[MID]/service/[SID]/task       | POST     | 等待返回接口                     |
-| getAllTasks         | /model/[MID]/service/[SID]/task       | GET      | 获取任务列表                     |
-| getTaskInfo         | /model/[MID]/service/[SID]/task/[TID] | GET      | 获取任务信息                     |
+| 函数名              | 后端地址                              | 请求方法 | 接口说明       |
+| ------------------- | ------------------------------------- | -------- | -------------- |
+| getAllModels        | /model                                | GET      | 获取模型列表   |
+| createModel         | /model                                | POST     | 创建模型       |
+| getModelInfo        | /model/[MID]                          | GET      | 获取模型信息   |
+| deleteModel         | /model/[MID]                          | DELETE   | 删除模型       |
+| testModel           | /model/[MID]/test                     | POST     | 测试模型       |
+| getPreProcess       | /model/[MID]/preprocess               | GET      | 获取模型预处理 |
+| LoadPreProcess      | /model/[MID]/preprocess               | POST     | 加载模型预处理 |
+| deletePreProcess    | /model/[MID]/preprocess               | DELETE   | 删除模型预处理 |
+| getAllServices      | /model/[MID]/service                  | GET      | 获取服务列表   |
+| createService       | /model/[MID]/service                  | POST     | 创建服务       |
+| changeServiceStatus | /model/[MID]/service/[SID]            | POST     | 更改服务状态   |
+| deleteService       | /model/[MID]/service/[SID]            | DELETE   | 删除服务       |
+| quickPredict        | /model/[MID]/service/[SID]/quick      | POST     | 快速返回接口   |
+| batchPredict        | /model/[MID]/service/[SID]/task       | POST     | 等待返回接口   |
+| getAllTasks         | /model/[MID]/service/[SID]/task       | GET      | 获取任务列表   |
+| getTaskInfo         | /model/[MID]/service/[SID]/task/[TID] | GET      | 获取任务信息   |
 
 #### 数据库设计
 
@@ -262,19 +263,20 @@
 
 ​	数据库相关函数设计如下表：
 
-| 函数名             | 函数描述                                   |
-| ------------------ | ------------------------------------------ |
-| getAllModels       | 从模型list获取所有模型                     |
-| getModelByID       | 从模型list查找指定ID模型                   |
-| addModel           | 添加模型到模型list                         |
-| deleteModel        | 从模型list删除指定ID模型                   |
-| addPreProcess      | 添加预处理到预处理list                     |
-| deletePreProcess   | 从预处理list删除模型ID对应的预处理         |
-| getPreProcessByID  | 从预处理list获取指定模型ID对应的预处理     |
-| getServicesByModel | 从服务list获取指定模型ID对应的所有服务     |
-| addService         | 添加服务到服务list                         |
-| setServiceStatus   | 在服务list中设定指定服务ID的状态（或删除） |
-| addResponse        | 添加一次服务响应到响应list                 |
+| 函数名             | 函数描述                               |
+| ------------------ | -------------------------------------- |
+| getAllModels       | 从模型list获取所有模型                 |
+| getModelByID       | 从模型list查找指定ID模型               |
+| addModel           | 添加模型到模型list                     |
+| deleteModel        | 从模型list删除指定ID模型               |
+| addPreProcess      | 添加预处理到预处理list                 |
+| deletePreProcess   | 从预处理list删除模型ID对应的预处理     |
+| getPreProcessByID  | 从预处理list获取指定模型ID对应的预处理 |
+| getServicesByModel | 从服务list获取指定模型ID对应的所有服务 |
+| addService         | 添加服务到服务list                     |
+| setServiceStatus   | 在服务list中设定指定服务ID的状态       |
+| deleteService      | 从服务list删除指定ID服务               |
+| addResponse        | 添加一次服务响应到响应list             |
 
 #### 模型数据结构设计
 

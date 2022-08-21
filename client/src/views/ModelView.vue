@@ -86,8 +86,8 @@ export default {
     clear(modelID) {
       for (let i = 0; i < this.models.length; i += 1) {
         if (this.models[i].id === modelID) {
-          const path = `/model/${modelID}/delete`;
-          axios.post(getBackUrl(path))
+          const path = `/model/${modelID}`;
+          axios.delete(getBackUrl(path))
             .then((res) => {
               if (res.data.status === 'success') {
                 for (let j = i; j < this.models.length - 1; j += 1) {

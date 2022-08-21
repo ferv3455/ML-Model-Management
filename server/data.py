@@ -183,13 +183,14 @@ def setServiceStatus(serviceID, status):
     #         else:
     #             temp_service['status'] = status
     #             return
+    mongo_services_list.update_many(
+        {'id': serviceID}, {'$set': {'status': status}})
+    return
 
-    if status == 'delete':
-        mongo_services_list.delete_many(
-            {'id': serviceID})
-    else:
-        mongo_services_list.update_many(
-            {'id': serviceID}, {'$set': {'status': status}})
+
+def deleteService(serviceID):
+    mongo_services_list.delete_many(
+        {'id': serviceID})
     return
 
 

@@ -120,7 +120,7 @@ def testModel(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<int:modelID>/delete', methods=['POST'])
+@app.route('/model/<int:modelID>', methods=['DELETE'])
 def deleteModel(modelID):
     try:
         services_to_delete = data.getServicesByModel(modelID)
@@ -200,7 +200,7 @@ def loadPreProcess(modelID):
     return jsonify(res)
 
 
-@app.route('/model/<int:modelID>/preprocess/delete', methods=['POST'])
+@app.route('/model/<int:modelID>/preprocess', methods=['DELETE'])
 def deletePreProcess(modelID):
     try:
         print('Delete PreProcess:', modelID)
@@ -285,11 +285,26 @@ def changeServiceStatus(modelID, serviceID):
         elif status == 'pause':
             data.setServiceStatus(serviceID, 'stopped')
 
-        if status == 'start' or status == 'pause':
-            services.get(serviceID).changeStatus(status)
-        else:
-            services.delete(serviceID)
+        services.get(serviceID).changeStatus(status)
 
+        res = {'status': 'success'}
+    except Exception as exc:
+        traceback.print_exc()
+        res = {'status': 'fail', 'reason': exc}
+
+    end = datetime.now().timestamp()
+    data.addResponse(serviceID, begin, end)
+    return jsonify(res)
+
+
+@app.route('/model/<int:modelID>/service/<int:serviceID>', methods=['DELETE'])
+def deleteService(modelID, serviceID):
+    begin = datetime.now().timestamp()
+
+    try:
+        print('Delete service {}/{}'.format(modelID, serviceID))
+        services.delete(serviceID)
+        data.deleteService(serviceID)
         res = {'status': 'success'}
     except Exception as exc:
         traceback.print_exc()

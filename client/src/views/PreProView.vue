@@ -97,11 +97,8 @@ export default {
       });
     },
     DeletePrePro(event) {
-      const path = `/model/${this.modelID}/preprocess/delete`;
-      axios.post(getBackUrl(path), {
-        LoadedProPath: this.LoadedProPath,
-        fileName: this.LoadedProName,
-      })
+      const path = `/model/${this.modelID}/preprocess`;
+      axios.delete(getBackUrl(path))
         .then((res) => {
           if (res.data.status === 'fail') {
             alert('删除预处理失败');

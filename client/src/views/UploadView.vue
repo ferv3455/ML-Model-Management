@@ -87,7 +87,7 @@ export default {
           } else if (error.response && error.response.status === 406) {
             alert('系统处理错误');
           } else {
-            alert('服务器错误');
+            alert('模型不合法');
           }
         });
     },

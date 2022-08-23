@@ -92,58 +92,14 @@ export default {
     return {
       // 从表单获得的信息（此处不包含模型文件信息）
       modelID: parseInt(this.$route.params.modelID, 10),
-      modelName: 'testName',
-      modelDes: 'xxxxxxxxxxxxxxx xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx',
-      modelType: 'pmml',
-      modelAlgo: 'xxxxxx',
-      modelTime: '13:20',
+      modelName: '',
+      modelDes: '',
+      modelType: '',
+      modelAlgo: '',
+      modelTime: '',
       PreProName: '无',
-      modelInputs: [
-        {
-          name: 'input1',
-          type: 'image',
-          measure: 'continuous',
-          value: '',
-        },
-        {
-          name: 'input2',
-          type: 'double',
-          measure: 'continuous',
-          value: 1080,
-        },
-        {
-          name: 'input3',
-          type: 'double',
-          measure: 'continuous',
-          value: 1080,
-        },
-        {
-          name: 'input4',
-          type: 'double',
-          measure: 'continuous',
-          value: 1080,
-        },
-        {
-          name: 'input5',
-          type: 'double',
-          measure: 'continuous',
-          value: 1080,
-        },
-      ],
-      modelOutputs: [
-        {
-          name: 'output1',
-          type: 'double',
-          measure: 'continuous',
-          value: '',
-        },
-        {
-          name: 'output2',
-          type: 'double',
-          measure: 'continuous',
-          value: 123,
-        },
-      ],
+      modelInputs: [],
+      modelOutputs: [],
     };
   },
   methods: {

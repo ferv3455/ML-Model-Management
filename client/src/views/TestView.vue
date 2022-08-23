@@ -87,7 +87,7 @@ export default {
       modelID: parseInt(this.$route.params.modelID, 10),
       modelName: '',
       mode: 'form',
-      output: 'this is output!',
+      output: '',
       jsonInput: '',
       variances: '',
     };

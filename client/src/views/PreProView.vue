@@ -55,7 +55,7 @@ export default {
       ProDescription: '',
       LoadedProDescription: '并未加载预处理脚本文件',
       LoadedProPath: '',
-      LoadedProName: 'xxx',
+      LoadedProName: '',
       Loaded: false,
     };
   },

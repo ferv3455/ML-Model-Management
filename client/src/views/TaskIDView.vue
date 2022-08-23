@@ -50,8 +50,8 @@ export default {
       taskID: parseInt(this.$route.params.taskID, 10),
       serviceID: parseInt(this.$route.params.serviceID, 10),
       serviceName: '',
-      status: 'finished', // 从后端获取
-      result: 'this is a result!', // 从后端获取
+      status: '', // 从后端获取
+      result: '', // 从后端获取
     };
   },
   methods: {

@@ -55,22 +55,7 @@ function changeMainPageDivBoxSize() {
 export default {
   data() {
     return {
-      models: [{
-        id: 1,
-        name: 'testModel1',
-        des: 'This is a test model',
-        type: 'pmml',
-        algo: 'SVC',
-        time: Date.now() / 1000,
-      }, {
-        id: 2,
-        name: 'testModel2',
-        des: 'This is another test model',
-        type: 'onnx',
-        algo: 'CNN',
-        time: Date.now() / 1000,
-      },
-      ],
+      models: [],
     };
   },
   methods: {

@@ -65,17 +65,7 @@ export default {
       serviceID: parseInt(this.$route.params.serviceID, 10),
       serviceName: '',
       // 需从后端请求当前存在的tasks
-      tasks: [{
-        id: 1,
-        status: 'waiting',
-      }, {
-        id: 2,
-        status: 'running',
-      }, {
-        id: 3,
-        status: 'finished',
-      },
-      ],
+      tasks: [],
     };
   },
   methods: {

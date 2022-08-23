@@ -61,7 +61,7 @@ export default {
       modelName: '',
       serviceID: parseInt(this.$route.params.serviceID, 10),
       serviceName: '',
-      output: 'this is output!', // 测试用，提交后等待后端返回输出
+      output: '', // 测试用，提交后等待后端返回输出
       jsonInput: '',
       curlInput: '',
     };

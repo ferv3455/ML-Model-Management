@@ -27,8 +27,6 @@ global services
 services = ServiceList()
 
 # View functions begin
-# TODO: It should be full of BUUUUUUGS now
-
 
 @app.route('/model', methods=['GET'])
 def getAllModels():

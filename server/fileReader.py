@@ -1,11 +1,9 @@
 import base64
 import io
-import tempfile
 import zipfile
 import numpy as np
 
 from PIL import Image
-# import skvideo.io       # sudo apt-get install ffmpeg
 
 
 def readCSV(data):
@@ -34,12 +32,6 @@ def readZIP(data, param_name):
             if filename.endswith('.npy'):
                 # NumPy data file
                 arr = np.load(fp)
-
-            # elif filename.endswith('.mp4'):
-            #     # Video file: write to a temporary file first
-            #     with tempfile.NamedTemporaryFile(delete=False, suffix='.mp4') as tmp:
-            #         tmp.write(fp.read())
-            #         arr = skvideo.io.vread(tmp.name)
 
             else:
                 # Image file
